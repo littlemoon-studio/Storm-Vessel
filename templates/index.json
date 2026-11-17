@@ -624,9 +624,9 @@
       "name": "[NEW] Product list",
       "settings": {
         "collection": "stocking-stuffers-under-50",
-        "layout_type": "grid",
+        "layout_type": "carousel",
         "carousel_on_mobile": true,
-        "max_products": 4,
+        "max_products": 11,
         "columns": 4,
         "mobile_columns": "2",
         "columns_gap": 8,
@@ -673,9 +673,7 @@
       "block_order": [
         "text_7PzxCW"
       ],
-      "custom_css": [
-        "marquee-component {border-top: solid 1px black; border-bottom: solid 1px black;}"
-      ],
+      "custom_css": [],
       "name": "t:names.marquee_section",
       "settings": {
         "movement_direction": "normal",
@@ -689,13 +687,13 @@
       "type": "split-collection",
       "settings": {
         "panel_background": "#191818",
-        "panel_text": "#f6e7d2",
+        "panel_text": "#F3F2ED",
         "star_image": "shopify://shop_images/stormstarmglimmer.gif",
         "star_color": "#fff786",
-        "heading": "STORM\nWRAPPED\nUNDER THE TREE",
+        "heading": "GIVE\nTHE GIFT OF\nSTORM SURF SHOP",
         "button_label": "SHOP STORM BRAND",
         "button_link": "",
-        "button_background": "#f6e7d2",
+        "button_background": "#F3F2ED",
         "button_text": "#000000",
         "collection": "storm-apparel",
         "products_to_show": 8,
@@ -764,6 +762,7 @@
           "static": true,
           "settings": {
             "media_type": "image",
+            "image": "shopify://shop_images/Christmas_gift_card_mockup_3c3c3694-e20f-4d6c-8809-8e05141b260a.png",
             "link": "",
             "video": "shopify://files/videos/copy_AE8DEA19-22B3-4552-B98F-AD484501F6EE 2.mov",
             "video_loop": true,
@@ -786,7 +785,7 @@
               "type": "jumbo-text",
               "name": "t:names.jumbo_text",
               "settings": {
-                "text": "THE GIFT\nOF CHOICE",
+                "text": "THE GIFT\nOF \n\n\nCHOICE",
                 "font": "heading",
                 "alignment": "left",
                 "line_height": "0.8",
@@ -800,11 +799,11 @@
             "storm_giftcard_text": {
               "type": "text",
               "settings": {
-                "text": "<p>$25 to $500, sent by email. There's no shipping cutoff.</p>",
+                "text": "<p>$25 to $500 Online Gift Cards.<br/>They'll love it, trust us.</p>",
                 "width": "fit-content",
                 "max_width": "narrow",
                 "alignment": "left",
-                "type_preset": "h1",
+                "type_preset": "h4",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -827,9 +826,9 @@
               "name": "t:names.button",
               "settings": {
                 "label": "BUY A GIFT CARD",
-                "link": "",
+                "link": "shopify://collections/gift-card",
                 "open_in_new_tab": false,
-                "style_class": "button",
+                "style_class": "link",
                 "width": "fit-content",
                 "custom_width": 100,
                 "width_mobile": "fit-content",
@@ -846,7 +845,6 @@
         }
       },
       "custom_css": [
-        ".media-block {border: 1px solid black;}",
         "@media screen and (max-width: 749px) {.media-with-content--medium.media-with-content--media-right {max-width: 90%; margin: 0 auto; padding-top: 60px; }}"
       ],
       "name": "t:names.editorial_jumbo_text",
