@@ -685,16 +685,19 @@
     },
     "storm_split": {
       "type": "split-collection",
+      "custom_css": [
+        ".storm-card__media {background: transparent;}"
+      ],
       "settings": {
         "panel_background": "#191818",
         "panel_text": "#f3f2ed",
         "star_image": "shopify://shop_images/stormstarmglimmer.gif",
         "star_color": "#fff786",
-        "star_size": 184,
-        "star_gap": 48,
+        "star_size": 228,
+        "star_gap": 36,
         "heading": "GIVE\nTHE GIFT OF\nSTORM SURF SHOP",
         "heading_word_spacing": -30,
-        "heading_line_height": 105,
+        "heading_line_height": 135,
         "line_1_tracking": -30,
         "line_1_size": 100,
         "line_2_tracking": -30,
