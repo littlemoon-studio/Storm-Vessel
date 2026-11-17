@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "footer",
   "name": "t:names.footer",
@@ -272,12 +281,7 @@
         "group_bA6rnT",
         "footer_utilities_zVWazC"
       ],
-      "custom_css": [
-        ".section-background {background-color: #000f9f; border-top: 1px solid black;}",
-        ".h5,.custom-typography,.menu__item.paragraph a,.footer-utilities__group-copyright,.footer-utilities__group a,.email-signup__input,.email-signup__input::placeholder {color: #f9f5ee !important;}",
-        ".footer-utilities,.footer-utilities__group a {border-color: #f9f5ee !important;}",
-        ".email-signup__input {background-color: rgba(255, 255, 255, 0.2) !important;}"
-      ],
+      "custom_css": [],
       "name": "t:names.footer",
       "settings": {
         "content_direction": "column",
@@ -290,7 +294,7 @@
         "gap": 64,
         "section_width": "page-width",
         "section_height": "",
-        "color_scheme": "scheme-storm-ember",
+        "color_scheme": "scheme-storm-deep",
         "background_media": "none",
         "video_position": "cover",
         "background_image_position": "cover",

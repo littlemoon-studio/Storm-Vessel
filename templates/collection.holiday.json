@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "quick_tiles": {
@@ -9,9 +18,9 @@
             "label": "SHOP ALL",
             "title": "STORM\nBRAND",
             "link": "/collections/storm-apparel",
-            "background": "#1E1E1E",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "background": "#1e1e1e",
+            "label_color": "#f9f5ee",
+            "title_color": "#f6e7d2"
           }
         },
         "tile_2": {
@@ -21,8 +30,8 @@
             "title": "STOCKING\nSTUFFERS",
             "link": "/collections/stocking-stuffers",
             "background": "#640403",
-            "label_color": "#E62E09",
-            "title_color": "#E62E09"
+            "label_color": "#e62e09",
+            "title_color": "#e62e09"
           }
         },
         "tile_3": {
@@ -31,9 +40,9 @@
             "label": "SKIP THE GUESSWORK",
             "title": "GIFTS 4\nSURFERS",
             "link": "/collections/gifts-4-surfers",
-            "background": "#08341C",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "background": "#08341c",
+            "label_color": "#f9f5ee",
+            "title_color": "#f6e7d2"
           }
         },
         "tile_4": {
@@ -42,7 +51,7 @@
             "label": "FLYING SOUTH?",
             "title": "SURF TRIP\nMUST-HAVES",
             "link": "/collections/surf-trip-must-haves",
-            "background": "#E62E09",
+            "background": "#e62e09",
             "label_color": "#640403",
             "title_color": "#640403"
           }
@@ -57,7 +66,7 @@
       "settings": {
         "sticky": "scroll-up",
         "columns": 4,
-        "tile_height": 160,
+        "tile_height": 116,
         "tile_height_mobile": 112
       }
     },
@@ -120,7 +129,7 @@
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
-        "color_scheme": "scheme-96f57ce3-9307-4fd9-aedc-d8b6572a3a67",
+        "color_scheme": "scheme-storm-cream",
         "background_media": "none",
         "video_position": "cover",
         "background_image_position": "cover",
@@ -445,7 +454,12 @@
                   "settings": {
                     "product": "{{ closest.product }}",
                     "product_swatches_alignment": "flex-end",
-                    "product_swatches_alignment_mobile": "flex-end"
+                    "product_swatches_alignment_mobile": "flex-end",
+                    "hide_padding": false,
+                    "product_swatches_padding_top": 4,
+                    "product_swatches_padding_bottom": 0,
+                    "product_swatches_padding_left": 0,
+                    "product_swatches_padding_right": 0
                   },
                   "blocks": {}
                 }
