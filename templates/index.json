@@ -39,7 +39,7 @@
           "settings": {
             "label": "SKIP THE GUESSWORK",
             "title": "GIFTS 4\nSURFERS",
-            "link": "/collections/gifts-4-surfers",
+            "link": "shopify://collections/gift-for-surfers",
             "background": "#08341c",
             "label_color": "#f9f5ee",
             "title_color": "#f6e7d2"
@@ -89,7 +89,7 @@
             "inherit_color_scheme": false,
             "color_scheme": "scheme-7320ef0c-8cb2-4360-8022-1a64657e4d96",
             "toggle_overlay": true,
-            "overlay_color": "#05281E6B",
+            "overlay_color": "#05281e6b",
             "overlay_style": "solid",
             "gradient_direction": "to top",
             "padding-block-start": 0,
