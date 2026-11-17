@@ -1,0 +1,552 @@
+{% doc %}
+  @prompt
+    Create a custom hover effect for product cards in collection pages that displays staff pick overlays based on product tags. When a product is tagged with staff identifiers like 'benpick', 'sarahpick', etc., hovering over the product card should show a semi-transparent colored overlay with text like "Ben's Pick" or "Sarah's Pick". Each staff member should have their own distinct overlay color (e.g., green for Ben, blue for Sarah). The overlay should appear smoothly on hover and include the staff member's name prominently displayed. The code should check for product tags and apply the appropriate styling dynamically., I don't want the default to include the names Sarah, mike, Emma and Alex. only include: Ben, Chris, Amanda, Ron, Craig, Nic, Lily, Jen, and Allister. they should correspond with products with the tag format: benpick, chrispick, amandapick, etc etc. And to be able to edit text within the theme editor controls. it should have a heading, and a body both with editable text, I don't want the default to include the names Sarah, mike, Emma and Alex. only include: Ben, Chris, Amanda, Ron, Craig, Nic, Lily, Jen, and Allister. they should correspond with products with the tag format: benpick, chrispick, amandapick, etc etc. And to be able to edit text within the theme editor controls. it should have a heading, and a body both with editable text
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-staff-pick-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    display: block;
+    width: 100%;
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity {{ block.settings.transition_speed }}ms ease, visibility {{ block.settings.transition_speed }}ms ease;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .ai-staff-pick-wrapper-{{ ai_gen_id }}:hover .ai-staff-pick-overlay-{{ ai_gen_id }} {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .ai-staff-pick-content-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .ai-staff-pick-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: {{ block.settings.heading_weight }};
+    text-transform: {{ block.settings.heading_transform }};
+    margin: 0 0 8px 0;
+  }
+
+  .ai-staff-pick-body-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_size }}px;
+    font-weight: {{ block.settings.body_weight }};
+    margin: 0;
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="ben"] {
+    background-color: {{ block.settings.ben_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="ben"] .ai-staff-pick-heading-{{ ai_gen_id }},
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="ben"] .ai-staff-pick-body-{{ ai_gen_id }} {
+    color: {{ block.settings.ben_text_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="chris"] {
+    background-color: {{ block.settings.chris_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="chris"] .ai-staff-pick-heading-{{ ai_gen_id }},
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="chris"] .ai-staff-pick-body-{{ ai_gen_id }} {
+    color: {{ block.settings.chris_text_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="amanda"] {
+    background-color: {{ block.settings.amanda_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="amanda"] .ai-staff-pick-heading-{{ ai_gen_id }},
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="amanda"] .ai-staff-pick-body-{{ ai_gen_id }} {
+    color: {{ block.settings.amanda_text_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="ron"] {
+    background-color: {{ block.settings.ron_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="ron"] .ai-staff-pick-heading-{{ ai_gen_id }},
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="ron"] .ai-staff-pick-body-{{ ai_gen_id }} {
+    color: {{ block.settings.ron_text_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="craig"] {
+    background-color: {{ block.settings.craig_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="craig"] .ai-staff-pick-heading-{{ ai_gen_id }},
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="craig"] .ai-staff-pick-body-{{ ai_gen_id }} {
+    color: {{ block.settings.craig_text_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="nic"] {
+    background-color: {{ block.settings.nic_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="nic"] .ai-staff-pick-heading-{{ ai_gen_id }},
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="nic"] .ai-staff-pick-body-{{ ai_gen_id }} {
+    color: {{ block.settings.nic_text_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="lily"] {
+    background-color: {{ block.settings.lily_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="lily"] .ai-staff-pick-heading-{{ ai_gen_id }},
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="lily"] .ai-staff-pick-body-{{ ai_gen_id }} {
+    color: {{ block.settings.lily_text_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="jen"] {
+    background-color: {{ block.settings.jen_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="jen"] .ai-staff-pick-heading-{{ ai_gen_id }},
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="jen"] .ai-staff-pick-body-{{ ai_gen_id }} {
+    color: {{ block.settings.jen_text_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="allister"] {
+    background-color: {{ block.settings.allister_color }};
+  }
+
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="allister"] .ai-staff-pick-heading-{{ ai_gen_id }},
+  .ai-staff-pick-overlay-{{ ai_gen_id }}[data-staff="allister"] .ai-staff-pick-body-{{ ai_gen_id }} {
+    color: {{ block.settings.allister_text_color }};
+  }
+{% endstyle %}
+
+<staff-pick-overlay-{{ ai_gen_id }} class="ai-staff-pick-wrapper-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <slot></slot>
+
+  {% liquid
+    assign staff_member = ''
+    assign staff_heading = ''
+    assign staff_body = ''
+    
+    if product.tags contains 'benpick'
+      assign staff_member = 'ben'
+      assign staff_heading = block.settings.ben_heading
+      assign staff_body = block.settings.ben_body
+    elsif product.tags contains 'chrispick'
+      assign staff_member = 'chris'
+      assign staff_heading = block.settings.chris_heading
+      assign staff_body = block.settings.chris_body
+    elsif product.tags contains 'amandapick'
+      assign staff_member = 'amanda'
+      assign staff_heading = block.settings.amanda_heading
+      assign staff_body = block.settings.amanda_body
+    elsif product.tags contains 'ronpick'
+      assign staff_member = 'ron'
+      assign staff_heading = block.settings.ron_heading
+      assign staff_body = block.settings.ron_body
+    elsif product.tags contains 'craigpick'
+      assign staff_member = 'craig'
+      assign staff_heading = block.settings.craig_heading
+      assign staff_body = block.settings.craig_body
+    elsif product.tags contains 'nicpick'
+      assign staff_member = 'nic'
+      assign staff_heading = block.settings.nic_heading
+      assign staff_body = block.settings.nic_body
+    elsif product.tags contains 'lilypick'
+      assign staff_member = 'lily'
+      assign staff_heading = block.settings.lily_heading
+      assign staff_body = block.settings.lily_body
+    elsif product.tags contains 'jenpick'
+      assign staff_member = 'jen'
+      assign staff_heading = block.settings.jen_heading
+      assign staff_body = block.settings.jen_body
+    elsif product.tags contains 'allisterpick'
+      assign staff_member = 'allister'
+      assign staff_heading = block.settings.allister_heading
+      assign staff_body = block.settings.allister_body
+    endif
+  %}
+
+  {% if staff_member != '' %}
+    <div class="ai-staff-pick-overlay-{{ ai_gen_id }}" data-staff="{{ staff_member }}">
+      <div class="ai-staff-pick-content-{{ ai_gen_id }}">
+        {% if staff_heading != blank %}
+          <p class="ai-staff-pick-heading-{{ ai_gen_id }}">{{ staff_heading }}</p>
+        {% endif %}
+        {% if staff_body != blank %}
+          <p class="ai-staff-pick-body-{{ ai_gen_id }}">{{ staff_body }}</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+</staff-pick-overlay-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class StaffPickOverlay{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        const overlay = this.querySelector('.ai-staff-pick-overlay-{{ ai_gen_id }}');
+        if (overlay) {
+          this.addEventListener('mouseenter', () => {
+            overlay.style.opacity = '1';
+            overlay.style.visibility = 'visible';
+          });
+
+          this.addEventListener('mouseleave', () => {
+            overlay.style.opacity = '0';
+            overlay.style.visibility = 'hidden';
+          });
+        }
+      }
+    }
+
+    customElements.define('staff-pick-overlay-{{ ai_gen_id }}', StaffPickOverlay{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Staff pick overlay",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Overlay settings"
+    },
+    {
+      "type": "range",
+      "id": "transition_speed",
+      "label": "Transition speed",
+      "min": 100,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 300
+    },
+    {
+      "type": "header",
+      "content": "Heading style"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Size",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "heading_transform",
+      "label": "Text case",
+      "options": [
+        { "value": "none", "label": "Default" },
+        { "value": "uppercase", "label": "Uppercase" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "header",
+      "content": "Body style"
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Size",
+      "min": 10,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "header",
+      "content": "Ben"
+    },
+    {
+      "type": "text",
+      "id": "ben_heading",
+      "label": "Heading",
+      "default": "Ben's Pick"
+    },
+    {
+      "type": "textarea",
+      "id": "ben_body",
+      "label": "Body"
+    },
+    {
+      "type": "color",
+      "id": "ben_color",
+      "label": "Overlay color",
+      "default": "#22c55ecc"
+    },
+    {
+      "type": "color",
+      "id": "ben_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Chris"
+    },
+    {
+      "type": "text",
+      "id": "chris_heading",
+      "label": "Heading",
+      "default": "Chris's Pick"
+    },
+    {
+      "type": "textarea",
+      "id": "chris_body",
+      "label": "Body"
+    },
+    {
+      "type": "color",
+      "id": "chris_color",
+      "label": "Overlay color",
+      "default": "#3b82f6cc"
+    },
+    {
+      "type": "color",
+      "id": "chris_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Amanda"
+    },
+    {
+      "type": "text",
+      "id": "amanda_heading",
+      "label": "Heading",
+      "default": "Amanda's Pick"
+    },
+    {
+      "type": "textarea",
+      "id": "amanda_body",
+      "label": "Body"
+    },
+    {
+      "type": "color",
+      "id": "amanda_color",
+      "label": "Overlay color",
+      "default": "#ec4899cc"
+    },
+    {
+      "type": "color",
+      "id": "amanda_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Ron"
+    },
+    {
+      "type": "text",
+      "id": "ron_heading",
+      "label": "Heading",
+      "default": "Ron's Pick"
+    },
+    {
+      "type": "textarea",
+      "id": "ron_body",
+      "label": "Body"
+    },
+    {
+      "type": "color",
+      "id": "ron_color",
+      "label": "Overlay color",
+      "default": "#f59e0bcc"
+    },
+    {
+      "type": "color",
+      "id": "ron_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Craig"
+    },
+    {
+      "type": "text",
+      "id": "craig_heading",
+      "label": "Heading",
+      "default": "Craig's Pick"
+    },
+    {
+      "type": "textarea",
+      "id": "craig_body",
+      "label": "Body"
+    },
+    {
+      "type": "color",
+      "id": "craig_color",
+      "label": "Overlay color",
+      "default": "#8b5cf6cc"
+    },
+    {
+      "type": "color",
+      "id": "craig_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Nic"
+    },
+    {
+      "type": "text",
+      "id": "nic_heading",
+      "label": "Heading",
+      "default": "Nic's Pick"
+    },
+    {
+      "type": "textarea",
+      "id": "nic_body",
+      "label": "Body"
+    },
+    {
+      "type": "color",
+      "id": "nic_color",
+      "label": "Overlay color",
+      "default": "#06b6d4cc"
+    },
+    {
+      "type": "color",
+      "id": "nic_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Lily"
+    },
+    {
+      "type": "text",
+      "id": "lily_heading",
+      "label": "Heading",
+      "default": "Lily's Pick"
+    },
+    {
+      "type": "textarea",
+      "id": "lily_body",
+      "label": "Body"
+    },
+    {
+      "type": "color",
+      "id": "lily_color",
+      "label": "Overlay color",
+      "default": "#f43f5ecc"
+    },
+    {
+      "type": "color",
+      "id": "lily_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Jen"
+    },
+    {
+      "type": "text",
+      "id": "jen_heading",
+      "label": "Heading",
+      "default": "Jen's Pick"
+    },
+    {
+      "type": "textarea",
+      "id": "jen_body",
+      "label": "Body"
+    },
+    {
+      "type": "color",
+      "id": "jen_color",
+      "label": "Overlay color",
+      "default": "#84cc16cc"
+    },
+    {
+      "type": "color",
+      "id": "jen_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Allister"
+    },
+    {
+      "type": "text",
+      "id": "allister_heading",
+      "label": "Heading",
+      "default": "Allister's Pick"
+    },
+    {
+      "type": "textarea",
+      "id": "allister_body",
+      "label": "Body"
+    },
+    {
+      "type": "color",
+      "id": "allister_color",
+      "label": "Overlay color",
+      "default": "#6366f1cc"
+    },
+    {
+      "type": "color",
+      "id": "allister_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Staff pick overlay"
+    }
+  ]
+}
+{% endschema %}
