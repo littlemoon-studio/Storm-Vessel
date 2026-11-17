@@ -77,7 +77,7 @@
           "type": "_slide",
           "settings": {
             "media_type_1": "image",
-            "image_1": "shopify://shop_images/beige-parka.webp",
+            "image_1": "shopify://shop_images/beige-park3.webp",
             "content_direction": "column",
             "vertical_on_mobile": true,
             "horizontal_alignment": "flex-start",
@@ -141,7 +141,7 @@
                   "type": "text",
                   "name": "t:names.text",
                   "settings": {
-                    "text": "<p>MOST WANTED</p>",
+                    "text": "<p>MOST WANTED:</p>",
                     "width": "fit-content",
                     "max_width": "normal",
                     "alignment": "left",
@@ -189,9 +189,36 @@
                   },
                   "blocks": {}
                 },
+                "text_47ATXP": {
+                  "type": "text",
+                  "name": "t:names.text",
+                  "settings": {
+                    "text": "<p><a href=\"/products/slowtide-all-weather-parka-dune\" title=\"Slowtide All Weather Parka - Dune\">SHOP NOW ❯</a></p>",
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
                 "button_hAAkTc": {
                   "type": "button",
                   "name": "t:names.button",
+                  "disabled": true,
                   "settings": {
                     "label": "Shop now ❯",
                     "link": "shopify://products/slowtide-all-weather-parka-dune",
@@ -208,6 +235,7 @@
               "block_order": [
                 "text_p76pLe",
                 "text_tLBGap",
+                "text_47ATXP",
                 "button_hAAkTc"
               ]
             }
@@ -276,7 +304,7 @@
             "product_list_text_phmMki": {
               "type": "_product-list-text",
               "settings": {
-                "text": "<h3>FEATURED COLLECTION</h3>",
+                "text": "<h3>GIFTS UNDER 50 BUCKS.</h3>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
