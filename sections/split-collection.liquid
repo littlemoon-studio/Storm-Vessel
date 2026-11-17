@@ -1,7 +1,7 @@
 {%- assign coll = section.settings.collection -%}
 <div
   class="storm-split"
-  style="--split-h: {{ section.settings.desktop_height }}px; --panel-bg: {{ section.settings.panel_background }}; --panel-fg: {{ section.settings.panel_text }}; --panel-btn-bg: {{ section.settings.button_background }}; --panel-btn-fg: {{ section.settings.button_text }}; --star-color: {{ section.settings.star_color }};"
+  style="--split-h: {{ section.settings.desktop_height }}px; --star-size: {{ section.settings.star_size }}px; --star-gap: {{ section.settings.star_gap }}px; --heading-ws: {{ section.settings.heading_word_spacing | divided_by: 100.0 }}em; --heading-lh: {{ section.settings.heading_line_height | divided_by: 100.0 }}; --panel-bg: {{ section.settings.panel_background }}; --panel-fg: {{ section.settings.panel_text }}; --panel-btn-bg: {{ section.settings.button_background }}; --panel-btn-fg: {{ section.settings.button_text }}; --star-color: {{ section.settings.star_color }};"
 >
   <div class="storm-split__panel">
     <div class="storm-split__star">
@@ -10,7 +10,29 @@
       {%- endif -%}
     </div>
     {%- if section.settings.heading != blank -%}
-      <h2 class="storm-split__heading">{{ section.settings.heading | escape | newline_to_br }}</h2>
+      {%- assign heading_lines = section.settings.heading | newline_to_br | split: '<br />' -%}
+      <h2 class="storm-split__heading">
+        {%- for line in heading_lines -%}
+          {%- assign n = forloop.index -%}
+          {%- liquid
+            case n
+              when 1
+                assign ls = section.settings.line_1_tracking
+                assign fs = section.settings.line_1_size
+              when 2
+                assign ls = section.settings.line_2_tracking
+                assign fs = section.settings.line_2_size
+              when 3
+                assign ls = section.settings.line_3_tracking
+                assign fs = section.settings.line_3_size
+              else
+                assign ls = section.settings.line_4_tracking
+                assign fs = section.settings.line_4_size
+            endcase
+          -%}
+          <span class="storm-split__line" style="--ls: {{ ls | divided_by: 1000.0 }}em; --fs: {{ fs | divided_by: 100.0 }};">{{ line | strip_newlines | strip | escape }}</span>
+        {%- endfor -%}
+      </h2>
     {%- endif -%}
     {%- if section.settings.button_label != blank -%}
       <a class="storm-split__button" href="{{ section.settings.button_link | default: coll.url | default: '#' }}">{{ section.settings.button_label | escape }}</a>
@@ -51,7 +73,8 @@
     text-align: center;
   }
   .storm-split__star {
-    width: 183px;
+    width: var(--star-size, 183px);
+    margin-bottom: var(--star-gap, 48px);
     aspect-ratio: 1;
     flex-shrink: 0;
     background: var(--star-color);
@@ -59,14 +82,20 @@
   }
   .storm-split__star img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .storm-split__heading {
-    margin: 16px 0 0;
+    margin: 0;
     font-family: var(--font-heading--family);
     font-weight: 600;
     font-size: clamp(40px, 5.56vw, 80px);
-    line-height: 1.31;
-    letter-spacing: -0.03em;
+    line-height: var(--heading-lh, 1.1);
+    word-spacing: var(--heading-ws, 0em);
     text-transform: uppercase;
     color: var(--panel-fg);
+  }
+  .storm-split__line {
+    display: block;
+    font-size: calc(var(--fs, 1) * 1em);
+    letter-spacing: var(--ls, -0.03em);
+    margin-right: calc(-1 * var(--ls, 0em));
   }
   .storm-split__button {
     margin-top: 80px;
@@ -106,8 +135,8 @@
       height: clamp(320px, calc((100svh - var(--header-height, 0px)) / 2), 440px);
       padding: 24px 20px;
     }
-    .storm-split__star { width: min(110px, 13svh); }
-    .storm-split__heading { margin-top: 12px; font-size: min(34px, 4.6svh); line-height: 1.12; }
+    .storm-split__star { width: min(calc(var(--star-size, 183px) * 0.6), 13svh); margin-bottom: min(var(--star-gap, 48px), 3svh); }
+    .storm-split__heading { font-size: min(34px, 4.6svh); }
     .storm-split__button { margin-top: 20px; }
     .storm-split__scroll { position: static; overflow: visible; }
   }
@@ -124,7 +153,20 @@
     { "type": "color", "id": "panel_text", "label": "Panel text", "default": "#F6E7D2" },
     { "type": "image_picker", "id": "star_image", "label": "Star image", "info": "Shown inside the star. Leave empty to use the star colour." },
     { "type": "color", "id": "star_color", "label": "Star colour", "default": "#FFF786" },
-    { "type": "textarea", "id": "heading", "label": "Heading", "default": "STORM\nWRAPPED\nUNDER THE TREE" },
+    { "type": "range", "id": "star_size", "label": "Star size", "min": 100, "max": 300, "step": 4, "unit": "px", "default": 184 },
+    { "type": "range", "id": "star_gap", "label": "Gap below star", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 48 },
+    { "type": "textarea", "id": "heading", "label": "Heading", "info": "One line per row. Use the shape controls below to stack it like a tree.", "default": "GIVE\nTHE GIFT OF\nSTORM SURF SHOP" },
+    { "type": "header", "content": "Heading shape" },
+    { "type": "range", "id": "heading_word_spacing", "label": "Word spacing", "min": -60, "max": 40, "step": 5, "unit": "%", "default": -30 },
+    { "type": "range", "id": "heading_line_height", "label": "Line height", "min": 80, "max": 140, "step": 5, "unit": "%", "default": 105 },
+    { "type": "range", "id": "line_1_tracking", "label": "Line 1 tracking", "min": -100, "max": 300, "step": 5, "default": -30 },
+    { "type": "range", "id": "line_1_size", "label": "Line 1 size", "min": 50, "max": 150, "step": 5, "unit": "%", "default": 100 },
+    { "type": "range", "id": "line_2_tracking", "label": "Line 2 tracking", "min": -100, "max": 300, "step": 5, "default": -30 },
+    { "type": "range", "id": "line_2_size", "label": "Line 2 size", "min": 50, "max": 150, "step": 5, "unit": "%", "default": 100 },
+    { "type": "range", "id": "line_3_tracking", "label": "Line 3 tracking", "min": -100, "max": 300, "step": 5, "default": -30 },
+    { "type": "range", "id": "line_3_size", "label": "Line 3 size", "min": 50, "max": 150, "step": 5, "unit": "%", "default": 100 },
+    { "type": "range", "id": "line_4_tracking", "label": "Line 4 tracking", "min": -100, "max": 300, "step": 5, "default": -30 },
+    { "type": "range", "id": "line_4_size", "label": "Line 4 size", "min": 50, "max": 150, "step": 5, "unit": "%", "default": 100 },
     { "type": "text", "id": "button_label", "label": "Button label", "default": "SHOP STORM BRAND" },
     { "type": "url", "id": "button_link", "label": "Button link", "info": "Defaults to the collection below." },
     { "type": "color", "id": "button_background", "label": "Button background", "default": "#F6E7D2" },

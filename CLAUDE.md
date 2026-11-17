@@ -1,0 +1,63 @@
+# Storm Vessel 3.0: notes for Claude Code
+
+This repo is the Shopify theme for Storm Surf Shop (stormcanada.ca). It's the Vessel theme with Storm customisations.
+Shopify is connected to this repo (branch `main`): every push syncs to the "Storm-Vessel/main" theme within about a minute.
+Shopify also commits theme-editor changes back to `main`, so **always `git pull` before editing**.
+
+## Workflow
+1. `git pull`
+2. Make the change and keep it small.
+3. `git add -A && git commit -m "<what changed>" && git push`
+4. Tell Christina to refresh the theme editor.
+
+Never rename or delete Vessel core files. Prefer adding settings to Storm's own sections over hard-coding values.
+JSON templates (`templates/*.json`, `sections/*-group.json`, `config/settings_data.json`) hold merchant content. Only edit them when asked, and keep their structure valid.
+
+## Design system
+- **Fonts:** IBM Plex Mono for body and headings, loaded from Google Fonts in `layout/theme.liquid` and set in `assets/storm.css`. Big type is weight 600–700, uppercase, letter-spacing −0.03em. PT Mono (the theme's *accent* font, `var(--font-accent--family)`) is used **only** for product titles, prices and the marquee.
+- **Colours (CSS variables in `assets/storm.css`):**
+  - `--storm-red` #A90707: main text, lines and links on cream
+  - `--storm-deep` #640403: primary buttons, gift card section, section dividers
+  - `--storm-cream` #F4F0E7: page background
+  - `--storm-paper` #F9F5EE: card background
+  - `--storm-sand` #F6E7D2: text on dark backgrounds
+  - `--storm-flame` #E62E09: announcement bar
+  - `--storm-ember` #E3441D: footer
+  - `--storm-night` #1E1E1E: dark panels and tiles
+  - `--storm-forest` #08341C: green tile
+- **Colour schemes in settings_data:** `scheme-storm-cream`, `-deep`, `-night`, `-flame`, `-ember`.
+- **Buttons:** square corners, 49px tall, 14px bold uppercase.
+- **Section dividers:** top and bottom borders only, **never left or right** (no lines against the screen edges).
+- **Product cards:**
+  - 1px #A90707 border, with a 1px line between image and info. Image ratio 303:379.
+  - Title is PT Mono 15px. Vendor is 10px uppercase. Price is bottom-left, with colour swatches bottom-right.
+  - Swatches show **only when a product has 2 or more colour values**. The "More colours" label is removed.
+- **Product page:** only the Colour option renders as swatches. Size and other options stay as dropdowns (patched in `snippets/variant-main-picker.liquid`; the 2+ rule is in `blocks/swatches.liquid`).
+
+## Storm custom files
+- **`sections/quick-tiles.liquid`:** row of colour tiles. Each tile has its own caption, title, link and three colours. The row sticks under the header, hides when scrolling down and comes back when scrolling up (setting `sticky`). Used on home and in `templates/collection.holiday|storm|travel.json`.
+- **`sections/split-collection.liquid`:**
+  - **Desktop:** a dark panel on the left (star with an image or colour fallback, heading, button) and a collection on the right in a 2-column grid that scrolls inside the panel height.
+  - **Mobile:** the panel sticks in the top half of the screen while the products scroll underneath.
+  - **Heading shape controls** stack the heading like a Christmas tree: word spacing, line height, and tracking and size for each of up to 4 lines.
+  - Cards inside use `flush` mode: no outer border, only centre grid lines, but still the image/info line.
+- **`snippets/storm-product-card.liquid`:** the card used by the split section.
+- **`assets/storm.css`:** global Storm layer (fonts, colours, dividers, card styles).
+- **`assets/storm-snap.js`:** soft "magnetic" scroll snap on the home page only. It's tuned in Theme settings → Scroll snap (zone % and duration ms) and turned off when the visitor has asked their device to reduce motion.
+
+## Home page order (`templates/index.json`)
+1. Quick tiles
+2. Slideshow (1 slide)
+3. Featured collection (4-column grid; one swipeable row on mobile)
+4. Marquee
+5. Split collection
+6. Full-width banner with button
+7. Gift card (media with content, deep red)
+
+## Pending update (do this first)
+The `assets/storm.css` and `sections/split-collection.liquid` that come with this file are newer than the ones in the repo. They add:
+- star size and "gap below star" settings
+- the heading shape controls (word spacing, line height, tracking and size per line)
+- the image/info divider line back on split-section cards
+
+Copy both into the repo, replacing the old ones, then commit `"Split section: tree heading controls, star gap, card divider"` and push.
