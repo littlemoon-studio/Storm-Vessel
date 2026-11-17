@@ -703,14 +703,55 @@
     "storm_banner": {
       "type": "hero",
       "blocks": {
+        "jumbo_text_XT7VCL": {
+          "type": "jumbo-text",
+          "name": "t:names.jumbo_text",
+          "settings": {
+            "text": "Flying South?",
+            "font": "heading",
+            "alignment": "left",
+            "line_height": "0.8",
+            "letter_spacing": "-0.03em",
+            "case": "none",
+            "text_effect": "none",
+            "animation_repeat": false
+          },
+          "blocks": {}
+        },
+        "text_pNGHNm": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<h6>Everything you need for your epic Winter surf trip, right here.<br/><br/><a href=\"/collections/surf-trip-must-haves\" title=\"Surf Trip Must-Haves\">SHOP TRAVEL ESSENTIALS</a></h6>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h4",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 58,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
         "button_rYfg3z": {
           "type": "button",
           "name": "t:names.button",
           "settings": {
-            "label": "SHOP THE COLLECTION",
+            "label": "SHOP TRAVEL ESSENTIALS",
             "link": "/collections/surf-trip-must-haves",
             "open_in_new_tab": false,
-            "style_class": "button",
+            "style_class": "link",
             "width": "fit-content",
             "custom_width": 100,
             "width_mobile": "fit-content",
@@ -720,6 +761,8 @@
         }
       },
       "block_order": [
+        "jumbo_text_XT7VCL",
+        "text_pNGHNm",
         "button_rYfg3z"
       ],
       "custom_css": [
@@ -731,6 +774,7 @@
         "link": "",
         "open_in_new_tab": false,
         "media_type_1": "image",
+        "image_1": "shopify://shop_images/CYCLONE-LT-WET-DRY-ROLLTOP-BACKPACK-30L-BLACK-10004479-01_jpg.webp",
         "media_type_2": "image",
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -743,7 +787,7 @@
         "section_width": "page-width",
         "section_height": "large",
         "section_height_custom": 50,
-        "color_scheme": "scheme-96f57ce3-9307-4fd9-aedc-d8b6572a3a67",
+        "color_scheme": "scheme-storm-deep",
         "toggle_overlay": true,
         "overlay_color": "#00000040",
         "overlay_style": "solid",
