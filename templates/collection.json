@@ -1,5 +1,77 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
+    "quick_tiles_dqRJjK": {
+      "type": "quick-tiles",
+      "blocks": {
+        "tile_ART9cV": {
+          "type": "tile",
+          "settings": {
+            "label": "SHOP ALL",
+            "title": "STORM\nBRAND",
+            "link": "",
+            "background": "#1E1E1E",
+            "label_color": "#F9F5EE",
+            "title_color": "#F6E7D2"
+          }
+        },
+        "tile_jQbUDY": {
+          "type": "tile",
+          "settings": {
+            "label": "SHOP ALL",
+            "title": "STORM\nBRAND",
+            "link": "",
+            "background": "#1E1E1E",
+            "label_color": "#F9F5EE",
+            "title_color": "#F6E7D2"
+          }
+        },
+        "tile_DVmfTT": {
+          "type": "tile",
+          "settings": {
+            "label": "SHOP ALL",
+            "title": "STORM\nBRAND",
+            "link": "",
+            "background": "#1E1E1E",
+            "label_color": "#F9F5EE",
+            "title_color": "#F6E7D2"
+          }
+        },
+        "tile_hQpkxE": {
+          "type": "tile",
+          "settings": {
+            "label": "SHOP ALL",
+            "title": "STORM\nBRAND",
+            "link": "",
+            "background": "#1E1E1E",
+            "label_color": "#F9F5EE",
+            "title_color": "#F6E7D2"
+          }
+        }
+      },
+      "block_order": [
+        "tile_ART9cV",
+        "tile_jQbUDY",
+        "tile_DVmfTT",
+        "tile_hQpkxE"
+      ],
+      "disabled": true,
+      "name": "Quick tiles",
+      "settings": {
+        "sticky": "scroll-up",
+        "columns": 4,
+        "tile_height": 160,
+        "tile_height_mobile": 112
+      }
+    },
     "section": {
       "type": "section",
       "blocks": {
@@ -59,7 +131,7 @@
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
-        "color_scheme": "scheme-96f57ce3-9307-4fd9-aedc-d8b6572a3a67",
+        "color_scheme": "scheme-storm-cream",
         "background_media": "none",
         "video_position": "cover",
         "background_image_position": "cover",
@@ -384,7 +456,12 @@
                   "settings": {
                     "product": "{{ closest.product }}",
                     "product_swatches_alignment": "flex-end",
-                    "product_swatches_alignment_mobile": "flex-end"
+                    "product_swatches_alignment_mobile": "flex-end",
+                    "hide_padding": false,
+                    "product_swatches_padding_top": 4,
+                    "product_swatches_padding_bottom": 0,
+                    "product_swatches_padding_left": 0,
+                    "product_swatches_padding_right": 0
                   },
                   "blocks": {}
                 }
@@ -535,6 +612,7 @@
     }
   },
   "order": [
+    "quick_tiles_dqRJjK",
     "section",
     "blocks_XHBKbj",
     "main"
