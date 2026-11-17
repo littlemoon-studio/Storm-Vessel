@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "quick_tiles": {
@@ -9,9 +18,9 @@
             "label": "STORM BRAND",
             "title": "HOODIES\n+ CREWS",
             "link": "/collections/storm-hoodies-crews",
-            "background": "#1E1E1E",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "background": "#1e1e1e",
+            "label_color": "#f9f5ee",
+            "title_color": "#f6e7d2"
           }
         },
         "tile_2": {
@@ -20,9 +29,9 @@
             "label": "STORM BRAND",
             "title": "TEES +\nLONG SLEEVES",
             "link": "/collections/storm-tees",
-            "background": "#1E1E1E",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "background": "#1e1e1e",
+            "label_color": "#f9f5ee",
+            "title_color": "#f6e7d2"
           }
         },
         "tile_3": {
@@ -31,9 +40,9 @@
             "label": "STORM BRAND",
             "title": "HATS +\nTOQUES",
             "link": "/collections/storm-hats",
-            "background": "#1E1E1E",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "background": "#1e1e1e",
+            "label_color": "#f9f5ee",
+            "title_color": "#f6e7d2"
           }
         },
         "tile_4": {
@@ -42,9 +51,9 @@
             "label": "STORM BRAND",
             "title": "KIDS\nAPPAREL",
             "link": "/collections/storm-kids",
-            "background": "#1E1E1E",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "background": "#1e1e1e",
+            "label_color": "#f9f5ee",
+            "title_color": "#f6e7d2"
           }
         }
       },
@@ -57,7 +66,7 @@
       "settings": {
         "sticky": "scroll-up",
         "columns": 4,
-        "tile_height": 160,
+        "tile_height": 116,
         "tile_height_mobile": 112
       }
     },
@@ -445,7 +454,12 @@
                   "settings": {
                     "product": "{{ closest.product }}",
                     "product_swatches_alignment": "flex-end",
-                    "product_swatches_alignment_mobile": "flex-end"
+                    "product_swatches_alignment_mobile": "flex-end",
+                    "hide_padding": false,
+                    "product_swatches_padding_top": 4,
+                    "product_swatches_padding_bottom": 0,
+                    "product_swatches_padding_left": 0,
+                    "product_swatches_padding_right": 0
                   },
                   "blocks": {}
                 }
