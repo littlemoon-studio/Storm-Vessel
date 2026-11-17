@@ -1,0 +1,807 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "section_ptc6iy": {
+      "type": "section",
+      "blocks": {
+        "text_qPNXQY": {
+          "type": "text",
+          "name": "Title",
+          "settings": {
+            "text": "<h1>All Brands</h1>",
+            "width": "fit-content",
+            "max_width": "narrow",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-tertiary--family)",
+            "font_size": "var(--font-size--heading-lg)",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "divider_QWVE9Q": {
+          "type": "_divider",
+          "name": "t:names.divider",
+          "disabled": true,
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_qPNXQY",
+        "divider_QWVE9Q"
+      ],
+      "name": "Collection Header",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "center",
+        "vertical_alignment": "flex-start",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-96f57ce3-9307-4fd9-aedc-d8b6572a3a67",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 50,
+        "padding-block-end": 0
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "text_A8F3Wr": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "text": "<p>{{ closest.page.title }}</p>",
+            "width": "100%",
+            "max_width": "none",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_KMwtTr": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "{{ closest.page.content }}",
+            "width": "100%",
+            "max_width": "none",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_A8F3Wr",
+        "text_KMwtTr"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "color_scheme": "scheme-96f57ce3-9307-4fd9-aedc-d8b6572a3a67",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "section_9ymQya": {
+      "type": "section",
+      "blocks": {
+        "ai_gen_block_a033b71_HYzBRa": {
+          "type": "ai_gen_block_a033b71",
+          "settings": {
+            "heading": "",
+            "heading_size": 48,
+            "heading_alignment": "center",
+            "max_width": "full",
+            "grid_gap": "10",
+            "padding_top": 50,
+            "padding_bottom": 50,
+            "background_color": "#f9f5ee",
+            "heading_color": "#000000",
+            "filter_border_color": "#000000",
+            "filter_inactive_bg": "rgba(0,0,0,0)",
+            "filter_inactive_color": "#000000",
+            "filter_active_bg": "#000f9f",
+            "filter_active_color": "#ffffff",
+            "logo_cell_bg": "rgba(0,0,0,0)",
+            "show_border": true,
+            "border_color": "rgba(0,0,0,0)",
+            "border_radius": 0,
+            "hover_effect": "opacity",
+            "brand_1_name": "Adelio",
+            "brand_1_logo": "shopify://shop_images/Adelio_5582baed-6cef-4ba0-a712-1519dde8590a.png",
+            "brand_2_name": "Afends",
+            "brand_2_logo": "shopify://shop_images/afends-logo-png_seeklogo-610987.png",
+            "brand_3_name": "Aftanas",
+            "brand_3_logo": "shopify://shop_images/Aftanas_Logo.png",
+            "brand_4_name": "Billabong",
+            "brand_4_logo": "shopify://shop_images/billabong.png",
+            "brand_5_name": "Bing",
+            "brand_5_logo": "shopify://shop_images/binglogo.png",
+            "brand_6_name": "",
+            "brand_7_name": "",
+            "brand_8_name": "",
+            "brand_9_name": "",
+            "brand_10_name": "",
+            "brand_11_name": "",
+            "brand_12_name": "",
+            "brand_13_name": "",
+            "brand_14_name": "",
+            "brand_15_name": "",
+            "brand_16_name": "",
+            "brand_17_name": "",
+            "brand_18_name": "",
+            "brand_19_name": "",
+            "brand_20_name": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_a033b71_HYzBRa"
+      ],
+      "disabled": true,
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-96f57ce3-9307-4fd9-aedc-d8b6572a3a67",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "all_brands_VXRtaE": {
+      "type": "all-brands",
+      "blocks": {
+        "brand_3wA43a": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Storm Surf Shop",
+            "brand_logo": "shopify://shop_images/cw-modern-logos-trans-black-02_3a8d9add-4d36-4e66-9513-a81ec658865c.png"
+          }
+        },
+        "brand_cLG84j": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Yucca",
+            "brand_logo": "shopify://shop_images/Yucca-Fins_492c4fab-b800-47a6-96ae-edf26dc47065.jpg_copy.png"
+          }
+        },
+        "brand_4HcHez": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Yeti",
+            "brand_logo": "shopify://shop_images/yeti-logo-2_2024-06-27-212537_bnpy_50fddbcdf1bc5728890207d304f83f3a.webp"
+          }
+        },
+        "brand_3gyqmk": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Xcel",
+            "brand_logo": "shopify://shop_images/Untitled-1.png"
+          }
+        },
+        "brand_fmXNi3": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Veia",
+            "brand_logo": "shopify://shop_images/VEIA_BAR-01.png"
+          }
+        },
+        "brand_Y3dbYi": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Volcom",
+            "brand_logo": "shopify://shop_images/lg-66137c5e01343-VOLCOM.webp"
+          }
+        },
+        "brand_yciQet": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Vissla",
+            "brand_logo": "shopify://shop_images/visslalogo-1.png"
+          }
+        },
+        "brand_QXYMAL": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Vans",
+            "brand_logo": "shopify://shop_images/vans.webp"
+          }
+        },
+        "brand_TxtjTK": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "True Ames",
+            "brand_logo": "shopify://shop_images/1595852882239_true-ames_picture.png"
+          }
+        },
+        "brand_hUpMhr": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Troy Elmore",
+            "brand_logo": "shopify://shop_images/5adce60ee605943513b99f6d_logo-elmore-surfboards-red.png"
+          }
+        },
+        "brand_fXwpK6": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "The Surfers Journal",
+            "brand_logo": "shopify://shop_images/25_5__COVER_ns-382x462_wFrame.png"
+          }
+        },
+        "brand_hcETGz": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "The Guild",
+            "brand_logo": "shopify://shop_images/600615e60c94440d1377e394_5c2fa3844763d2e8176c3460_The-Guild-logo-Black.png"
+          }
+        },
+        "brand_HLaYrR": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Surfco Hawaii",
+            "brand_logo": "shopify://shop_images/surfco-logo-250x100-bigcommerce_1538288747__03094.original.png"
+          }
+        },
+        "brand_Yx76tw": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Solarez",
+            "brand_logo": "shopify://shop_images/3bef7dc0fc122c920bdb5fe030f43befd27c14ae_solarez-logo_png.webp"
+          }
+        },
+        "brand_QM3HUz": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "The Critical Slide Society",
+            "brand_logo": "shopify://shop_images/TCSS_Institute_Logo_BLACK-TRANSPARENT_png.webp"
+          }
+        },
+        "brand_4E7XWj": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Teva",
+            "brand_logo": "shopify://shop_images/370-3706449_teva-sandals-logo.png"
+          }
+        },
+        "brand_Q6H9RV": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Stance",
+            "brand_logo": "shopify://shop_images/logo-stance.png"
+          }
+        },
+        "brand_wVHDJ6": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Spy Optics",
+            "brand_logo": "shopify://shop_images/SPY-LOGO.png"
+          }
+        },
+        "brand_NmLdNa": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Smith Optics",
+            "brand_logo": "shopify://shop_images/Smith-Optics-logo.png"
+          }
+        },
+        "brand_yQQMTH": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Slowtide",
+            "brand_logo": "shopify://shop_images/slowtide_logo.png"
+          }
+        },
+        "brand_3MjBBB": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Sisstr",
+            "brand_logo": "shopify://shop_images/SISSTR-LOGO-2025.png"
+          }
+        },
+        "brand_6MREQN": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Sex Wax",
+            "brand_logo": "shopify://shop_images/sexwax-logo-3-1_600x_png.webp"
+          }
+        },
+        "brand_tTdGDj": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Sendero",
+            "brand_logo": "shopify://shop_images/logo-2_1200x1200_401bdfd7-bbee-4c5b-bf48-f41a061fb477.png"
+          }
+        },
+        "brand_PwKnnc": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Sanuk",
+            "brand_logo": "shopify://shop_images/sanuk_png.webp"
+          }
+        },
+        "brand_A4DPcH": {
+          "type": "brand",
+          "settings": {
+            "brand_name": ""
+          }
+        },
+        "brand_FDiXth": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Ryan Burch",
+            "brand_logo": "shopify://shop_images/Logo_png_692a3a10-e5b9-471a-9e7c-7e630de510ee.avif"
+          }
+        },
+        "brand_b9k86J": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "RVCA",
+            "brand_logo": "shopify://shop_images/rvca-logo-png_seeklogo-321604.png"
+          }
+        },
+        "brand_CJYPCB": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Roxy",
+            "brand_logo": "shopify://shop_images/Roxy-Symbol.png"
+          }
+        },
+        "brand_XN4npF": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Rolla's",
+            "brand_logo": "shopify://shop_images/2_631861d3-0c60-43ba-89ab-0b26858571af_png.webp"
+          }
+        },
+        "brand_qRC9Pm": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Rip Curl",
+            "brand_logo": "shopify://shop_images/rip_curl_e19d0581-8209-4bdc-a762-1d150ba441c8.png"
+          }
+        },
+        "brand_cJ7RxH": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Rhythm",
+            "brand_logo": "shopify://shop_images/rhythm-logo-black_f95ee31d-e85e-4aab-9ebf-d237f7b4e340.png_copy.png"
+          }
+        },
+        "brand_Ry4r6y": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Reef",
+            "brand_logo": "shopify://shop_images/Reef_logo.png"
+          }
+        },
+        "brand_tpWzdB": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Reebok",
+            "brand_logo": "shopify://shop_images/Reebok_2019_logo_svg.png"
+          }
+        },
+        "brand_KqTEy8": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Ray-Ban",
+            "brand_logo": "shopify://shop_images/Ray-Ban-logo-transparent-1024x514_png.webp"
+          }
+        },
+        "brand_BEtWD9": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Quimby",
+            "brand_logo": "shopify://shop_images/Quimby-Logo-Wordmark-White.png_copy.png"
+          }
+        },
+        "brand_ePX7TR": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Pyzel",
+            "brand_logo": "shopify://shop_images/pyzel-logo.jpg"
+          }
+        },
+        "brand_wb994r": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Octopus",
+            "brand_logo": "shopify://shop_images/octopus.jpg_copy.png"
+          }
+        },
+        "brand_m37GRE": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Oakley",
+            "brand_logo": "shopify://shop_images/Oakley_logo_svg.png"
+          }
+        },
+        "brand_6th4WC": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "O'Neill",
+            "brand_logo": "shopify://shop_images/WETSUIT-ONEILL_480x480.jpg_copy.png"
+          }
+        },
+        "brand_n8CcHj": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Northwest Surf Designs",
+            "brand_logo": "shopify://shop_images/IMG_7386_18af102b-87ae-43f6-be58-0642d40345f2.png"
+          }
+        },
+        "brand_JcHGCe": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Nocs",
+            "brand_logo": "shopify://shop_images/nocs-black.svg"
+          }
+        },
+        "brand_Qdax3y": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Nirvana Fern",
+            "brand_logo": "shopify://shop_images/Nivana_Fern_png.png"
+          }
+        },
+        "brand_yrXtAB": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Lovemachine",
+            "brand_logo": "shopify://shop_images/651c3d824afbac7692efeea7_lovemachinewhite.png"
+          }
+        },
+        "brand_MVmrMx": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Lost",
+            "brand_logo": "shopify://shop_images/cropped-favicon.png_copy.png"
+          }
+        },
+        "brand_cEUrRd": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Levis",
+            "brand_logo": "shopify://shop_images/18548-levi_s-vetement-logo.png"
+          }
+        },
+        "brand_CDhfDH": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "JS Industries",
+            "brand_logo": "shopify://shop_images/jslogo_1_copy.png"
+          }
+        },
+        "brand_f4cVYb": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Herschel Supply Co.",
+            "brand_logo": "shopify://shop_images/herschel_Collection_500x500-2-2_1200x1200.png_copy.png"
+          }
+        },
+        "brand_gbqBt7": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Gorilla",
+            "brand_logo": "shopify://shop_images/logo.jpg_copy.png"
+          }
+        },
+        "brand_gQQXBM": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Futures",
+            "brand_logo": "shopify://shop_images/futures-fins-logo.jpg_copy.png"
+          }
+        },
+        "brand_CNAWcE": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Furrow",
+            "brand_logo": "shopify://shop_images/furrow.jpg_copy.png"
+          }
+        },
+        "brand_AfHMTU": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Former",
+            "brand_logo": "shopify://shop_images/former_clothing_600x.jpg_copy.png"
+          }
+        },
+        "brand_BUyrYm": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Florence Marine X",
+            "brand_logo": "shopify://shop_images/s-l1200.png"
+          }
+        },
+        "brand_WpPyN8": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Fjallraven",
+            "brand_logo": "shopify://shop_images/image.png"
+          }
+        },
+        "brand_bCVA3y": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Finisterre",
+            "brand_logo": "shopify://shop_images/finisterre-logo.png"
+          }
+        },
+        "brand_6yrhGk": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "FCS",
+            "brand_logo": "shopify://shop_images/Melbourne_Surfboard_Shop_-_FCS_II_Fins_jpg.webp"
+          }
+        },
+        "brand_ewiwNa": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Dakine",
+            "brand_logo": "shopify://shop_images/Dakine-logo.png"
+          }
+        },
+        "brand_MhPr3E": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Creatures of Leisure",
+            "brand_logo": "shopify://shop_images/creatures-of-leisure-logo_jpg.webp"
+          }
+        },
+        "brand_rXFDV7": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Channel Islands",
+            "brand_logo": "shopify://shop_images/Channel-Islands-Flag-Logo-Black_567c834c-b948-47ef-8739-d9dbab8a389d_png.webp"
+          }
+        },
+        "brand_VUK6Rj": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Catch Surf",
+            "brand_logo": "shopify://shop_images/catchsurf.png"
+          }
+        },
+        "brand_4DhFmt": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Casio",
+            "brand_logo": "shopify://shop_images/casio-logo-logo-png-transparent.png"
+          }
+        },
+        "brand_UKez49": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Brixton",
+            "brand_logo": "shopify://shop_images/brixton_png_9454e569-8076-4cc6-961f-13172d3f27cd.webp"
+          }
+        },
+        "brand_L8EwHM": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Bing",
+            "brand_logo": "shopify://shop_images/binglogo.png"
+          }
+        },
+        "brand_iFz3fH": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Billabong",
+            "brand_logo": "shopify://shop_images/billabong.png"
+          }
+        },
+        "brand_AaPVcz": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Adelio",
+            "brand_logo": "shopify://shop_images/Adelio_5582baed-6cef-4ba0-a712-1519dde8590a.png"
+          }
+        },
+        "brand_RDmaHP": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Afends",
+            "brand_logo": "shopify://shop_images/afends-logo-png_seeklogo-610987.png"
+          }
+        },
+        "brand_Uawnd3": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Aftanas",
+            "brand_logo": "shopify://shop_images/Aftanas_Logo.png"
+          }
+        }
+      },
+      "block_order": [
+        "brand_3wA43a",
+        "brand_cLG84j",
+        "brand_4HcHez",
+        "brand_3gyqmk",
+        "brand_fmXNi3",
+        "brand_Y3dbYi",
+        "brand_yciQet",
+        "brand_QXYMAL",
+        "brand_TxtjTK",
+        "brand_hUpMhr",
+        "brand_fXwpK6",
+        "brand_hcETGz",
+        "brand_HLaYrR",
+        "brand_Yx76tw",
+        "brand_QM3HUz",
+        "brand_4E7XWj",
+        "brand_Q6H9RV",
+        "brand_wVHDJ6",
+        "brand_NmLdNa",
+        "brand_yQQMTH",
+        "brand_3MjBBB",
+        "brand_6MREQN",
+        "brand_tTdGDj",
+        "brand_PwKnnc",
+        "brand_A4DPcH",
+        "brand_FDiXth",
+        "brand_b9k86J",
+        "brand_CJYPCB",
+        "brand_XN4npF",
+        "brand_qRC9Pm",
+        "brand_cJ7RxH",
+        "brand_Ry4r6y",
+        "brand_tpWzdB",
+        "brand_KqTEy8",
+        "brand_BEtWD9",
+        "brand_ePX7TR",
+        "brand_wb994r",
+        "brand_m37GRE",
+        "brand_6th4WC",
+        "brand_n8CcHj",
+        "brand_JcHGCe",
+        "brand_Qdax3y",
+        "brand_yrXtAB",
+        "brand_MVmrMx",
+        "brand_cEUrRd",
+        "brand_CDhfDH",
+        "brand_f4cVYb",
+        "brand_gbqBt7",
+        "brand_gQQXBM",
+        "brand_CNAWcE",
+        "brand_AfHMTU",
+        "brand_BUyrYm",
+        "brand_WpPyN8",
+        "brand_bCVA3y",
+        "brand_6yrhGk",
+        "brand_ewiwNa",
+        "brand_MhPr3E",
+        "brand_rXFDV7",
+        "brand_VUK6Rj",
+        "brand_4DhFmt",
+        "brand_UKez49",
+        "brand_L8EwHM",
+        "brand_iFz3fH",
+        "brand_AaPVcz",
+        "brand_RDmaHP",
+        "brand_Uawnd3"
+      ],
+      "custom_css": [],
+      "name": "Brand directory",
+      "settings": {
+        "heading": "",
+        "heading_size": 48,
+        "heading_alignment": "center",
+        "max_width": "contained",
+        "grid_gap": "10",
+        "padding_top": 50,
+        "padding_bottom": 50,
+        "background_color": "#f9f5ee",
+        "heading_color": "#000000",
+        "filter_font_size": 16,
+        "filter_border_color": "#000000",
+        "filter_inactive_color": "#000000",
+        "filter_active_bg": "#000f9f",
+        "filter_active_color": "#ffffff",
+        "logo_cell_bg": "#f9f5ee",
+        "show_border": false,
+        "border_color": "rgba(0,0,0,0)",
+        "border_radius": 0
+      }
+    }
+  },
+  "order": [
+    "section_ptc6iy",
+    "main",
+    "section_9ymQya",
+    "all_brands_VXRtaE"
+  ]
+}
