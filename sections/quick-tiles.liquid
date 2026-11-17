@@ -1,0 +1,138 @@
+<storm-quick-tiles
+  class="storm-tiles"
+  data-sticky="{{ section.settings.sticky }}"
+  style="--tile-h: {{ section.settings.tile_height }}px; --tile-h-mobile: {{ section.settings.tile_height_mobile }}px; --tile-cols: {{ section.settings.columns }};"
+>
+  <div class="storm-tiles__grid">
+    {%- for block in section.blocks -%}
+      <a
+        class="storm-tile"
+        href="{{ block.settings.link | default: '#' }}"
+        style="--tile-bg: {{ block.settings.background }}; --tile-label: {{ block.settings.label_color }}; --tile-title: {{ block.settings.title_color }};"
+        {{ block.shopify_attributes }}
+      >
+        <span class="storm-tile__label">{{ block.settings.label | escape }}</span>
+        <span class="storm-tile__title">{{ block.settings.title | escape | newline_to_br }}</span>
+      </a>
+    {%- endfor -%}
+  </div>
+</storm-quick-tiles>
+
+{% stylesheet %}
+  storm-quick-tiles { display: block; }
+  .shopify-section:has(> storm-quick-tiles[data-sticky='scroll-up']),
+  .shopify-section:has(> storm-quick-tiles[data-sticky='always']) {
+    position: sticky;
+    top: var(--header-height, 0px);
+    z-index: 3;
+    transition: transform 0.32s ease;
+  }
+  .shopify-section.storm-tiles-hidden { transform: translateY(-100%); }
+  .storm-tiles__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--tile-cols), minmax(0, 1fr));
+    gap: 1px;
+    background: #000;
+    border-block: 1px solid #000;
+  }
+  .storm-tile {
+    height: var(--tile-h);
+    background: var(--tile-bg);
+    padding: 20px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    min-width: 0;
+  }
+  .storm-tile:hover { filter: brightness(1.12); }
+  .storm-tile__label {
+    font-family: var(--font-body--family);
+    font-size: 11px;
+    line-height: 14.3px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--tile-label);
+    min-height: 14.3px;
+  }
+  .storm-tile__title {
+    font-family: var(--font-body--family);
+    font-weight: 700;
+    font-size: clamp(22px, 2.64vw, 38px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    color: var(--tile-title);
+  }
+  @media screen and (max-width: 749px) {
+    .storm-tiles__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .storm-tile { height: var(--tile-h-mobile); padding: 12px 14px 14px; }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('storm-quick-tiles')) {
+    customElements.define(
+      'storm-quick-tiles',
+      class StormQuickTiles extends HTMLElement {
+        connectedCallback() {
+          if (this.dataset.sticky !== 'scroll-up') return;
+          this.section = this.closest('.shopify-section');
+          this.lastY = window.scrollY;
+          this.onScroll = () => {
+            const y = window.scrollY;
+            const d = y - this.lastY;
+            if (Math.abs(d) < 6 || !this.section) return;
+            this.section.classList.toggle('storm-tiles-hidden', d > 0 && y > 320);
+            this.lastY = y;
+          };
+          window.addEventListener('scroll', this.onScroll, { passive: true });
+        }
+        disconnectedCallback() {
+          if (this.onScroll) window.removeEventListener('scroll', this.onScroll);
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Quick tiles",
+  "tag": "section",
+  "class": "storm-quick-tiles-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "sticky",
+      "label": "Sticky behaviour",
+      "options": [
+        { "value": "scroll-up", "label": "Hide on scroll down, show on scroll up" },
+        { "value": "always", "label": "Always stuck under the header" },
+        { "value": "none", "label": "Scroll away" }
+      ],
+      "default": "scroll-up"
+    },
+    { "type": "range", "id": "columns", "label": "Tiles per row (desktop)", "min": 2, "max": 6, "step": 1, "default": 4 },
+    { "type": "range", "id": "tile_height", "label": "Tile height (desktop)", "min": 100, "max": 260, "step": 4, "unit": "px", "default": 160 },
+    { "type": "range", "id": "tile_height_mobile", "label": "Tile height (mobile)", "min": 80, "max": 200, "step": 4, "unit": "px", "default": 112 }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Caption", "default": "SHOP ALL" },
+        { "type": "textarea", "id": "title", "label": "Title", "default": "STORM\nBRAND" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "color", "id": "background", "label": "Background", "default": "#1E1E1E" },
+        { "type": "color", "id": "label_color", "label": "Caption colour", "default": "#F9F5EE" },
+        { "type": "color", "id": "title_color", "label": "Title colour", "default": "#F6E7D2" }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    { "name": "Quick tiles", "blocks": [{ "type": "tile" }, { "type": "tile" }, { "type": "tile" }, { "type": "tile" }] }
+  ]
+}
+{% endschema %}

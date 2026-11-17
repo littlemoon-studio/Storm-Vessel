@@ -1,0 +1,556 @@
+{{ 'section-rotating-frames.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign duration_ms = section.settings.slide_duration | times: 1000 | round
+  assign stagger_ms = section.settings.stagger_delay | times: 1000 | round
+-%}
+
+<section
+  class="rf-section"
+  id="rf-section-{{ section.id }}"
+  style="
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    min-height: {{ section.settings.min_height }}px;
+    --rf-m-margin: {{ section.settings.mobile_side_margin }}px;
+    --rf-m-row-gap: {{ section.settings.mobile_row_gap }}px;
+    --rf-m-frame-padding: {{ section.settings.mobile_frame_padding }}px;
+    --rf-m-caption: {{ section.settings.mobile_caption_size }}px;
+    --rf-m-title: {{ section.settings.mobile_title_size }}px;
+    --rf-m-product: {{ section.settings.mobile_product_title_size }}px;
+  "
+>
+  <div class="rf-container">
+    <div class="rf-grid">
+    {%- for block in section.blocks -%}
+      <div
+        class="rf-frame"
+        {{ block.shopify_attributes }}
+        data-rf-frame
+        data-duration="{{ duration_ms }}"
+        data-delay="{{ forloop.index | times: stagger_ms }}"
+        style="
+          padding: {{ section.settings.frame_padding }}px;
+          border-width: {{ section.settings.frame_border_width }}px;
+          border-color: {{ section.settings.frame_border_color }};
+          border-style: {% if section.settings.frame_border_width > 0 %}solid{% else %}none{% endif %};
+        "
+      >
+        <div class="rf-frame-header{% if section.settings.mobile_stack_header %} is-stacked-mobile{% endif %}">
+          <span class="rf-caption rf-type-{{ section.settings.caption_typography }}">
+            {{ block.settings.frame_caption }}
+          </span>
+          <span class="rf-title rf-type-{{ section.settings.title_typography }}">
+            <span class="rf-title-ellipse">{{ block.settings.frame_title }}</span>
+          </span>
+        </div>
+
+        <div
+          class="rf-divider"
+          style="
+            margin-top: {{ section.settings.divider_gap_top }}px;
+            margin-bottom: {{ section.settings.divider_gap_bottom }}px;
+          "
+        ></div>
+
+        <div class="rf-image-stack" data-rf-image-stack>
+          {%- assign rf_active_set = false -%}
+          {%- for i in (1..5) -%}
+            {%- case i -%}
+              {%- when 1 -%}{%- assign product = all_products[block.settings.product_1] -%}{%- assign image = block.settings.image_1 -%}
+              {%- when 2 -%}{%- assign product = all_products[block.settings.product_2] -%}{%- assign image = block.settings.image_2 -%}
+              {%- when 3 -%}{%- assign product = all_products[block.settings.product_3] -%}{%- assign image = block.settings.image_3 -%}
+              {%- when 4 -%}{%- assign product = all_products[block.settings.product_4] -%}{%- assign image = block.settings.image_4 -%}
+              {%- when 5 -%}{%- assign product = all_products[block.settings.product_5] -%}{%- assign image = block.settings.image_5 -%}
+            {%- endcase -%}
+            {%- if product -%}
+              {%- assign rf_is_active = false -%}
+              {%- unless rf_active_set -%}
+                {%- assign rf_is_active = true -%}
+                {%- assign rf_active_set = true -%}
+              {%- endunless -%}
+              <div class="rf-slide{% if rf_is_active %} is-active{% endif %}" data-rf-slide>
+                <a href="{{ product.url }}" class="rf-slide-link">
+                  <div
+                    class="rf-image-wrap"
+                    style="
+                      border-width: {{ section.settings.image_border_width }}px;
+                      border-color: {{ section.settings.image_border_color }};
+                      border-style: {% if section.settings.image_border_width > 0 %}solid{% else %}none{% endif %};
+                    "
+                  >
+                    {%- if image -%}
+                      <img
+                        src="{{ image | image_url: width: 1000 }}"
+                        srcset="{{ image | image_url: width: 500 }} 500w, {{ image | image_url: width: 1000 }} 1000w, {{ image | image_url: width: 1500 }} 1500w"
+                        sizes="(min-width: 750px) 25vw, 50vw"
+                        loading="lazy"
+                        alt="{{ image.alt | default: product.title | escape }}"
+                        width="{{ image.width }}"
+                        height="{{ image.height }}"
+                        class="rf-image"
+                      >
+                    {%- else -%}
+                      <div class="rf-image rf-image--placeholder">{{ 'image' | placeholder_svg_tag }}</div>
+                    {%- endif -%}
+                  </div>
+                </a>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <div class="rf-info-stack" data-rf-info-stack>
+          {%- assign rf_active_set = false -%}
+          {%- for i in (1..5) -%}
+            {%- case i -%}
+              {%- when 1 -%}{%- assign product = all_products[block.settings.product_1] -%}
+              {%- when 2 -%}{%- assign product = all_products[block.settings.product_2] -%}
+              {%- when 3 -%}{%- assign product = all_products[block.settings.product_3] -%}
+              {%- when 4 -%}{%- assign product = all_products[block.settings.product_4] -%}
+              {%- when 5 -%}{%- assign product = all_products[block.settings.product_5] -%}
+            {%- endcase -%}
+            {%- if product -%}
+              {%- assign rf_is_active = false -%}
+              {%- unless rf_active_set -%}
+                {%- assign rf_is_active = true -%}
+                {%- assign rf_active_set = true -%}
+              {%- endunless -%}
+              <div class="rf-slide{% if rf_is_active %} is-active{% endif %}" data-rf-slide>
+                <div
+                  class="rf-info-group"
+                  style="
+                    border-width: {{ section.settings.info_border_width }}px;
+                    border-color: {{ section.settings.info_border_color }};
+                    border-style: {% if section.settings.info_border_width > 0 %}solid{% else %}none{% endif %};
+                  "
+                >
+                  <p class="rf-product-title rf-type-{{ section.settings.product_title_typography }}">{{ product.title }}</p>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+      {%- unless forloop.last -%}
+        <div class="rf-plus" aria-hidden="true" style="font-size: {{ section.settings.plus_symbol_size }}px;">+</div>
+      {%- endunless -%}
+    {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'section-rotating-frames.js' | asset_url }}" defer="defer"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.RotatingFrames) {
+      window.RotatingFrames.init(document.getElementById('rf-section-{{ section.id }}'));
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Rotating product frames",
+  "class": "section-rotating-frames",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout & spacing"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Section top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Section bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum section height",
+      "min": 0,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "frame_padding",
+      "label": "Frame padding",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "\"+\" symbol between frames"
+    },
+    {
+      "type": "range",
+      "id": "plus_symbol_size",
+      "label": "Symbol size",
+      "min": 12,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Divider (between text and image)"
+    },
+    {
+      "type": "range",
+      "id": "divider_gap_top",
+      "label": "Gap above divider",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "divider_gap_bottom",
+      "label": "Gap below divider",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Frame border"
+    },
+    {
+      "type": "range",
+      "id": "frame_border_width",
+      "label": "Frame border width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "frame_border_color",
+      "label": "Frame border color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Image border"
+    },
+    {
+      "type": "range",
+      "id": "image_border_width",
+      "label": "Image border width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "image_border_color",
+      "label": "Image border color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Product title/vendor group border"
+    },
+    {
+      "type": "range",
+      "id": "info_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "info_border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Rotation timing"
+    },
+    {
+      "type": "range",
+      "id": "slide_duration",
+      "label": "Seconds each product image shows",
+      "min": 2,
+      "max": 15,
+      "step": 0.5,
+      "unit": "s",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "stagger_delay",
+      "label": "Delay before next frame starts cycling",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "s",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "caption_typography",
+      "label": "Frame caption style",
+      "options": [
+        { "value": "h1", "label": "Heading 1" },
+        { "value": "h2", "label": "Heading 2" },
+        { "value": "h3", "label": "Heading 3" },
+        { "value": "h4", "label": "Heading 4" },
+        { "value": "h5", "label": "Heading 5" },
+        { "value": "h6", "label": "Heading 6" },
+        { "value": "paragraph", "label": "Paragraph" },
+        { "value": "caption", "label": "Caption" }
+      ],
+      "default": "caption"
+    },
+    {
+      "type": "select",
+      "id": "title_typography",
+      "label": "Frame title style",
+      "options": [
+        { "value": "h1", "label": "Heading 1" },
+        { "value": "h2", "label": "Heading 2" },
+        { "value": "h3", "label": "Heading 3" },
+        { "value": "h4", "label": "Heading 4" },
+        { "value": "h5", "label": "Heading 5" },
+        { "value": "h6", "label": "Heading 6" },
+        { "value": "paragraph", "label": "Paragraph" },
+        { "value": "caption", "label": "Caption" }
+      ],
+      "default": "h6"
+    },
+    {
+      "type": "select",
+      "id": "product_title_typography",
+      "label": "Product title style",
+      "options": [
+        { "value": "h1", "label": "Heading 1" },
+        { "value": "h2", "label": "Heading 2" },
+        { "value": "h3", "label": "Heading 3" },
+        { "value": "h4", "label": "Heading 4" },
+        { "value": "h5", "label": "Heading 5" },
+        { "value": "h6", "label": "Heading 6" },
+        { "value": "paragraph", "label": "Paragraph" },
+        { "value": "caption", "label": "Caption" }
+      ],
+      "default": "paragraph"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_stack_header",
+      "label": "Stack frame caption and title",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "mobile_side_margin",
+      "label": "Side margin (each side)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_row_gap",
+      "label": "Gap between rows",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "mobile_frame_padding",
+      "label": "Frame padding",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "mobile_caption_size",
+      "label": "Frame caption size",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "mobile_title_size",
+      "label": "Frame title size",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_product_title_size",
+      "label": "Product title size",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    }
+  ],
+  "blocks": [
+    {
+      "type": "frame",
+      "name": "Frame",
+      "settings": [
+        {
+          "type": "text",
+          "id": "frame_caption",
+          "label": "Frame caption",
+          "default": "Caption"
+        },
+        {
+          "type": "text",
+          "id": "frame_title",
+          "label": "Frame title",
+          "default": "Title"
+        },
+        {
+          "type": "header",
+          "content": "Product 1"
+        },
+        {
+          "type": "product",
+          "id": "product_1",
+          "label": "Product 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Product 1 image"
+        },
+        {
+          "type": "header",
+          "content": "Product 2"
+        },
+        {
+          "type": "product",
+          "id": "product_2",
+          "label": "Product 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Product 2 image"
+        },
+        {
+          "type": "header",
+          "content": "Product 3"
+        },
+        {
+          "type": "product",
+          "id": "product_3",
+          "label": "Product 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Product 3 image"
+        },
+        {
+          "type": "header",
+          "content": "Product 4"
+        },
+        {
+          "type": "product",
+          "id": "product_4",
+          "label": "Product 4"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_4",
+          "label": "Product 4 image"
+        },
+        {
+          "type": "header",
+          "content": "Product 5"
+        },
+        {
+          "type": "product",
+          "id": "product_5",
+          "label": "Product 5"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_5",
+          "label": "Product 5 image"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Rotating product frames",
+      "blocks": [
+        { "type": "frame" },
+        { "type": "frame" },
+        { "type": "frame" },
+        { "type": "frame" }
+      ]
+    }
+  ]
+}
+{% endschema %}

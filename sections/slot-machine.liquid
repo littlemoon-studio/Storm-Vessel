@@ -1,0 +1,1032 @@
+{%- liquid
+  assign nums = '1,2,3,4' | split: ','
+  assign uid = section.id
+-%}
+
+<style>
+  #slot-{{ uid }} {
+    --c1: {{ section.settings.bulb_color_1 }};
+    --c2: {{ section.settings.bulb_color_2 }};
+    --c3: {{ section.settings.bulb_color_3 }};
+    --c4: {{ section.settings.bulb_color_4 }};
+    --title-scale: {{ section.settings.title_scale | times: 0.01 }};
+    --offset: 0px;
+    --machine-w: {{ section.settings.machine_width }}%;
+    --side-w: {{ section.settings.side_width }}%;
+    --stage-shift: 0%;
+    --col-gap: {{ section.settings.gap_columns }}%;
+    --paper-gap: {{ section.settings.gap_paper_buttons }}px;
+    overflow-x: clip;
+    box-sizing: border-box;
+    min-height: calc(100vh - var(--offset));
+    min-height: calc(100svh - var(--offset));
+    display: flex;
+    align-items: center;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    border-bottom: 1px solid #000;
+  }
+  #slot-{{ uid }}, #slot-{{ uid }} *, #slot-{{ uid }} *::before, #slot-{{ uid }} *::after {
+    box-sizing: border-box;
+  }
+  #slot-{{ uid }} .slotmachine__inner {
+    width: 100%;
+    min-width: 0;
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 {{ section.settings.side_padding }}px;
+  }
+
+  #slot-{{ uid }} .slotmachine__layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--col-gap);
+    width: 100%;
+    min-width: 0;
+  }
+  #slot-{{ uid }} .slotmachine__machine {
+    flex: 0 0 var(--machine-w);
+    max-width: var(--machine-w);
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  #slot-{{ uid }} .slotmachine__side {
+    flex: 0 0 var(--side-w);
+    max-width: var(--side-w);
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--paper-gap);
+  }
+  #slot-{{ uid }} .slotmachine__paper {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  #slot-{{ uid }} .slotmachine__stage {
+    position: relative;
+    container-type: inline-size;
+    max-width: 100%;
+    flex: 0 0 auto;
+    align-self: center;
+    min-width: 0;
+    width: 100%;
+    width: min(100%, calc((100vh - var(--offset) - {{ section.settings.padding_top }}px - {{ section.settings.padding_bottom }}px) * {{ section.settings.stage_height | times: 0.015776 }}));
+    width: min(100%, calc((100svh - var(--offset) - {{ section.settings.padding_top }}px - {{ section.settings.padding_bottom }}px) * {{ section.settings.stage_height | times: 0.015776 }}));
+    transform: translateX(var(--stage-shift));
+  }
+  #slot-{{ uid }} .slotmachine__stage > svg {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  #slot-{{ uid }} .slotmachine__reel {
+    position: absolute;
+    overflow: hidden;
+    z-index: 2;
+    width: 13.810%;
+    top: 34.376%;
+    height: 27.318%;
+  }
+  #slot-{{ uid }} .slotmachine__reel[data-reel="1"] { left: 14.393%; }
+  #slot-{{ uid }} .slotmachine__reel[data-reel="2"] { left: 29.430%; }
+  #slot-{{ uid }} .slotmachine__reel[data-reel="3"] { left: 44.468%; }
+  #slot-{{ uid }} .slotmachine__reel[data-reel="4"] { left: 59.505%; }
+
+  #slot-{{ uid }} .slotmachine__link {
+    position: absolute;
+    z-index: 3;
+    display: block;
+    width: 13.810%;
+    top: 34.376%;
+    height: 27.318%;
+    pointer-events: none;
+  }
+  #slot-{{ uid }} .slotmachine__link.is-active { pointer-events: auto; cursor: pointer; }
+  #slot-{{ uid }} .slotmachine__link[data-link="1"] { left: 14.393%; }
+  #slot-{{ uid }} .slotmachine__link[data-link="2"] { left: 29.430%; }
+  #slot-{{ uid }} .slotmachine__link[data-link="3"] { left: 44.468%; }
+  #slot-{{ uid }} .slotmachine__link[data-link="4"] { left: 59.505%; }
+
+  #slot-{{ uid }} .slotmachine__strip { display: block; will-change: transform; }
+  #slot-{{ uid }} .slotmachine__cell {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+  #slot-{{ uid }} .slotmachine__cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #slot-{{ uid }}.is-blurring .slotmachine__strip { filter: blur(1.5px); }
+
+  #slot-{{ uid }} .slotmachine__title {
+    position: absolute;
+    overflow: hidden;
+    z-index: 2;
+    width: 13.810%;
+    top: 63.484%;
+    height: 4.583%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    padding: 0 .5cqw;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0;
+    transition: opacity .3s ease;
+    line-height: 1.15;
+  }
+  #slot-{{ uid }} .slotmachine__title.is-revealed { opacity: 1; }
+  #slot-{{ uid }} .slotmachine__title[data-title="1"] { left: 14.393%; }
+  #slot-{{ uid }} .slotmachine__title[data-title="2"] { left: 29.430%; }
+  #slot-{{ uid }} .slotmachine__title[data-title="3"] { left: 44.468%; }
+  #slot-{{ uid }} .slotmachine__title[data-title="4"] { left: 59.505%; }
+  #slot-{{ uid }} .slotmachine__name {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: calc(1.28cqw * var(--title-scale));
+    font-weight: 600;
+    line-height: 1.05;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  #slot-{{ uid }} .slotmachine__preview {
+    position: absolute;
+    z-index: 6;
+    display: none;
+    container-type: inline-size;
+    width: {{ section.settings.preview_size }}%;
+    top: 48.035%;
+    padding: 4cqw;
+    box-sizing: border-box;
+    text-align: center;
+    background: {{ section.settings.preview_bg }};
+    color: {{ section.settings.preview_text }};
+    border: 2px solid {{ section.settings.preview_text }};
+    box-shadow: 1.5cqw 1.5cqw 0 rgba(0, 0, 0, .35);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(.94);
+    transition: opacity .16s ease, transform .16s ease;
+  }
+  #slot-{{ uid }} .slotmachine__preview[data-preview="1"] { left: 21.298%; }
+  #slot-{{ uid }} .slotmachine__preview[data-preview="2"] { left: 36.335%; }
+  #slot-{{ uid }} .slotmachine__preview[data-preview="3"] { left: 51.373%; }
+  #slot-{{ uid }} .slotmachine__preview[data-preview="4"] { left: 66.410%; }
+  #slot-{{ uid }} .slotmachine__preview img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    margin-bottom: 3cqw;
+  }
+  #slot-{{ uid }} .slotmachine__preview-title {
+    display: block;
+    font-size: 5.5cqw;
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  #slot-{{ uid }} .slotmachine__preview-price {
+    display: block;
+    font-size: 5cqw;
+    margin-top: 1.5cqw;
+  }
+  #slot-{{ uid }} .slotmachine__preview-cta {
+    display: block;
+    font-size: 4cqw;
+    margin-top: 2cqw;
+    text-decoration: underline;
+    opacity: .75;
+  }
+
+  @media (hover: hover) and (min-width: 750px) {
+    #slot-{{ uid }} .slotmachine__preview { display: block; }
+    #slot-{{ uid }} .slotmachine__preview.is-shown {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  #slot-{{ uid }} .slotmachine__hotspot {
+    position: absolute;
+    z-index: 4;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  #slot-{{ uid }} .slotmachine__hotspot--plate {
+    left: 12.234%;
+    top: 76.895%;
+    width: 33.738%;
+    height: 5.316%;
+  }
+
+  #slot-{{ uid }} #BULBS circle {
+    --cycle: 4s;
+    animation: sm-chase-{{ uid }} var(--cycle) step-end infinite;
+  }
+  #slot-{{ uid }} #bulb-1, #slot-{{ uid }} #bulb-5 { animation-delay: 0s; }
+  #slot-{{ uid }} #bulb-2, #slot-{{ uid }} #bulb-6 { animation-delay: calc(var(--cycle) * -0.75); }
+  #slot-{{ uid }} #bulb-3, #slot-{{ uid }} #bulb-7 { animation-delay: calc(var(--cycle) * -0.5); }
+  #slot-{{ uid }} #bulb-4, #slot-{{ uid }} #bulb-8 { animation-delay: calc(var(--cycle) * -0.25); }
+  #slot-{{ uid }}.is-spinning #BULBS circle { --cycle: 1.2s; }
+  @keyframes sm-chase-{{ uid }} {
+    0%   { fill: var(--c1); }
+    25%  { fill: var(--c4); }
+    50%  { fill: var(--c3); }
+    75%  { fill: var(--c2); }
+    100% { fill: var(--c1); }
+  }
+
+  #slot-{{ uid }} #lever-arm {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transition: transform .42s cubic-bezier(.34, 1.4, .64, 1);
+    cursor: pointer;
+  }
+  #slot-{{ uid }}.is-pulled #lever-arm {
+    transform: rotate(60deg);
+    transition: transform .17s cubic-bezier(.4, 0, .9, 1);
+  }
+
+  #slot-{{ uid }} .slotmachine__actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .75rem;
+  }
+  #slot-{{ uid }} .slotmachine__button[disabled] { opacity: .5; cursor: not-allowed; }
+
+  #slot-{{ uid }} .slotmachine__status {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media screen and (max-width: 749px) {
+    #slot-{{ uid }} {
+      --title-scale: {{ section.settings.title_scale_mobile | times: 0.01 }};
+      --col-gap: {{ section.settings.gap_mobile }}px;
+      --stage-shift: 5.06%;
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+    #slot-{{ uid }} .slotmachine__inner {
+      padding-left: {{ section.settings.side_padding_mobile }}px;
+      padding-right: {{ section.settings.side_padding_mobile }}px;
+    }
+    #slot-{{ uid }} .slotmachine__layout { flex-direction: column; }
+    #slot-{{ uid }} .slotmachine__machine {
+      flex: 0 0 auto;
+      width: 100%;
+      max-width: 100%;
+      justify-content: center;
+    }
+    #slot-{{ uid }} .slotmachine__stage {
+      width: 100%;
+      width: min(100%, calc((100vh - var(--offset) - {{ section.settings.padding_top_mobile }}px - {{ section.settings.padding_bottom_mobile }}px) * {{ section.settings.stage_height_mobile | times: 0.015776 }}));
+      width: min(100%, calc((100svh - var(--offset) - {{ section.settings.padding_top_mobile }}px - {{ section.settings.padding_bottom_mobile }}px) * {{ section.settings.stage_height_mobile | times: 0.015776 }}));
+    }
+    #slot-{{ uid }} .slotmachine__side {
+      flex: 0 0 auto;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: {{ section.settings.gap_paper_buttons_mobile }}px;
+    }
+    #slot-{{ uid }} .slotmachine__paper {
+      flex: 0 1 {{ section.settings.paper_width_mobile }}%;
+      width: {{ section.settings.paper_width_mobile }}%;
+      max-width: {{ section.settings.paper_width_mobile }}%;
+      min-width: 0;
+    }
+    {%- if section.settings.show_titles_mobile -%}
+    #slot-{{ uid }} .slotmachine__name {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      font-size: calc(2.35cqw * var(--title-scale));
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.05;
+    }
+    {%- else -%}
+    #slot-{{ uid }} .slotmachine__title { display: none; }
+    {%- endif -%}
+    #slot-{{ uid }} .slotmachine__actions {
+      flex: 1 1 0;
+      min-width: 0;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    #slot-{{ uid }} .slotmachine__button {
+      width: 100%;
+      min-width: 0;
+      text-align: center;
+      overflow-wrap: break-word;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #slot-{{ uid }} #BULBS circle { animation: none; fill: var(--c1); }
+    #slot-{{ uid }} #lever-arm { transition: none; }
+    #slot-{{ uid }} .slotmachine__strip { transition: none !important; filter: none !important; }
+  }
+</style>
+
+<div id="slot-{{ uid }}" class="slotmachine" data-duration="{{ section.settings.spin_duration }}">
+  <div class="slotmachine__inner">
+    <div class="slotmachine__layout">
+
+      <div class="slotmachine__machine">
+        <div class="slotmachine__stage">
+          {% render 'slot-machine-svg' %}
+
+          {%- for n in nums -%}
+            <div class="slotmachine__reel" data-reel="{{ n }}">
+              <div class="slotmachine__strip"></div>
+            </div>
+          {%- endfor -%}
+
+          {%- for n in nums -%}
+            <a class="slotmachine__link" data-link="{{ n }}" href="#" aria-hidden="true" tabindex="-1"></a>
+          {%- endfor -%}
+
+          {%- for n in nums -%}
+            <a class="slotmachine__title" data-title="{{ n }}" href="#">
+              <span class="slotmachine__name"></span>
+            </a>
+          {%- endfor -%}
+
+          {%- for n in nums -%}
+            <div class="slotmachine__preview" data-preview="{{ n }}" aria-hidden="true">
+              <img src="" alt="" loading="lazy" decoding="async">
+              <span class="slotmachine__preview-title"></span>
+              <span class="slotmachine__preview-price"></span>
+              <span class="slotmachine__preview-cta">View product</span>
+            </div>
+          {%- endfor -%}
+
+          <button type="button" class="slotmachine__hotspot slotmachine__hotspot--plate"
+                  data-hotspot aria-hidden="true" tabindex="-1"></button>
+        </div>
+      </div>
+
+      <div class="slotmachine__side">
+        {%- if section.settings.paper_image != blank -%}
+          <img class="slotmachine__paper"
+               src="{{ section.settings.paper_image | image_url: width: 900 }}"
+               alt="{{ section.settings.paper_image.alt | escape }}"
+               width="{{ section.settings.paper_image.width }}"
+               height="{{ section.settings.paper_image.height }}"
+               loading="eager">
+        {%- endif -%}
+
+        <div class="slotmachine__actions">
+          <button type="button" class="slotmachine__button button" data-spin>
+            {{ section.settings.button_label | escape }}
+          </button>
+          {%- if section.settings.button_2_label != blank and section.settings.button_2_link != blank -%}
+            <a class="slotmachine__button button button--secondary" href="{{ section.settings.button_2_link }}">
+              {{ section.settings.button_2_label | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+    </div>
+
+    <p class="slotmachine__status" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<script type="application/json" data-slot-data-{{ uid }}>
+{
+{%- for n in nums -%}
+  {%- assign key = 'category_' | append: n | append: '_products' -%}
+  {%- capture entries -%}
+    {%- for product in section.settings[key] -%}
+      {%- assign has_variant_images = false -%}
+      {%- if section.settings.expand_variants -%}
+        {%- for v in product.variants -%}
+          {%- if v.image -%}{%- assign has_variant_images = true -%}{%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- if has_variant_images -%}
+        {%- for v in product.variants -%}
+          {%- if v.image -%}
+            {%- if section.settings.show_variant_name and product.has_only_default_variant == false -%}
+              {%- assign entry_title = product.title | append: ' - ' | append: v.title -%}
+            {%- else -%}
+              {%- assign entry_title = product.title -%}
+            {%- endif -%}
+            {%- assign entry_url = product.url | append: '?variant=' | append: v.id -%}
+            {"i": {{ v.image | image_url: width: 900 | json }}, "t": {{ entry_title | json }}, "u": {{ entry_url | json }}, "p": {{ v.price | money | json }}}|||
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {"i": {{ product.featured_image | image_url: width: 900 | json }}, "t": {{ product.title | json }}, "u": {{ product.url | json }}, "p": {{ product.price | money | json }}}|||
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  "{{ n }}": [{{ entries | split: '|||' | join: ',' }}]{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}
+}
+</script>
+
+<script>
+(function () {
+  var UID = {{ uid | json }};
+
+  function initSlot() {
+    var root = document.getElementById('slot-' + UID);
+    if (!root || root.dataset.ready === 'true') return;
+    root.dataset.ready = 'true';
+
+    var dataEl = document.querySelector('[data-slot-data-' + UID + ']');
+    var raw;
+    try { raw = JSON.parse(dataEl.textContent); } catch (e) { return; }
+
+    var pools = {};
+    ['1', '2', '3', '4'].forEach(function (n) {
+      pools[n] = (raw[n] || []).filter(function (p) { return p && p.i; });
+    });
+
+    var reels = {}, titles = {}, links = {}, previews = {};
+    ['1', '2', '3', '4'].forEach(function (n) {
+      reels[n] = root.querySelector('.slotmachine__reel[data-reel="' + n + '"] .slotmachine__strip');
+      titles[n] = root.querySelector('.slotmachine__title[data-title="' + n + '"]');
+      links[n] = root.querySelector('.slotmachine__link[data-link="' + n + '"]');
+      previews[n] = root.querySelector('.slotmachine__preview[data-preview="' + n + '"]');
+    });
+
+    var button = root.querySelector('[data-spin]');
+    var status = root.querySelector('.slotmachine__status');
+    var arm = root.querySelector('#lever-arm');
+    var hotspots = root.querySelectorAll('[data-hotspot]');
+    var baseDur = parseFloat(root.dataset.duration) || 2.5;
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var spinning = false;
+
+    function cell(p) {
+      var img = document.createElement('img');
+      img.src = p.i;
+      img.alt = '';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      var wrap = document.createElement('div');
+      wrap.className = 'slotmachine__cell';
+      wrap.appendChild(img);
+      return wrap;
+    }
+
+    function pick(pool) {
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function setTitle(n, p) {
+      var el = titles[n];
+      if (!el) return;
+      el.querySelector('.slotmachine__name').textContent = p.t;
+      el.setAttribute('href', p.u);
+      el.classList.add('is-revealed');
+
+      var link = links[n];
+      if (link) {
+        link.setAttribute('href', p.u);
+        link.classList.add('is-active');
+      }
+
+      var pv = previews[n];
+      if (pv) {
+        pv.querySelector('img').src = p.i;
+        pv.querySelector('.slotmachine__preview-title').textContent = p.t;
+        pv.querySelector('.slotmachine__preview-price').textContent = p.p || '';
+      }
+    }
+
+    function land(n, p) {
+      var strip = reels[n];
+      strip.style.transition = 'none';
+      strip.style.transform = 'translateY(0)';
+      strip.innerHTML = '';
+      strip.appendChild(cell(p));
+      setTitle(n, p);
+    }
+
+    function idle() {
+      ['1', '2', '3', '4'].forEach(function (n) {
+        var pool = pools[n];
+        if (!pool.length) return;
+        land(n, pool[0]);
+      });
+    }
+
+    function spin() {
+      if (spinning) return;
+      var active = ['1', '2', '3', '4'].filter(function (n) { return pools[n].length; });
+      if (!active.length) return;
+
+      spinning = true;
+      button.disabled = true;
+      status.textContent = '';
+      root.classList.add('is-spinning');
+
+      var results = {};
+      var longest = 0;
+
+      active.forEach(function (n, k) {
+        var pool = pools[n];
+        var chosen = pick(pool);
+        results[n] = chosen;
+
+        if (reduced) {
+          land(n, chosen);
+          return;
+        }
+
+        var strip = reels[n];
+        var COUNT = 14;
+        titles[n].classList.remove('is-revealed');
+        if (links[n]) links[n].classList.remove('is-active');
+        if (previews[n]) previews[n].classList.remove('is-shown');
+        strip.innerHTML = '';
+        for (var c = 0; c < COUNT - 1; c++) strip.appendChild(cell(pick(pool)));
+        strip.appendChild(cell(chosen));
+        strip.appendChild(cell(pick(pool)));
+
+        strip.style.transition = 'none';
+        strip.style.transform = 'translateY(0)';
+        void strip.offsetHeight;
+
+        var h = strip.parentElement.getBoundingClientRect().height;
+        var dur = baseDur + k * 0.28;
+        longest = Math.max(longest, dur);
+
+        strip.style.transition = 'transform ' + dur + 's cubic-bezier(.11,.62,.14,1)';
+        strip.style.transform = 'translateY(' + (-(COUNT - 1) * h) + 'px)';
+
+        window.setTimeout(function () { land(n, chosen); }, dur * 1000 + 30);
+      });
+
+      if (!reduced) {
+        root.classList.add('is-blurring');
+        window.setTimeout(function () {
+          root.classList.remove('is-blurring');
+        }, baseDur * 620);
+      }
+
+      window.setTimeout(function () {
+        spinning = false;
+        button.disabled = false;
+        root.classList.remove('is-spinning');
+        status.textContent = active.map(function (n) { return results[n].t; }).join(', ');
+      }, reduced ? 120 : longest * 1000 + 120);
+    }
+
+    function pull() {
+      if (spinning) return;
+      if (arm && !reduced) {
+        root.classList.add('is-pulled');
+        window.setTimeout(spin, 170);
+        window.setTimeout(function () { root.classList.remove('is-pulled'); }, 530);
+      } else {
+        spin();
+      }
+    }
+
+    ['1', '2', '3', '4'].forEach(function (n) {
+      var link = links[n];
+      var pv = previews[n];
+      if (!link || !pv) return;
+      link.addEventListener('mouseenter', function () {
+        if (spinning || !link.classList.contains('is-active')) return;
+        pv.classList.add('is-shown');
+      });
+      link.addEventListener('mouseleave', function () {
+        pv.classList.remove('is-shown');
+      });
+    });
+
+    button.addEventListener('click', pull);
+
+    Array.prototype.forEach.call(hotspots, function (el) {
+      el.addEventListener('click', pull);
+    });
+
+    if (arm) {
+      arm.addEventListener('click', pull);
+    }
+
+    function fitViewport() {
+      var top = root.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0);
+      root.style.setProperty('--offset', Math.max(0, Math.round(top)) + 'px');
+    }
+
+    fitViewport();
+    window.addEventListener('resize', fitViewport);
+    window.addEventListener('load', fitViewport);
+
+    idle();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSlot);
+  } else {
+    initSlot();
+  }
+
+  document.addEventListener('shopify:section:load', function (e) {
+    if (e.detail && e.detail.sectionId === UID) {
+      var el = document.getElementById('slot-' + UID);
+      if (el) el.dataset.ready = 'false';
+      initSlot();
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Slot machine hero",
+  "tag": "section",
+  "class": "slot-machine-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "paper_image",
+      "label": "Note image",
+      "info": "The torn-paper heading and description graphic."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Spin button label",
+      "default": "Spin!"
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Second button label",
+      "info": "Leave blank to hide."
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Second button link"
+    },
+    {
+      "type": "header",
+      "content": "Reels"
+    },
+    {
+      "type": "paragraph",
+      "content": "Category names are part of the artwork. Reel 1 is Backpack, 2 is Bottle, 3 is Threads, 4 is Bonus."
+    },
+    {
+      "type": "checkbox",
+      "id": "expand_variants",
+      "label": "Spin variants separately",
+      "info": "Each variant with its own image becomes its own reel option. Variants without an image are skipped.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variant_name",
+      "label": "Add variant name to title",
+      "default": true
+    },
+    {
+      "type": "product_list",
+      "id": "category_1_products",
+      "label": "Reel 1 products",
+      "limit": 12
+    },
+    {
+      "type": "product_list",
+      "id": "category_2_products",
+      "label": "Reel 2 products",
+      "limit": 12
+    },
+    {
+      "type": "product_list",
+      "id": "category_3_products",
+      "label": "Reel 3 products",
+      "limit": 12
+    },
+    {
+      "type": "product_list",
+      "id": "category_4_products",
+      "label": "Reel 4 products",
+      "limit": 12
+    },
+    {
+      "type": "header",
+      "content": "Motion and lights"
+    },
+    {
+      "type": "range",
+      "id": "spin_duration",
+      "label": "Spin duration",
+      "min": 1,
+      "max": 5,
+      "step": 0.5,
+      "unit": "s",
+      "default": 2.5
+    },
+    {
+      "type": "paragraph",
+      "content": "The four colours travel down both bulb rails in order."
+    },
+    {
+      "type": "color",
+      "id": "bulb_color_1",
+      "label": "Bulb colour 1",
+      "default": "#FFDE00"
+    },
+    {
+      "type": "color",
+      "id": "bulb_color_2",
+      "label": "Bulb colour 2",
+      "default": "#3FBF4A"
+    },
+    {
+      "type": "color",
+      "id": "bulb_color_3",
+      "label": "Bulb colour 3",
+      "default": "#8E4FD1"
+    },
+    {
+      "type": "color",
+      "id": "bulb_color_4",
+      "label": "Bulb colour 4",
+      "default": "#D32924"
+    },
+    {
+      "type": "header",
+      "content": "Hover preview"
+    },
+    {
+      "type": "paragraph",
+      "content": "Shown when hovering a reel window on desktop."
+    },
+    {
+      "type": "range",
+      "id": "preview_size",
+      "label": "Preview size",
+      "info": "Width as a percentage of the machine.",
+      "min": 20,
+      "max": 48,
+      "step": 1,
+      "unit": "%",
+      "default": 34
+    },
+    {
+      "type": "color",
+      "id": "preview_bg",
+      "label": "Preview background",
+      "default": "#FDF6DC"
+    },
+    {
+      "type": "color",
+      "id": "preview_text",
+      "label": "Preview text and border",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Desktop layout"
+    },
+    {
+      "type": "range",
+      "id": "stage_height",
+      "label": "Machine height",
+      "info": "Percentage of the available hero height. 100 fills it completely.",
+      "min": 40,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "machine_width",
+      "label": "Machine column width",
+      "info": "Machine sits flush left, note column flush right. Whatever the two widths leave over becomes the gap.",
+      "min": 40,
+      "max": 85,
+      "step": 1,
+      "unit": "%",
+      "default": 66
+    },
+    {
+      "type": "range",
+      "id": "side_width",
+      "label": "Note column width",
+      "min": 12,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "gap_columns",
+      "label": "Minimum gap between columns",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "unit": "%",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "gap_paper_buttons",
+      "label": "Gap between note and buttons",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "title_scale",
+      "label": "Product title size",
+      "min": 70,
+      "max": 130,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Section max width",
+      "min": 700,
+      "max": 2400,
+      "step": 50,
+      "unit": "px",
+      "default": 2000
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    {
+      "type": "range",
+      "id": "stage_height_mobile",
+      "label": "Machine height",
+      "info": "Percentage of the available hero height. Leave room for the note row below.",
+      "min": 25,
+      "max": 90,
+      "step": 1,
+      "unit": "%",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "paper_width_mobile",
+      "label": "Note width",
+      "min": 25,
+      "max": 75,
+      "step": 1,
+      "unit": "%",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "Gap between machine and note row",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "gap_paper_buttons_mobile",
+      "label": "Gap between note and buttons",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "show_titles_mobile",
+      "label": "Show product titles",
+      "info": "The title strip is only a few pixels tall on a phone. Turn this off if it reads as clutter.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "title_scale_mobile",
+      "label": "Product title size",
+      "min": 70,
+      "max": 160,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "side_padding_mobile",
+      "label": "Side padding",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Slot machine hero"
+    }
+  ]
+}
+{% endschema %}

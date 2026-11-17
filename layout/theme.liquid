@@ -1,0 +1,116 @@
+{% include 'shogun-content-handler' %}
+<!doctype html>
+<html
+  class="no-js{% if request.design_mode %} shopify-design-mode{% endif %}"
+  lang="{{ request.locale.iso_code }}"
+>
+  <head>
+  {% comment %}Loads Shogun Analytics. Removing this will disrupt analytics data collection.{% endcomment %}
+  <script type="text/javascript" async src="https://na.shgcdn3.com/pixel-collector.js"></script>
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+
+    {%- if settings.favicon != blank -%}
+      <link
+        rel="icon"
+        type="image/png"
+        href="{{ settings.favicon | image_url: width: 32, height: 32 }}"
+      >
+    {%- endif -%}
+
+    {% comment %} This a way to wait for main content to load when navigating to a new page so that the view transitions can work consistently {% endcomment %}
+    <link
+      rel="expect"
+      href="#MainContent"
+      blocking="render"
+      id="view-transition-render-blocker"
+    >
+
+    {%- render 'meta-tags' -%}
+    {%- render 'fonts' -%}
+    {%- render 'scripts' -%}
+    {%- render 'theme-styles-variables' -%}
+    {%- render 'color-schemes' -%}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    {{ 'storm.css' | asset_url | stylesheet_tag }}
+    {%- if template.name == 'index' and settings.storm_snap_enabled -%}
+      <script src="{{ 'storm-snap.js' | asset_url }}" data-zone="{{ settings.storm_snap_zone }}" data-duration="{{ settings.storm_snap_duration }}" defer></script>
+    {%- endif -%}
+
+    {% if request.design_mode %}
+      {%- render 'theme-editor' -%}
+    {% endif %}
+
+    {{ content_for_header }}
+  
+  {% render 'shogun-head' %}
+</head>
+
+  <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}">
+    {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
+    <div id="header-group">
+      {% sections 'header-group' %}
+    </div>
+
+    <main
+      id="MainContent"
+      class="content-for-layout"
+      role="main"
+      data-page-transition-enabled="{{ settings.page_transition_enabled }}"
+      data-product-transition="{{ settings.transition_to_main_product }}"
+      data-template="{{ template }}"
+    >
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {% render 'search-modal' %}
+
+    {% # theme-check-disable ParserBlockingScript %}
+    <script src="{{ 'critical.js' | asset_url }}"></script>
+    {% # theme-check-enable ParserBlockingScript %}
+
+    {% if settings.quick_add or settings.mobile_quick_add %}
+      {% render 'quick-add-modal' %}
+    {% endif %}
+<script>
+window.onload = function() {
+  const links = document.querySelectorAll('.collection-links__link');
+  let lastHovered = null;
+  links[0].classList.add('active-collection-link');
+lastHovered = links[0];
+
+
+  links.forEach(link => {
+    link.addEventListener('mouseenter', () => {
+      // Remove styling from all
+      links.forEach(l => l.classList.remove('active-collection-link'));
+
+      // Add to this one
+      link.classList.add('active-collection-link');
+      lastHovered = link;
+    });
+
+    link.addEventListener('mouseleave', () => {
+      // When leaving, keep the last hovered highlighted
+      if (lastHovered) {
+        lastHovered.classList.add('active-collection-link');
+      }
+    });
+  });
+};
+</script>
+
+<script>
+  // Prevent auto-scrolling to anchors on page load
+  if (window.location.hash) {
+    history.replaceState(null, null, window.location.pathname);
+  }
+</script>
+
+
+    
+  </body>
+</html>

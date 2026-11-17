@@ -1,0 +1,589 @@
+{% assign section_id = section.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .brand-dir-{{ section_id }} {
+    display: block;
+    width: 100%;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.background_color }};
+  }
+
+  .brand-dir-heading-{{ section_id }} {
+    font-size: {{ section.settings.heading_size }}px;
+    text-align: {{ section.settings.heading_alignment }};
+    margin: 0 0 40px 0;
+    color: {{ section.settings.heading_color }};
+  }
+
+  /* ── Filter bar wrapper ── */
+  .brand-dir-filterbar-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0;
+    border-top: 1px solid {{ section.settings.filter_border_color }};
+    border-bottom: 1px solid {{ section.settings.filter_border_color }};
+    margin-bottom: 40px;
+    padding: 8px 0;
+    overflow: hidden;
+  }
+
+  /* ── Letter buttons ── */
+  .brand-dir-letters-{{ section_id }} {
+    display: flex;
+    flex-wrap: nowrap;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .brand-dir-filter-btn-{{ section_id }} {
+    padding: 13px 12px;
+    background-color: transparent;
+    color: {{ section.settings.filter_inactive_color }};
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: {{ section.settings.filter_font_size }}px;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .brand-dir-filter-btn-{{ section_id }}:hover,
+  .brand-dir-filter-btn-{{ section_id }}.active {
+    background-color: {{ section.settings.filter_active_bg }};
+    color: {{ section.settings.filter_active_color }};
+  }
+
+  /* ── Search input inside filter bar ── */
+  .brand-dir-search-wrap-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    border-left: 1px solid {{ section.settings.filter_border_color }};
+    padding-left: 12px;
+    margin-left: 4px;
+    flex-shrink: 0;
+  }
+
+  .brand-dir-search-{{ section_id }} {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: {{ section.settings.filter_font_size }}px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: {{ section.settings.filter_inactive_color }};
+    width: 140px;
+    padding: 8px 4px;
+  }
+
+  .brand-dir-search-{{ section_id }}::placeholder {
+    color: {{ section.settings.filter_inactive_color }};
+    opacity: 0.5;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .brand-dir-search-icon-{{ section_id }} {
+    color: {{ section.settings.filter_inactive_color }};
+    opacity: 0.6;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+
+  /* ── Mobile: hide letter row, show select + search stacked ── */
+  .brand-dir-mobile-controls-{{ section_id }} {
+    display: none;
+  }
+
+  .brand-dir-filter-select-{{ section_id }} {
+    flex: 1;
+    padding: 10px 12px;
+    background-color: transparent;
+    color: {{ section.settings.filter_inactive_color }};
+    border: 1px solid {{ section.settings.filter_border_color }};
+    font-size: {{ section.settings.filter_font_size }}px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .brand-dir-mobile-search-{{ section_id }} {
+    flex: 1;
+    padding: 10px 12px;
+    background: transparent;
+    border: 1px solid {{ section.settings.filter_border_color }};
+    border-top: none;
+    outline: none;
+    font-size: {{ section.settings.filter_font_size }}px;
+    color: {{ section.settings.filter_inactive_color }};
+  }
+
+  .brand-dir-mobile-search-{{ section_id }}::placeholder {
+    color: {{ section.settings.filter_inactive_color }};
+    opacity: 0.5;
+  }
+
+  @media screen and (max-width: 749px) {
+    .brand-dir-filterbar-{{ section_id }} {
+      display: none;
+    }
+    .brand-dir-mobile-controls-{{ section_id }} {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 40px;
+      border-top: 1px solid {{ section.settings.filter_border_color }};
+      border-bottom: 1px solid {{ section.settings.filter_border_color }};
+    }
+  }
+
+  /* ── Brand grid ── */
+  .brand-dir-grid-{{ section_id }} {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: {{ section.settings.grid_gap }}px;
+    margin-bottom: 20px;
+  }
+
+  @media screen and (max-width: 989px) {
+    .brand-dir-grid-{{ section_id }} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .brand-dir-grid-{{ section_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .brand-dir-item-{{ section_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    background-color: {{ section.settings.logo_cell_bg }};
+    {% if section.settings.show_border %}
+      border: 1px solid {{ section.settings.border_color }};
+    {% endif %}
+    border-radius: {{ section.settings.border_radius }}px;
+    text-decoration: none;
+    height: 140px;
+  }
+
+  .brand-dir-logo-{{ section_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+
+  .brand-dir-item-{{ section_id }}:hover .brand-dir-logo-{{ section_id }} {
+    transform: rotate(-3deg) scale(1.18);
+  }
+
+  .brand-dir-name-{{ section_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ section.settings.heading_color }};
+    text-align: center;
+  }
+
+  .brand-dir-empty-{{ section_id }} {
+    text-align: center;
+    padding: 40px 20px;
+    color: {{ section.settings.heading_color }};
+    opacity: 0.6;
+    font-size: 16px;
+    display: none;
+    grid-column: 1 / -1;
+  }
+
+  .brand-dir-empty-{{ section_id }}.visible {
+    display: block;
+  }
+{% endstyle %}
+
+<section class="brand-dir-{{ section_id }}" id="brand-directory-{{ section_id }}">
+  <div class="brand-dir-container-{{ section_id }} section section--page-width">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="brand-dir-heading-{{ section_id }}">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {%- comment -%} Desktop filter bar {%- endcomment -%}
+    <div class="brand-dir-filterbar-{{ section_id }}">
+      <div class="brand-dir-letters-{{ section_id }}">
+        <button class="brand-dir-filter-btn-{{ section_id }} active" data-filter="all">All</button>
+        <button class="brand-dir-filter-btn-{{ section_id }}" data-filter="#">#</button>
+        {%- assign alphabet = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z' | split: ',' -%}
+        {%- for letter in alphabet -%}
+          <button class="brand-dir-filter-btn-{{ section_id }}" data-filter="{{ letter }}">{{ letter }}</button>
+        {%- endfor -%}
+      </div>
+      <div class="brand-dir-search-wrap-{{ section_id }}">
+        <svg class="brand-dir-search-icon-{{ section_id }}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="text"
+          class="brand-dir-search-{{ section_id }}"
+          placeholder="Search"
+          aria-label="Search brands"
+          data-brand-search
+        >
+      </div>
+    </div>
+
+    {%- comment -%} Mobile controls {%- endcomment -%}
+    <div class="brand-dir-mobile-controls-{{ section_id }}">
+      <select class="brand-dir-filter-select-{{ section_id }}" data-filter-select aria-label="Filter brands by letter">
+        <option value="all">All Brands</option>
+        <option value="#"># (Numbers)</option>
+        {%- for letter in alphabet -%}
+          <option value="{{ letter }}">{{ letter }}</option>
+        {%- endfor -%}
+      </select>
+      <input
+        type="text"
+        class="brand-dir-mobile-search-{{ section_id }}"
+        placeholder="Search brands..."
+        aria-label="Search brands"
+        data-brand-search-mobile
+      >
+    </div>
+
+    {%- comment -%} Brand grid — built from blocks {%- endcomment -%}
+    <div class="brand-dir-grid-{{ section_id }}" data-brand-grid>
+      {%- for block in section.blocks -%}
+        {%- assign brand_name = block.settings.brand_name -%}
+        {%- if brand_name != blank -%}
+          {%- assign first_char = brand_name | slice: 0 | upcase -%}
+          {%- assign encoded_name = brand_name | url_encode -%}
+          {%- assign brand_url = '/collections/vendors?q=' | append: encoded_name -%}
+          <a
+            href="{{ brand_url }}"
+            class="brand-dir-item-{{ section_id }}"
+            data-brand="{{ brand_name | escape }}"
+            data-letter="{{ first_char }}"
+            {{ block.shopify_attributes }}
+          >
+            {%- if block.settings.brand_logo != blank -%}
+              <img
+                src="{{ block.settings.brand_logo | image_url: width: 300 }}"
+                alt="{{ brand_name | escape }}"
+                class="brand-dir-logo-{{ section_id }}"
+                loading="lazy"
+                width="300"
+                height="140"
+              >
+            {%- else -%}
+              <div class="brand-dir-name-{{ section_id }}">{{ brand_name }}</div>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+      <div class="brand-dir-empty-{{ section_id }}" data-brand-empty>No brands found</div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function() {
+  const sid = '{{ section_id }}';
+  const section = document.getElementById('brand-directory-' + sid);
+  if (!section) return;
+
+  const grid       = section.querySelector('[data-brand-grid]');
+  const items      = Array.from(section.querySelectorAll('.brand-dir-item-' + sid));
+  const emptyMsg   = section.querySelector('[data-brand-empty]');
+  const filterBtns = section.querySelectorAll('.brand-dir-filter-btn-' + sid);
+  const filterSel  = section.querySelector('[data-filter-select]');
+  const searchDsk  = section.querySelector('[data-brand-search]');
+  const searchMob  = section.querySelector('[data-brand-search-mobile]');
+
+  let activeLetter = 'all';
+  let searchTerm   = '';
+
+  // ── Sort alphabetically on load ──
+  items.sort(function(a, b) {
+    return a.getAttribute('data-brand').toLowerCase()
+      .localeCompare(b.getAttribute('data-brand').toLowerCase());
+  });
+  items.forEach(function(item) { grid.insertBefore(item, emptyMsg); });
+
+  // ── Hide letter buttons that have no matching brands ──
+const usedLetters = new Set();
+items.forEach(function(item) {
+  const letter = item.getAttribute('data-letter');
+  const name = item.getAttribute('data-brand');
+  usedLetters.add(letter);
+  if (/^[0-9]/.test(name)) usedLetters.add('#');
+});
+
+filterBtns.forEach(function(btn) {
+  const filter = btn.getAttribute('data-filter');
+  if (filter === 'all') return;
+  if (!usedLetters.has(filter)) {
+    btn.style.display = 'none';
+  }
+});
+
+  // ── Core filter function ──
+  function applyFilters() {
+    let visible = 0;
+    items.forEach(function(item) {
+      const name   = item.getAttribute('data-brand').toLowerCase();
+      const letter = item.getAttribute('data-letter');
+      const term   = searchTerm.trim().toLowerCase();
+
+      const letterMatch = activeLetter === 'all'
+        ? true
+        : activeLetter === '#'
+          ? /^[0-9]/.test(name)
+          : letter === activeLetter;
+
+      const searchMatch = term === '' || name.includes(term);
+
+      if (letterMatch && searchMatch) {
+        item.style.display = 'flex';
+        visible++;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    emptyMsg.classList.toggle('visible', visible === 0);
+  }
+
+  // ── Letter buttons ──
+  filterBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      activeLetter = this.getAttribute('data-filter');
+      filterBtns.forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      if (filterSel) filterSel.value = activeLetter;
+      applyFilters();
+    });
+  });
+
+  // ── Mobile select ──
+  if (filterSel) {
+    filterSel.addEventListener('change', function() {
+      activeLetter = this.value;
+      applyFilters();
+    });
+  }
+
+  // ── Search inputs ──
+  function handleSearch(e) {
+    searchTerm = e.target.value;
+    if (searchTerm !== '') {
+      activeLetter = 'all';
+      filterBtns.forEach(function(b) { b.classList.remove('active'); });
+      const allBtn = section.querySelector('.brand-dir-filter-btn-' + sid + '[data-filter="all"]');
+      if (allBtn) allBtn.classList.add('active');
+      if (filterSel) filterSel.value = 'all';
+    }
+    applyFilters();
+  }
+
+  if (searchDsk)  searchDsk.addEventListener('input', handleSearch);
+  if (searchMob)  searchMob.addEventListener('input', handleSearch);
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Brand directory",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "All Brands"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right"  }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "max_width",
+      "label": "Section width",
+      "options": [
+        { "value": "full",      "label": "Full width" },
+        { "value": "contained", "label": "Contained"  }
+      ],
+      "default": "contained"
+    },
+    {
+      "type": "select",
+      "id": "grid_gap",
+      "label": "Grid gap",
+      "options": [
+        { "value": "10", "label": "Small"  },
+        { "value": "20", "label": "Medium" },
+        { "value": "30", "label": "Large"  }
+      ],
+      "default": "20"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0, "max": 100, "step": 5, "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0, "max": 100, "step": 5, "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Filter bar"
+    },
+    {
+      "type": "range",
+      "id": "filter_font_size",
+      "label": "Filter text size",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "filter_border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "filter_inactive_color",
+      "label": "Letter color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "filter_active_bg",
+      "label": "Active / hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "filter_active_color",
+      "label": "Active / hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Logo cells"
+    },
+    {
+      "type": "color",
+      "id": "logo_cell_bg",
+      "label": "Cell background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show cell border",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0, "max": 20, "step": 2, "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand",
+      "settings": [
+        {
+          "type": "text",
+          "id": "brand_name",
+          "label": "Brand name",
+          "info": "Must match the vendor name exactly as entered in Shopify products. The link is auto-generated."
+        },
+        {
+          "type": "image_picker",
+          "id": "brand_logo",
+          "label": "Brand logo"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand directory",
+      "blocks": [
+        { "type": "brand" },
+        { "type": "brand" },
+        { "type": "brand" }
+      ]
+    }
+  ]
+}
+{% endschema %}
