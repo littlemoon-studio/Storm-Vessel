@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "storm_tiles": {
@@ -9,9 +18,9 @@
             "label": "SHOP ALL",
             "title": "STORM\nBRAND",
             "link": "/collections/storm-apparel",
-            "background": "#1E1E1E",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "background": "#1e1e1e",
+            "label_color": "#f9f5ee",
+            "title_color": "#f6e7d2"
           }
         },
         "tile_2": {
@@ -21,8 +30,8 @@
             "title": "STOCKING\nSTUFFERS",
             "link": "/collections/stocking-stuffers",
             "background": "#640403",
-            "label_color": "#E62E09",
-            "title_color": "#E62E09"
+            "label_color": "#e62e09",
+            "title_color": "#e62e09"
           }
         },
         "tile_3": {
@@ -31,9 +40,9 @@
             "label": "SKIP THE GUESSWORK",
             "title": "GIFTS 4\nSURFERS",
             "link": "/collections/gifts-4-surfers",
-            "background": "#08341C",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "background": "#08341c",
+            "label_color": "#f9f5ee",
+            "title_color": "#f6e7d2"
           }
         },
         "tile_4": {
@@ -42,7 +51,7 @@
             "label": "FLYING SOUTH?",
             "title": "SURF TRIP\nMUST-HAVES",
             "link": "/collections/surf-trip-must-haves",
-            "background": "#E62E09",
+            "background": "#e62e09",
             "label_color": "#640403",
             "title_color": "#640403"
           }
@@ -87,8 +96,7 @@
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
-          "blocks": {},
-          "block_order": []
+          "blocks": {}
         }
       },
       "block_order": [
@@ -443,7 +451,12 @@
                   "settings": {
                     "product": "{{ closest.product }}",
                     "product_swatches_alignment": "flex-end",
-                    "product_swatches_alignment_mobile": "flex-end"
+                    "product_swatches_alignment_mobile": "flex-end",
+                    "hide_padding": false,
+                    "product_swatches_padding_top": 4,
+                    "product_swatches_padding_bottom": 0,
+                    "product_swatches_padding_left": 0,
+                    "product_swatches_padding_right": 0
                   },
                   "blocks": {}
                 }
@@ -464,7 +477,7 @@
       },
       "name": "[NEW] Product list",
       "settings": {
-        "collection": "boneyard-revival",
+        "collection": "stocking-stuffers-under-50",
         "layout_type": "grid",
         "carousel_on_mobile": true,
         "max_products": 4,
@@ -529,16 +542,18 @@
     "storm_split": {
       "type": "split-collection",
       "settings": {
-        "collection": "storm-apparel",
+        "panel_background": "#191818",
+        "panel_text": "#f6e7d2",
+        "star_image": "shopify://shop_images/stormstarmglimmer.gif",
+        "star_color": "#fff786",
         "heading": "STORM\nWRAPPED\nUNDER THE TREE",
         "button_label": "SHOP STORM BRAND",
+        "button_link": "",
+        "button_background": "#f6e7d2",
+        "button_text": "#000000",
+        "collection": "storm-apparel",
         "products_to_show": 8,
-        "desktop_height": 820,
-        "panel_background": "#1E1E1E",
-        "panel_text": "#F6E7D2",
-        "star_color": "#FFF786",
-        "button_background": "#F6E7D2",
-        "button_text": "#000000"
+        "desktop_height": 820
       }
     },
     "storm_banner": {
@@ -636,21 +651,6 @@
               },
               "blocks": {}
             },
-            "button_KMdpW6": {
-              "type": "button",
-              "name": "t:names.button",
-              "settings": {
-                "label": "BUY A GIFT CARD",
-                "link": "",
-                "open_in_new_tab": false,
-                "style_class": "button",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            },
             "storm_giftcard_text": {
               "type": "text",
               "settings": {
@@ -673,6 +673,21 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "button_KMdpW6": {
+              "type": "button",
+              "name": "t:names.button",
+              "settings": {
+                "label": "BUY A GIFT CARD",
+                "link": "",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
               },
               "blocks": {}
             }
