@@ -1,0 +1,528 @@
+{% doc %}
+  @prompt
+    Editable column section that has an image over top, and below is heading and body text
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-column-section-{{ ai_gen_id }} {
+    padding: {{ block.settings.section_padding_top }}px 0 {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-column-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-column-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.column_gap }}px;
+    align-items: {{ block.settings.vertical_alignment }};
+  }
+
+  .ai-column-item-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    text-align: {{ block.settings.text_alignment }};
+  }
+
+  .ai-column-image-wrapper-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.image_spacing }}px;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-column-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-column-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: {{ block.settings.image_aspect_ratio }};
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-column-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-column-heading-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: {{ block.settings.heading_weight }};
+    margin: 0 0 {{ block.settings.heading_spacing }}px;
+    line-height: 1.2;
+  }
+
+  .ai-column-text-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .ai-column-text-{{ ai_gen_id }} p {
+    margin: 0 0 1em;
+  }
+
+  .ai-column-text-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+  .ai-column-grid-{{ ai_gen_id }} {
+    --slide: 50vw;          /* tweak card width */
+    --gap: 12px;
+
+    display: flex;
+    gap: 60px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+
+    /* keep edge alignment without clipping */
+    margin: 0 -16px;        /* matches container side padding */
+    padding: 0 16px;        /* restores inner space so first/last aren’t cut */
+    scroll-padding-left: 16px;
+    scroll-padding-right: 16px;
+  }
+
+  .ai-column-item-{{ ai_gen_id }} {
+    flex: 0 0 var(--slide);
+    scroll-snap-align: start;
+    min-width: 0;           /* prevents inner overflow */
+  }
+  .ai-column-grid-{{ ai_gen_id }} {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 16px;
+  padding-left: 20px; /* keeps left alignment consistent with page */
+  margin-right: -20px; /* lets right edge “bleed” offscreen */
+}
+
+.ai-column-item-{{ ai_gen_id }} {
+  flex: 0 0 80%; /* adjust width of each card */
+  scroll-snap-align: start;
+}
+
+}
+
+  }
+{% endstyle %}
+
+<div class="ai-column-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-column-container-{{ ai_gen_id }}">
+    <div class="ai-column-grid-{{ ai_gen_id }}">
+      {% for i in (1..6) %}
+        {% liquid
+          assign column_enabled_key = 'column_' | append: i | append: '_enabled'
+          assign column_image_key = 'column_' | append: i | append: '_image'
+          assign column_heading_key = 'column_' | append: i | append: '_heading'
+          assign column_text_key = 'column_' | append: i | append: '_text'
+
+          assign column_enabled = block.settings[column_enabled_key]
+          assign column_image = block.settings[column_image_key]
+          assign column_heading = block.settings[column_heading_key]
+          assign column_text = block.settings[column_text_key]
+        %}
+
+        {% if column_enabled %}
+          <div class="ai-column-item-{{ ai_gen_id }}">
+            <div class="ai-column-image-wrapper-{{ ai_gen_id }}">
+              {% if column_image %}
+                <img
+                  src="{{ column_image | image_url: width: 600 }}"
+                  alt="{{ column_image.alt | escape }}"
+                  class="ai-column-image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="{{ column_image.width }}"
+                  height="{{ column_image.height }}"
+                >
+              {% else %}
+                <div class="ai-column-image-placeholder-{{ ai_gen_id }}">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+
+            {% if column_heading != blank %}
+              <h3 class="ai-column-heading-{{ ai_gen_id }}">{{ column_heading }}</h3>
+            {% endif %}
+
+            {% if column_text != blank %}
+              <div class="ai-column-text-{{ ai_gen_id }}">{{ column_text }}</div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Editable columns",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" },
+        { "value": "6", "label": "6" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Column gap",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        { "value": "start", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "end", "label": "Bottom" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f9f8f6"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Image style"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        { "value": "1/1", "label": "Square (1:1)" },
+        { "value": "4/3", "label": "Landscape (4:3)" },
+        { "value": "3/4", "label": "Portrait (3:4)" },
+        { "value": "16/9", "label": "Wide (16:9)" },
+        { "value": "auto", "label": "Natural" }
+      ],
+      "default": "1/1"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "image_spacing",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Space below image",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Heading style"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 14,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Space below heading",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Text style"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Column 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "column_1_enabled",
+      "label": "Enable column 1",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "column_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "column_1_heading",
+      "label": "Heading",
+      "default": "Column heading"
+    },
+    {
+      "type": "richtext",
+      "id": "column_1_text",
+      "label": "Text",
+      "default": "<p>Add your column text content here. This can include multiple paragraphs and basic formatting.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Column 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "column_2_enabled",
+      "label": "Enable column 2",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "column_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "column_2_heading",
+      "label": "Heading",
+      "default": "Column heading"
+    },
+    {
+      "type": "richtext",
+      "id": "column_2_text",
+      "label": "Text",
+      "default": "<p>Add your column text content here. This can include multiple paragraphs and basic formatting.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Column 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "column_3_enabled",
+      "label": "Enable column 3",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "column_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "column_3_heading",
+      "label": "Heading",
+      "default": "Column heading"
+    },
+    {
+      "type": "richtext",
+      "id": "column_3_text",
+      "label": "Text",
+      "default": "<p>Add your column text content here. This can include multiple paragraphs and basic formatting.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Column 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "column_4_enabled",
+      "label": "Enable column 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "column_4_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "column_4_text",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Column 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "column_5_enabled",
+      "label": "Enable column 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_5_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "column_5_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "column_5_text",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Column 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "column_6_enabled",
+      "label": "Enable column 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "column_6_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "column_6_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "column_6_text",
+      "label": "Text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editable columns"
+    }
+  ]
+}
+{% endschema %}

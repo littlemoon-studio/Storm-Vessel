@@ -1,0 +1,1091 @@
+{% doc %}
+  @prompt
+    An interactive size chart table with 5 rows and 20 columns that highlights the row on hover, I made a mistake - 20 ROWS and 5 COLUMNS, And add a button on the top to switch the view from one table to another (the use will be to show imperial vs metric units)
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-size-chart-container-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding }}px;
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-size-chart-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 20px 0;
+    text-align: center;
+  }
+
+  .ai-size-chart-toggle-container-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .ai-size-chart-toggle-{{ ai_gen_id }} {
+    display: flex;
+    background-color: {{ block.settings.toggle_background }};
+    border-radius: {{ block.settings.toggle_border_radius }}px;
+    padding: 4px;
+    border: {{ block.settings.toggle_border_width }}px solid {{ block.settings.toggle_border_color }};
+  }
+
+  .ai-size-chart-toggle-button-{{ ai_gen_id }} {
+    padding: {{ block.settings.toggle_padding }}px {{ block.settings.toggle_padding | times: 1.5 }}px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: {{ block.settings.toggle_text_size }}px;
+    color: {{ block.settings.toggle_text_color }};
+    border-radius: {{ block.settings.toggle_button_radius }}px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+  }
+
+  .ai-size-chart-toggle-button-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.toggle_active_background }};
+    color: {{ block.settings.toggle_active_text_color }};
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-size-chart-toggle-button-{{ ai_gen_id }}:hover:not(.active) {
+    background-color: {{ block.settings.toggle_hover_background }};
+  }
+
+  .ai-size-chart-wrapper-{{ ai_gen_id }} {
+    overflow-x: auto;
+    border-radius: {{ block.settings.table_border_radius }}px;
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: {{ block.settings.text_size }}px;
+    background-color: {{ block.settings.table_background }};
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }}.hidden {
+    display: none;
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} th {
+    background-color: {{ block.settings.header_background }};
+    color: {{ block.settings.header_text_color }};
+    padding: {{ block.settings.cell_padding }}px;
+    text-align: center;
+    font-weight: 600;
+    border-bottom: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} td {
+    padding: {{ block.settings.cell_padding }}px;
+    text-align: center;
+    color: {{ block.settings.text_color }};
+    border-bottom: 1px solid {{ block.settings.border_color }};
+    transition: background-color 0.2s ease;
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} tr:hover td {
+    background-color: {{ block.settings.hover_background }};
+    color: {{ block.settings.hover_text_color }};
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} tr:hover th {
+    background-color: {{ block.settings.hover_header_background }};
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} th:first-child,
+  .ai-size-chart-table-{{ ai_gen_id }} td:first-child {
+    background-color: {{ block.settings.first_column_background }};
+    font-weight: 600;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} tr:hover td:first-child {
+    background-color: {{ block.settings.hover_first_column_background }};
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} th:first-child {
+    z-index: 3;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-size-chart-table-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.9 }}px;
+    }
+
+    .ai-size-chart-table-{{ ai_gen_id }} th,
+    .ai-size-chart-table-{{ ai_gen_id }} td {
+      padding: {{ block.settings.cell_padding | times: 0.7 }}px;
+    }
+
+    .ai-size-chart-toggle-button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.toggle_text_size | times: 0.9 }}px;
+      padding: {{ block.settings.toggle_padding | times: 0.8 }}px {{ block.settings.toggle_padding | times: 1.2 }}px;
+    }
+  }
+{% endstyle %}
+
+<size-chart-{{ ai_gen_id }}
+  class="ai-size-chart-container-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.title != blank %}
+    <h3 class="ai-size-chart-title-{{ ai_gen_id }}">{{ block.settings.title }}</h3>
+  {% endif %}
+
+  <div class="ai-size-chart-toggle-container-{{ ai_gen_id }}">
+    <div class="ai-size-chart-toggle-{{ ai_gen_id }}">
+      <button
+        class="ai-size-chart-toggle-button-{{ ai_gen_id }} active"
+        data-table="table1"
+        aria-pressed="true"
+      >
+        {{ block.settings.table1_label }}
+      </button>
+      <button
+        class="ai-size-chart-toggle-button-{{ ai_gen_id }}"
+        data-table="table2"
+        aria-pressed="false"
+      >
+        {{ block.settings.table2_label }}
+      </button>
+    </div>
+  </div>
+
+  <div class="ai-size-chart-wrapper-{{ ai_gen_id }}">
+    <table class="ai-size-chart-table-{{ ai_gen_id }}" id="ai-size-chart-table1-{{ ai_gen_id }}">
+      <thead>
+        <tr>
+          <th>{{ block.settings.size_label }}</th>
+          {% for i in (1..5) %}
+            {% assign header_key = 'table1_header_' | append: i %}
+            {% if block.settings[header_key] != blank %}
+              <th>{{ block.settings[header_key] }}</th>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in (1..20) %}
+          <tr>
+            {% assign size_key = 'size_' | append: row %}
+            <td>{{ block.settings[size_key] }}</td>
+            {% for col in (1..5) %}
+              {% assign cell_key = 'table1_row_' | append: row | append: '_col_' | append: col %}
+              {% if block.settings[cell_key] != blank %}
+                <td>{{ block.settings[cell_key] }}</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <table class="ai-size-chart-table-{{ ai_gen_id }} hidden" id="ai-size-chart-table2-{{ ai_gen_id }}">
+      <thead>
+        <tr>
+          <th>{{ block.settings.size_label }}</th>
+          {% for i in (1..5) %}
+            {% assign header_key = 'table2_header_' | append: i %}
+            {% if block.settings[header_key] != blank %}
+              <th>{{ block.settings[header_key] }}</th>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in (1..20) %}
+          <tr>
+            {% assign size_key = 'size_' | append: row %}
+            <td>{{ block.settings[size_key] }}</td>
+            {% for col in (1..5) %}
+              {% assign cell_key = 'table2_row_' | append: row | append: '_col_' | append: col %}
+              {% if block.settings[cell_key] != blank %}
+                <td>{{ block.settings[cell_key] }}</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</size-chart-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class SizeChart{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.tables = {
+          table1: this.querySelector('#ai-size-chart-table1-{{ ai_gen_id }}'),
+          table2: this.querySelector('#ai-size-chart-table2-{{ ai_gen_id }}')
+        };
+        this.toggleButtons = this.querySelectorAll('.ai-size-chart-toggle-button-{{ ai_gen_id }}');
+        this.currentTable = 'table1';
+        
+        this.setupInteractivity();
+        this.setupToggle();
+      }
+
+      setupInteractivity() {
+        Object.values(this.tables).forEach(table => {
+          const rows = table.querySelectorAll('tbody tr');
+          
+          rows.forEach(row => {
+            row.addEventListener('mouseenter', () => {
+              row.style.transform = 'scale(1.01)';
+              row.style.zIndex = '10';
+            });
+
+            row.addEventListener('mouseleave', () => {
+              row.style.transform = 'scale(1)';
+              row.style.zIndex = 'auto';
+            });
+          });
+        });
+      }
+
+      setupToggle() {
+        this.toggleButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const targetTable = button.dataset.table;
+            
+            if (targetTable !== this.currentTable) {
+              this.switchTable(targetTable);
+              this.updateToggleButtons(button);
+            }
+          });
+        });
+      }
+
+      switchTable(targetTable) {
+        this.tables[this.currentTable].classList.add('hidden');
+        this.tables[targetTable].classList.remove('hidden');
+        this.currentTable = targetTable;
+      }
+
+      updateToggleButtons(activeButton) {
+        this.toggleButtons.forEach(button => {
+          button.classList.remove('active');
+          button.setAttribute('aria-pressed', 'false');
+        });
+        
+        activeButton.classList.add('active');
+        activeButton.setAttribute('aria-pressed', 'true');
+      }
+    }
+
+    customElements.define('size-chart-{{ ai_gen_id }}', SizeChart{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Interactive Size Chart",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Chart title",
+      "default": "Size Chart"
+    },
+    {
+      "type": "text",
+      "id": "size_label",
+      "label": "Size column label",
+      "default": "Size"
+    },
+    {
+      "type": "text",
+      "id": "table1_label",
+      "label": "Table 1 label",
+      "default": "Imperial"
+    },
+    {
+      "type": "text",
+      "id": "table2_label",
+      "label": "Table 2 label",
+      "default": "Metric"
+    },
+    {
+      "type": "header",
+      "content": "Table 1 Headers"
+    },
+    {
+      "type": "text",
+      "id": "table1_header_1",
+      "label": "Header 1",
+      "default": "Chest (in)"
+    },
+    {
+      "type": "text",
+      "id": "table1_header_2",
+      "label": "Header 2",
+      "default": "Waist (in)"
+    },
+    {
+      "type": "text",
+      "id": "table1_header_3",
+      "label": "Header 3",
+      "default": "Hips (in)"
+    },
+    {
+      "type": "text",
+      "id": "table1_header_4",
+      "label": "Header 4",
+      "default": "Length (in)"
+    },
+    {
+      "type": "text",
+      "id": "table1_header_5",
+      "label": "Header 5",
+      "default": "Sleeve (in)"
+    },
+    {
+      "type": "header",
+      "content": "Table 2 Headers"
+    },
+    {
+      "type": "text",
+      "id": "table2_header_1",
+      "label": "Header 1",
+      "default": "Chest (cm)"
+    },
+    {
+      "type": "text",
+      "id": "table2_header_2",
+      "label": "Header 2",
+      "default": "Waist (cm)"
+    },
+    {
+      "type": "text",
+      "id": "table2_header_3",
+      "label": "Header 3",
+      "default": "Hips (cm)"
+    },
+    {
+      "type": "text",
+      "id": "table2_header_4",
+      "label": "Header 4",
+      "default": "Length (cm)"
+    },
+    {
+      "type": "text",
+      "id": "table2_header_5",
+      "label": "Header 5",
+      "default": "Sleeve (cm)"
+    },
+    {
+      "type": "header",
+      "content": "Size Labels"
+    },
+    {
+      "type": "text",
+      "id": "size_1",
+      "label": "Size 1",
+      "default": "XXS"
+    },
+    {
+      "type": "text",
+      "id": "size_2",
+      "label": "Size 2",
+      "default": "XS"
+    },
+    {
+      "type": "text",
+      "id": "size_3",
+      "label": "Size 3",
+      "default": "S"
+    },
+    {
+      "type": "text",
+      "id": "size_4",
+      "label": "Size 4",
+      "default": "M"
+    },
+    {
+      "type": "text",
+      "id": "size_5",
+      "label": "Size 5",
+      "default": "L"
+    },
+    {
+      "type": "text",
+      "id": "size_6",
+      "label": "Size 6",
+      "default": "XL"
+    },
+    {
+      "type": "text",
+      "id": "size_7",
+      "label": "Size 7",
+      "default": "XXL"
+    },
+    {
+      "type": "text",
+      "id": "size_8",
+      "label": "Size 8",
+      "default": "XXXL"
+    },
+    {
+      "type": "text",
+      "id": "size_9",
+      "label": "Size 9"
+    },
+    {
+      "type": "text",
+      "id": "size_10",
+      "label": "Size 10"
+    },
+    {
+      "type": "text",
+      "id": "size_11",
+      "label": "Size 11"
+    },
+    {
+      "type": "text",
+      "id": "size_12",
+      "label": "Size 12"
+    },
+    {
+      "type": "text",
+      "id": "size_13",
+      "label": "Size 13"
+    },
+    {
+      "type": "text",
+      "id": "size_14",
+      "label": "Size 14"
+    },
+    {
+      "type": "text",
+      "id": "size_15",
+      "label": "Size 15"
+    },
+    {
+      "type": "text",
+      "id": "size_16",
+      "label": "Size 16"
+    },
+    {
+      "type": "text",
+      "id": "size_17",
+      "label": "Size 17"
+    },
+    {
+      "type": "text",
+      "id": "size_18",
+      "label": "Size 18"
+    },
+    {
+      "type": "text",
+      "id": "size_19",
+      "label": "Size 19"
+    },
+    {
+      "type": "text",
+      "id": "size_20",
+      "label": "Size 20"
+    },
+    {
+      "type": "header",
+      "content": "Table 1 Row 1 Data"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_1_col_1",
+      "label": "Row 1 Column 1",
+      "default": "30-32"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_1_col_2",
+      "label": "Row 1 Column 2",
+      "default": "24-26"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_1_col_3",
+      "label": "Row 1 Column 3",
+      "default": "32-34"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_1_col_4",
+      "label": "Row 1 Column 4",
+      "default": "25"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_1_col_5",
+      "label": "Row 1 Column 5",
+      "default": "22"
+    },
+    {
+      "type": "header",
+      "content": "Table 1 Row 2 Data"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_2_col_1",
+      "label": "Row 2 Column 1",
+      "default": "32-34"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_2_col_2",
+      "label": "Row 2 Column 2",
+      "default": "26-28"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_2_col_3",
+      "label": "Row 2 Column 3",
+      "default": "34-36"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_2_col_4",
+      "label": "Row 2 Column 4",
+      "default": "26"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_2_col_5",
+      "label": "Row 2 Column 5",
+      "default": "23"
+    },
+    {
+      "type": "header",
+      "content": "Table 1 Row 3 Data"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_3_col_1",
+      "label": "Row 3 Column 1",
+      "default": "36-38"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_3_col_2",
+      "label": "Row 3 Column 2",
+      "default": "30-32"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_3_col_3",
+      "label": "Row 3 Column 3",
+      "default": "38-40"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_3_col_4",
+      "label": "Row 3 Column 4",
+      "default": "27"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_3_col_5",
+      "label": "Row 3 Column 5",
+      "default": "24"
+    },
+    {
+      "type": "header",
+      "content": "Table 1 Row 4 Data"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_4_col_1",
+      "label": "Row 4 Column 1",
+      "default": "40-42"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_4_col_2",
+      "label": "Row 4 Column 2",
+      "default": "34-36"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_4_col_3",
+      "label": "Row 4 Column 3",
+      "default": "42-44"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_4_col_4",
+      "label": "Row 4 Column 4",
+      "default": "28"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_4_col_5",
+      "label": "Row 4 Column 5",
+      "default": "25"
+    },
+    {
+      "type": "header",
+      "content": "Table 1 Row 5 Data"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_5_col_1",
+      "label": "Row 5 Column 1",
+      "default": "44-46"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_5_col_2",
+      "label": "Row 5 Column 2",
+      "default": "38-40"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_5_col_3",
+      "label": "Row 5 Column 3",
+      "default": "46-48"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_5_col_4",
+      "label": "Row 5 Column 4",
+      "default": "29"
+    },
+    {
+      "type": "text",
+      "id": "table1_row_5_col_5",
+      "label": "Row 5 Column 5",
+      "default": "26"
+    },
+    {
+      "type": "header",
+      "content": "Table 2 Row 1 Data"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_1_col_1",
+      "label": "Row 1 Column 1",
+      "default": "76-81"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_1_col_2",
+      "label": "Row 1 Column 2",
+      "default": "61-66"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_1_col_3",
+      "label": "Row 1 Column 3",
+      "default": "81-86"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_1_col_4",
+      "label": "Row 1 Column 4",
+      "default": "64"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_1_col_5",
+      "label": "Row 1 Column 5",
+      "default": "56"
+    },
+    {
+      "type": "header",
+      "content": "Table 2 Row 2 Data"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_2_col_1",
+      "label": "Row 2 Column 1",
+      "default": "81-86"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_2_col_2",
+      "label": "Row 2 Column 2",
+      "default": "66-71"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_2_col_3",
+      "label": "Row 2 Column 3",
+      "default": "86-91"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_2_col_4",
+      "label": "Row 2 Column 4",
+      "default": "66"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_2_col_5",
+      "label": "Row 2 Column 5",
+      "default": "58"
+    },
+    {
+      "type": "header",
+      "content": "Table 2 Row 3 Data"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_3_col_1",
+      "label": "Row 3 Column 1",
+      "default": "91-97"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_3_col_2",
+      "label": "Row 3 Column 2",
+      "default": "76-81"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_3_col_3",
+      "label": "Row 3 Column 3",
+      "default": "97-102"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_3_col_4",
+      "label": "Row 3 Column 4",
+      "default": "69"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_3_col_5",
+      "label": "Row 3 Column 5",
+      "default": "61"
+    },
+    {
+      "type": "header",
+      "content": "Table 2 Row 4 Data"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_4_col_1",
+      "label": "Row 4 Column 1",
+      "default": "102-107"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_4_col_2",
+      "label": "Row 4 Column 2",
+      "default": "86-91"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_4_col_3",
+      "label": "Row 4 Column 3",
+      "default": "107-112"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_4_col_4",
+      "label": "Row 4 Column 4",
+      "default": "71"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_4_col_5",
+      "label": "Row 4 Column 5",
+      "default": "64"
+    },
+    {
+      "type": "header",
+      "content": "Table 2 Row 5 Data"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_5_col_1",
+      "label": "Row 5 Column 1",
+      "default": "112-117"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_5_col_2",
+      "label": "Row 5 Column 2",
+      "default": "97-102"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_5_col_3",
+      "label": "Row 5 Column 3",
+      "default": "117-122"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_5_col_4",
+      "label": "Row 5 Column 4",
+      "default": "74"
+    },
+    {
+      "type": "text",
+      "id": "table2_row_5_col_5",
+      "label": "Row 5 Column 5",
+      "default": "66"
+    },
+    {
+      "type": "header",
+      "content": "Toggle Style"
+    },
+    {
+      "type": "color",
+      "id": "toggle_background",
+      "label": "Toggle background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "toggle_border_color",
+      "label": "Toggle border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "toggle_text_color",
+      "label": "Toggle text color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "toggle_active_background",
+      "label": "Active toggle background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "toggle_active_text_color",
+      "label": "Active toggle text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "toggle_hover_background",
+      "label": "Toggle hover background",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "range",
+      "id": "toggle_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Toggle border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "toggle_button_radius",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "label": "Toggle button radius",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "toggle_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Toggle border width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "toggle_text_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Toggle text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "toggle_padding",
+      "min": 6,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "label": "Toggle padding",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Table Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "table_background",
+      "label": "Table background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "header_background",
+      "label": "Header background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "first_column_background",
+      "label": "First column background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "hover_background",
+      "label": "Row hover background",
+      "default": "#e6f3ff"
+    },
+    {
+      "type": "color",
+      "id": "hover_header_background",
+      "label": "Header hover background",
+      "default": "#d9d9d9"
+    },
+    {
+      "type": "color",
+      "id": "hover_first_column_background",
+      "label": "First column hover background",
+      "default": "#cce7ff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Header text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "hover_text_color",
+      "label": "Hover text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "cell_padding",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Cell padding",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Container padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Container border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "table_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Table border radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Interactive Size Chart"
+    }
+  ]
+}
+{% endschema %}

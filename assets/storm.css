@@ -1,0 +1,40 @@
+/* Storm Vessel 3.0 — global layer. Loaded after theme-styles-variables. */
+html:root {
+  --font-body--family: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-subheading--family: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-heading--family: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-heading--weight: 600;
+  --storm-red: #A90707;
+  --storm-deep: #640403;
+  --storm-cream: #F4F0E7;
+  --storm-paper: #F9F5EE;
+  --storm-sand: #F6E7D2;
+  --storm-flame: #E62E09;
+  --storm-ember: #E3441D;
+  --storm-night: #1E1E1E;
+  --storm-forest: #08341C;
+}
+body { background: var(--storm-cream); }
+h1, h2, h3, .h1, .h2, .h3 { letter-spacing: -0.03em; }
+
+/* Section dividers: top + bottom only, never on the screen edges */
+.shopify-section[id$="__storm_slideshow"],
+.shopify-section[id$="__storm_banner"],
+.shopify-section[id$="__storm_marquee"] { border-block: 2px solid var(--storm-deep); }
+.shopify-section[id$="__storm_giftcard"] { border-top: 2px solid #000; }
+
+/* Vessel product cards: round swatches */
+.product-card .swatch { border-radius: 50% !important; }
+
+/* Storm product card (split collection) */
+.storm-card { display: flex; flex-direction: column; height: 100%; background: var(--storm-paper); border: 1px solid var(--storm-red); color: var(--storm-red); text-decoration: none; }
+.storm-card--flush { border: 0; }
+.storm-card__media { aspect-ratio: 303 / 379; background: #fff; border-bottom: 1px solid var(--storm-red); overflow: hidden; }
+.storm-card--flush .storm-card__media { border-bottom: 0; }
+.storm-card__media img, .storm-card__media svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+.storm-card__info { flex: 1; display: flex; flex-direction: column; gap: 7px; padding: 18px 19px 14px; }
+.storm-card__title, .storm-card__price { font-family: var(--font-accent--family); font-size: 15px; line-height: 17.25px; color: var(--storm-red); }
+.storm-card__vendor { font-family: var(--font-body--family); font-size: 10px; line-height: 13px; letter-spacing: .04em; text-transform: uppercase; }
+.storm-card__bottom { margin-top: auto; padding-top: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 8px 12px; }
+.storm-card__swatches { display: flex; gap: 6px; margin-left: auto; }
+.storm-card__swatch { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--storm-red); background-size: cover; background-position: center; }

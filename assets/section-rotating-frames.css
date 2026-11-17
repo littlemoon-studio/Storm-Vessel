@@ -1,0 +1,215 @@
+.rf-section {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rf-container {
+  width: calc(100% - 80px);
+  max-width: var(--page-width, 1280px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rf-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+}
+
+.rf-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  line-height: 1;
+  color: #000;
+  user-select: none;
+}
+
+@media screen and (max-width: 749px) {
+  .rf-grid {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 12px;
+    row-gap: var(--rf-m-row-gap, 12px);
+  }
+
+  .rf-plus {
+    display: none;
+  }
+
+  .rf-container {
+    width: calc(100% - (var(--rf-m-margin, 16px) * 2));
+  }
+
+  .rf-frame {
+    padding: var(--rf-m-frame-padding, 12px) !important;
+  }
+
+  .rf-frame .rf-caption { font-size: var(--rf-m-caption, 10px); }
+  .rf-frame .rf-title { font-size: var(--rf-m-title, 16px); }
+  .rf-frame .rf-product-title { font-size: var(--rf-m-product, 12px); }
+
+  .rf-frame-header.is-stacked-mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .rf-frame-header.is-stacked-mobile .rf-title {
+    text-align: left;
+  }
+
+  .rf-title-ellipse {
+    padding: 0.1em 0.5em;
+  }
+
+  .rf-divider {
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .rf-info-stack {
+    margin-top: 8px;
+  }
+
+  .rf-info-group {
+    padding: 4px;
+    gap: 2px;
+  }
+
+}
+
+.rf-frame {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
+.rf-frame-header {
+  display: flex;
+  align-items: flex-end;
+  align-items: last baseline;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.rf-caption {
+  text-align: left;
+}
+
+.rf-title {
+  text-align: right;
+}
+
+.rf-title-ellipse {
+  display: inline-block;
+  border: 0.5px solid #000;
+  border-radius: 50%;
+  padding: 0.15em 0.7em;
+  transform: rotate(-0.5deg);
+}
+
+.rf-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #000;
+}
+
+.rf-image-stack {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+}
+
+.rf-slide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.rf-image-stack .rf-slide {
+  position: absolute;
+  inset: 0;
+}
+
+.rf-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.rf-slide-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.rf-image-wrap {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.rf-image,
+.rf-image--placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rf-image--placeholder svg {
+  width: 100%;
+  height: 100%;
+}
+
+.rf-info-stack {
+  position: relative;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.rf-info-stack .rf-slide {
+  position: relative;
+  width: 100%;
+  display: none;
+}
+
+.rf-info-stack .rf-slide.is-active {
+  display: block;
+}
+
+.rf-info-group {
+  box-sizing: border-box;
+  max-width: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 4px;
+  padding: 8px;
+  overflow-wrap: break-word;
+}
+
+.rf-product-title {
+  margin: 0;
+  max-width: 100%;
+}
+
+/* Typography scale — semantic size presets independent of tag used */
+.rf-type-h1 { font-size: clamp(2.5rem, 2rem + 2vw, 4rem); font-weight: 600; line-height: 1.1; }
+.rf-type-h2 { font-size: clamp(2rem, 1.6rem + 1.6vw, 3rem); font-weight: 600; line-height: 1.15; }
+.rf-type-h3 { font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem); font-weight: 600; line-height: 1.2; }
+.rf-type-h4 { font-size: clamp(1.5rem, 1.3rem + 0.8vw, 1.875rem); font-weight: 600; line-height: 1.25; }
+.rf-type-h5 { font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem); font-weight: 600; line-height: 1.3; }
+.rf-type-h6 { font-size: clamp(1.125rem, 1rem + 0.3vw, 1.25rem); font-weight: 600; line-height: 1.3; }
+.rf-type-paragraph { font-size: 1rem; font-weight: 400; line-height: 1.5; }
+.rf-type-caption { font-size: 0.75rem; font-weight: 400; line-height: 1.4; letter-spacing: 0.04em; }

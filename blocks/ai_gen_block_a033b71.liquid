@@ -1,0 +1,1006 @@
+{% doc %}
+  @prompt
+    Create a Shopify section called "Brand Directory" that displays all store vendors as a filterable, alphabetical brand logo grid.
+    Layout & Structure:
+    
+    Full-width section with a large bold heading ("All Brands" or customizable via settings)
+    Below the heading, a horizontal alphabet filter bar with individual letter buttons (#, A–Z) plus an "All" button at the start
+    The active/selected letter should be visually highlighted (filled background or underline style)
+    Below the filter bar, brand logos are displayed in a responsive CSS grid (6 columns desktop, 3–4 tablet, 2 mobile)
+    Each brand logo is a clickable link that routes to /collections/vendors?q=[vendor name] or a customizable URL per brand
+    
+    Brand Data & Logo Display:
+    
+    Brands are defined as a repeatable block in section settings, each block containing: Brand Name (text), Logo Image (image picker), and optional Custom URL (URL field)
+    If no logo image is uploaded for a brand, fall back to displaying the brand name as styled text
+    Logos displayed in black and white / greyscale by default, with full colour or opacity change on hover (customizable)
+    Maintain consistent logo cell size with logos scaled to fit (object-fit: contain) within a fixed-height container
+    
+    Alphabet Filter Behaviour:
+    
+    Implemented in vanilla JavaScript (no external libraries) — no page reload required
+    Clicking a letter hides all brand grid items whose names do not start with that letter
+    Clicking "All" shows every brand
+    If a selected letter has no matching brands, display a subtle "No brands found" message
+    Brands are sorted alphabetically by name automatically on render
+    The "#" filter shows brands starting with a number
+    
+    Theme Integration & Customization Settings:
+    
+    Section padding (top/bottom) — defaults to theme spacing
+    Background color — defaults to theme background
+    Heading text, font size, and alignment — inherits theme heading styles by default
+    Filter bar: button font, active state color, inactive state color — all default to theme accent/primary colors
+    Logo cell border: toggle on/off, color, border-radius — defaults off
+    Logo hover effect: choose between colour reveal, opacity lift, or none
+    Grid gap size — small / medium / large options
+    Section max-width — full width or contained
+    
+    Code Requirements:
+    
+    Written as a single .liquid file with embedded <style> and <script> blocks
+    Uses Shopify section schema at the bottom with all settings and one repeatable block type ("Brand")
+    Semantic HTML: section > div.container > h2 + nav (filter bar) + div (grid)
+    Mobile responsive using CSS grid auto-fill or explicit column counts per breakpoint via media queries
+    No dependencies on jQuery or external scripts
+    Compatible with Shopify OS 2.0 themes, Restyle the alphabet filter bar to match the following:
+    
+    Remove the individual button box/border from each letter — letters should sit in a plain horizontal row with no background or box by default
+    Add a single full-width border line underneath the entire row of letters (like a bottom border on the nav container, not on each individual letter)
+    On hover, each letter should show a filled background (theme accent/primary color) so it feels like a button only on interaction
+    The active/selected letter should also have the filled background state
+    All letters must fit in a single row on desktop — reduce font size, letter-spacing, or padding as needed to prevent wrapping. Do not allow overflow into a second row on desktop
+    On mobile: collapse the alphabet filter into a compact dropdown select element (a styled <select> tag) that shows the currently active letter and allows the user to pick a different one. Style it to match the section's color settings.
+    Also add a top border to the filter bar container as well, so the row of letters sits between a top and bottom border line — both spanning the full width of the section/container. The border color should be a customizable setting that defaults to the theme's border or text color., Change the grid to display 5 columns on desktop, 3 on tablet, and 2 on mobile. Increase the padding inside each logo cell to give logos more breathing room., Remove the custom URL field from the brand block settings entirely. Instead, always auto-generate the vendor link from the brand name using the format /collections/vendors?q=[brand name], encoding any spaces as %20. No manual URL input should be required.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-brand-directory-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding-top: {{ block.settings.padding_top }}px;
+    padding-bottom: {{ block.settings.padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-brand-directory-container-{{ ai_gen_id }} {
+    {% if block.settings.max_width == 'full' %}
+      max-width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+    {% else %}
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 20px;
+      padding-right: 20px;
+    {% endif %}
+  }
+
+  .ai-brand-directory-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    text-align: {{ block.settings.heading_alignment }};
+    margin: 0 0 40px 0;
+    color: {{ block.settings.heading_color }};
+  }
+
+  .ai-brand-directory-filter-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    justify-content: {{ block.settings.heading_alignment }};
+    margin-bottom: 40px;
+    padding: 12px 0;
+    border-top: 1px solid {{ block.settings.filter_border_color }};
+    border-bottom: 1px solid {{ block.settings.filter_border_color }};
+    overflow-x: auto;
+  }
+
+  .ai-brand-directory-filter-select-{{ ai_gen_id }} {
+    display: none;
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 40px;
+    background-color: {{ block.settings.filter_inactive_bg }};
+    color: {{ block.settings.filter_inactive_color }};
+    border: 1px solid {{ block.settings.filter_border_color }};
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .ai-brand-directory-filter-btn-{{ ai_gen_id }} {
+    padding: 6px 8px;
+    background-color: transparent;
+    color: {{ block.settings.filter_inactive_color }};
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .ai-brand-directory-filter-btn-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.filter_active_bg }};
+    color: {{ block.settings.filter_active_color }};
+  }
+
+  .ai-brand-directory-filter-btn-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.filter_active_bg }};
+    color: {{ block.settings.filter_active_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-brand-directory-filter-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-brand-directory-filter-select-{{ ai_gen_id }} {
+      display: block;
+    }
+  }
+
+  .ai-brand-directory-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+    margin-bottom: 20px;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-brand-directory-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-brand-directory-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .ai-brand-directory-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    background-color: {{ block.settings.logo_cell_bg }};
+    {% if block.settings.show_border %}
+      border: 1px solid {{ block.settings.border_color }};
+    {% endif %}
+    border-radius: {{ block.settings.border_radius }}px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    height: 140px;
+  }
+
+  .ai-brand-directory-item-{{ ai_gen_id }}:hover {
+    {% if block.settings.hover_effect == 'color' %}
+      filter: none;
+    {% elsif block.settings.hover_effect == 'opacity' %}
+      opacity: 0.7;
+    {% endif %}
+  }
+
+  .ai-brand-directory-logo-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    {% if block.settings.hover_effect == 'color' %}
+      filter: grayscale(100%);
+      transition: filter 0.3s ease;
+    {% endif %}
+  }
+
+  .ai-brand-directory-item-{{ ai_gen_id }}:hover .ai-brand-directory-logo-{{ ai_gen_id }} {
+    {% if block.settings.hover_effect == 'color' %}
+      filter: grayscale(0%);
+    {% endif %}
+  }
+
+  .ai-brand-directory-name-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ block.settings.heading_color }};
+    text-align: center;
+  }
+
+  .ai-brand-directory-empty-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 40px 20px;
+    color: {{ block.settings.heading_color }};
+    opacity: 0.6;
+    font-size: 16px;
+    display: none;
+  }
+
+  .ai-brand-directory-empty-{{ ai_gen_id }}.visible {
+    display: block;
+  }
+{% endstyle %}
+
+<brand-directory-{{ ai_gen_id }} class="ai-brand-directory-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-brand-directory-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-brand-directory-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+    {% endif %}
+
+    <select class="ai-brand-directory-filter-select-{{ ai_gen_id }}" data-filter-select aria-label="Filter brands by letter">
+      <option value="all">All Brands</option>
+      <option value="#"># (Numbers)</option>
+      {% for i in (65..90) %}
+        {% assign letter = i | minus: 65 %}
+        {% assign letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' | split: '' %}
+        <option value="{{ letters[letter] }}">{{ letters[letter] }}</option>
+      {% endfor %}
+    </select>
+
+    <nav class="ai-brand-directory-filter-{{ ai_gen_id }}" aria-label="Brand filter">
+      <button class="ai-brand-directory-filter-btn-{{ ai_gen_id }} active" data-filter="all">All</button>
+      <button class="ai-brand-directory-filter-btn-{{ ai_gen_id }}" data-filter="#">#</button>
+      {% for i in (65..90) %}
+        {% assign letter = i | minus: 65 %}
+        {% assign letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' | split: '' %}
+        <button class="ai-brand-directory-filter-btn-{{ ai_gen_id }}" data-filter="{{ letters[letter] }}">{{ letters[letter] }}</button>
+      {% endfor %}
+    </nav>
+
+    <div class="ai-brand-directory-grid-{{ ai_gen_id }}" data-grid>
+      {% liquid
+        assign brand_1_name = block.settings.brand_1_name
+        assign brand_1_logo = block.settings.brand_1_logo
+        
+        assign brand_2_name = block.settings.brand_2_name
+        assign brand_2_logo = block.settings.brand_2_logo
+        
+        assign brand_3_name = block.settings.brand_3_name
+        assign brand_3_logo = block.settings.brand_3_logo
+        
+        assign brand_4_name = block.settings.brand_4_name
+        assign brand_4_logo = block.settings.brand_4_logo
+        
+        assign brand_5_name = block.settings.brand_5_name
+        assign brand_5_logo = block.settings.brand_5_logo
+        
+        assign brand_6_name = block.settings.brand_6_name
+        assign brand_6_logo = block.settings.brand_6_logo
+        
+        assign brand_7_name = block.settings.brand_7_name
+        assign brand_7_logo = block.settings.brand_7_logo
+        
+        assign brand_8_name = block.settings.brand_8_name
+        assign brand_8_logo = block.settings.brand_8_logo
+        
+        assign brand_9_name = block.settings.brand_9_name
+        assign brand_9_logo = block.settings.brand_9_logo
+        
+        assign brand_10_name = block.settings.brand_10_name
+        assign brand_10_logo = block.settings.brand_10_logo
+        
+        assign brand_11_name = block.settings.brand_11_name
+        assign brand_11_logo = block.settings.brand_11_logo
+        
+        assign brand_12_name = block.settings.brand_12_name
+        assign brand_12_logo = block.settings.brand_12_logo
+        
+        assign brand_13_name = block.settings.brand_13_name
+        assign brand_13_logo = block.settings.brand_13_logo
+        
+        assign brand_14_name = block.settings.brand_14_name
+        assign brand_14_logo = block.settings.brand_14_logo
+        
+        assign brand_15_name = block.settings.brand_15_name
+        assign brand_15_logo = block.settings.brand_15_logo
+        
+        assign brand_16_name = block.settings.brand_16_name
+        assign brand_16_logo = block.settings.brand_16_logo
+        
+        assign brand_17_name = block.settings.brand_17_name
+        assign brand_17_logo = block.settings.brand_17_logo
+        
+        assign brand_18_name = block.settings.brand_18_name
+        assign brand_18_logo = block.settings.brand_18_logo
+        
+        assign brand_19_name = block.settings.brand_19_name
+        assign brand_19_logo = block.settings.brand_19_logo
+        
+        assign brand_20_name = block.settings.brand_20_name
+        assign brand_20_logo = block.settings.brand_20_logo
+      %}
+
+      {% for i in (1..20) %}
+        {% liquid
+          case i
+            when 1
+              assign brand_name = brand_1_name
+              assign brand_logo = brand_1_logo
+            when 2
+              assign brand_name = brand_2_name
+              assign brand_logo = brand_2_logo
+            when 3
+              assign brand_name = brand_3_name
+              assign brand_logo = brand_3_logo
+            when 4
+              assign brand_name = brand_4_name
+              assign brand_logo = brand_4_logo
+            when 5
+              assign brand_name = brand_5_name
+              assign brand_logo = brand_5_logo
+            when 6
+              assign brand_name = brand_6_name
+              assign brand_logo = brand_6_logo
+            when 7
+              assign brand_name = brand_7_name
+              assign brand_logo = brand_7_logo
+            when 8
+              assign brand_name = brand_8_name
+              assign brand_logo = brand_8_logo
+            when 9
+              assign brand_name = brand_9_name
+              assign brand_logo = brand_9_logo
+            when 10
+              assign brand_name = brand_10_name
+              assign brand_logo = brand_10_logo
+            when 11
+              assign brand_name = brand_11_name
+              assign brand_logo = brand_11_logo
+            when 12
+              assign brand_name = brand_12_name
+              assign brand_logo = brand_12_logo
+            when 13
+              assign brand_name = brand_13_name
+              assign brand_logo = brand_13_logo
+            when 14
+              assign brand_name = brand_14_name
+              assign brand_logo = brand_14_logo
+            when 15
+              assign brand_name = brand_15_name
+              assign brand_logo = brand_15_logo
+            when 16
+              assign brand_name = brand_16_name
+              assign brand_logo = brand_16_logo
+            when 17
+              assign brand_name = brand_17_name
+              assign brand_logo = brand_17_logo
+            when 18
+              assign brand_name = brand_18_name
+              assign brand_logo = brand_18_logo
+            when 19
+              assign brand_name = brand_19_name
+              assign brand_logo = brand_19_logo
+            when 20
+              assign brand_name = brand_20_name
+              assign brand_logo = brand_20_logo
+          endcase
+        %}
+        
+        {% if brand_name != blank %}
+          {% assign first_char = brand_name | slice: 0 | upcase %}
+          {% assign encoded_name = brand_name | url_encode %}
+          {% assign brand_url = '/collections/vendors?q=' | append: encoded_name %}
+
+          <a 
+            href="{{ brand_url }}" 
+            class="ai-brand-directory-item-{{ ai_gen_id }}"
+            data-brand="{{ brand_name }}"
+            data-letter="{{ first_char }}"
+          >
+            {% if brand_logo != blank %}
+              <img 
+                src="{{ brand_logo | image_url: width: 300 }}" 
+                alt="{{ brand_name | escape }}"
+                class="ai-brand-directory-logo-{{ ai_gen_id }}"
+                loading="lazy"
+                width="300"
+                height="140"
+              >
+            {% else %}
+              <div class="ai-brand-directory-name-{{ ai_gen_id }}">{{ brand_name }}</div>
+            {% endif %}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ai-brand-directory-empty-{{ ai_gen_id }}" data-empty>
+      No brands found
+    </div>
+  </div>
+</brand-directory-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class BrandDirectory{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.filterButtons = this.querySelectorAll('.ai-brand-directory-filter-btn-{{ ai_gen_id }}');
+        this.filterSelect = this.querySelector('[data-filter-select]');
+        this.brandItems = this.querySelectorAll('.ai-brand-directory-item-{{ ai_gen_id }}');
+        this.emptyMessage = this.querySelector('.ai-brand-directory-empty-{{ ai_gen_id }}');
+        
+        this.sortBrands();
+        this.setupEventListeners();
+      }
+
+      sortBrands() {
+        const grid = this.querySelector('[data-grid]');
+        const items = Array.from(this.brandItems);
+        
+        items.sort(function(a, b) {
+          const nameA = a.getAttribute('data-brand').toLowerCase();
+          const nameB = b.getAttribute('data-brand').toLowerCase();
+          return nameA.localeCompare(nameB);
+        });
+        
+        items.forEach(function(item) {
+          grid.appendChild(item);
+        });
+      }
+
+      setupEventListeners() {
+        const self = this;
+        
+        this.filterButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+            self.filterBrands(filter);
+            
+            self.filterButtons.forEach(function(btn) {
+              btn.classList.remove('active');
+            });
+            this.classList.add('active');
+          });
+        });
+
+        if (this.filterSelect) {
+          this.filterSelect.addEventListener('change', function() {
+            const filter = this.value;
+            self.filterBrands(filter);
+          });
+        }
+      }
+
+      filterBrands(filter) {
+        let visibleCount = 0;
+        
+        this.brandItems.forEach(function(item) {
+          const brandName = item.getAttribute('data-brand');
+          const firstChar = item.getAttribute('data-letter');
+          
+          if (filter === 'all') {
+            item.style.display = 'flex';
+            visibleCount++;
+          } else if (filter === '#') {
+            const isNumber = /^[0-9]/.test(brandName);
+            if (isNumber) {
+              item.style.display = 'flex';
+              visibleCount++;
+            } else {
+              item.style.display = 'none';
+            }
+          } else {
+            if (firstChar === filter) {
+              item.style.display = 'flex';
+              visibleCount++;
+            } else {
+              item.style.display = 'none';
+            }
+          }
+        });
+        
+        if (visibleCount === 0) {
+          this.emptyMessage.classList.add('visible');
+        } else {
+          this.emptyMessage.classList.remove('visible');
+        }
+      }
+    }
+
+    customElements.define('brand-directory-{{ ai_gen_id }}', BrandDirectory{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Brand directory",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "All Brands"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "max_width",
+      "label": "Section width",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full width"
+        },
+        {
+          "value": "contained",
+          "label": "Contained"
+        }
+      ],
+      "default": "contained"
+    },
+    {
+      "type": "select",
+      "id": "grid_gap",
+      "label": "Grid gap",
+      "options": [
+        {
+          "value": "10",
+          "label": "Small"
+        },
+        {
+          "value": "20",
+          "label": "Medium"
+        },
+        {
+          "value": "30",
+          "label": "Large"
+        }
+      ],
+      "default": "20"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f9f8f6"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Filter bar"
+    },
+    {
+      "type": "color",
+      "id": "filter_border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "filter_inactive_bg",
+      "label": "Inactive background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "filter_inactive_color",
+      "label": "Inactive text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "filter_active_bg",
+      "label": "Active background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "filter_active_color",
+      "label": "Active text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Logo cells"
+    },
+    {
+      "type": "color",
+      "id": "logo_cell_bg",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show border",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "color",
+          "label": "Color reveal"
+        },
+        {
+          "value": "opacity",
+          "label": "Opacity lift"
+        }
+      ],
+      "default": "color"
+    },
+    {
+      "type": "header",
+      "content": "Brand 1"
+    },
+    {
+      "type": "text",
+      "id": "brand_1_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_1_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 2"
+    },
+    {
+      "type": "text",
+      "id": "brand_2_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_2_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 3"
+    },
+    {
+      "type": "text",
+      "id": "brand_3_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_3_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 4"
+    },
+    {
+      "type": "text",
+      "id": "brand_4_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_4_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 5"
+    },
+    {
+      "type": "text",
+      "id": "brand_5_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_5_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 6"
+    },
+    {
+      "type": "text",
+      "id": "brand_6_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_6_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 7"
+    },
+    {
+      "type": "text",
+      "id": "brand_7_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_7_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 8"
+    },
+    {
+      "type": "text",
+      "id": "brand_8_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_8_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 9"
+    },
+    {
+      "type": "text",
+      "id": "brand_9_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_9_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 10"
+    },
+    {
+      "type": "text",
+      "id": "brand_10_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_10_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 11"
+    },
+    {
+      "type": "text",
+      "id": "brand_11_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_11_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 12"
+    },
+    {
+      "type": "text",
+      "id": "brand_12_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_12_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 13"
+    },
+    {
+      "type": "text",
+      "id": "brand_13_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_13_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 14"
+    },
+    {
+      "type": "text",
+      "id": "brand_14_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_14_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 15"
+    },
+    {
+      "type": "text",
+      "id": "brand_15_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_15_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 16"
+    },
+    {
+      "type": "text",
+      "id": "brand_16_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_16_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 17"
+    },
+    {
+      "type": "text",
+      "id": "brand_17_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_17_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 18"
+    },
+    {
+      "type": "text",
+      "id": "brand_18_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_18_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 19"
+    },
+    {
+      "type": "text",
+      "id": "brand_19_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_19_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "header",
+      "content": "Brand 20"
+    },
+    {
+      "type": "text",
+      "id": "brand_20_name",
+      "label": "Name"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_20_logo",
+      "label": "Logo"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand directory"
+    }
+  ]
+}
+{% endschema %}

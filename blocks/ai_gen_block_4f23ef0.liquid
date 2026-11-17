@@ -1,0 +1,490 @@
+{% comment %} Storm Cover Flow Gallery {% endcomment %}
+{% assign section_id = section.id | replace: '-', '_' %}
+
+{% style %}
+  #st-cf-{{ section_id }} {
+    background-color: {{ section.settings.background_color }};
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px 0;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .st-cf-stage-{{ section_id }} {
+    width: 100%;
+    height: {{ section.settings.image_height }}px;
+    position: relative;
+    perspective: 1200px;
+    perspective-origin: center center;
+  }
+
+  .st-cf-slide-{{ section_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc({{ section.settings.image_height }}px * 0.6);
+    height: 80%;
+    margin-top: calc({{ section.settings.image_height }}px * 0.8 / -2);
+    margin-left: calc({{ section.settings.image_height }}px * 0.6 / -2);
+    transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+                opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transform-style: preserve-3d;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .st-cf-img-wrap-{{ section_id }} {
+    width: 100%;
+    flex: 1;
+    overflow: hidden;
+    border: 8px solid #fff;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  .st-cf-img-wrap-{{ section_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    display: block;
+  }
+
+  .st-cf-placeholder-{{ section_id }} {
+    width: 100%;
+    height: 100%;
+    background: #e8e4dc;
+    display: grid;
+    place-items: center;
+    color: #999;
+    font-size: 13px;
+  }
+
+  .st-cf-caption-{{ section_id }} {
+    color: {{ section.settings.caption_color }};
+    font-size: {{ section.settings.caption_font_size }}px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .st-cf-slide-{{ section_id }}.is-active .st-cf-caption-{{ section_id }} {
+    opacity: 1;
+  }
+
+  .st-cf-nav-{{ section_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 56px;
+  }
+
+  .st-cf-dot-{{ section_id }} {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: {{ section.settings.caption_color }};
+    opacity: 0.25;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    border: none;
+    padding: 0;
+  }
+
+  .st-cf-dot-{{ section_id }}.is-active {
+    opacity: 1;
+  }
+
+  .st-cf-lightbox-{{ section_id }} {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 10000;
+    display: none;
+    place-items: center;
+  }
+
+  .st-cf-lightbox-{{ section_id }}.active {
+    display: grid;
+  }
+
+  .st-cf-lightbox-{{ section_id }} img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+
+  .st-cf-close-{{ section_id }} {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    color: #fff;
+    font-size: 36px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    line-height: 1;
+    padding: 0;
+  }
+{% endstyle %}
+
+{% assign slides_data = '' %}
+{% for i in (1..20) %}
+  {% assign img_key = 'image_' | append: i %}
+  {% assign img = section.settings[img_key] %}
+  {% if img != blank %}
+    {% assign slides_data = slides_data | append: i | append: ',' %}
+  {% endif %}
+{% endfor %}
+{% assign slide_indices = slides_data | split: ',' %}
+
+<div id="st-cf-{{ section_id }}">
+  <div class="st-cf-stage-{{ section_id }}" id="st-stage-{{ section_id }}">
+
+    {% if slide_indices.size > 0 %}
+      {% for i_str in slide_indices %}
+        {% assign i = i_str | plus: 0 %}
+        {% assign img_key = 'image_' | append: i %}
+        {% assign cap_key = 'caption_' | append: i %}
+        {% assign img = section.settings[img_key] %}
+        {% assign cap = section.settings[cap_key] %}
+        <div
+          class="st-cf-slide-{{ section_id }}"
+          data-index="{{ forloop.index0 }}"
+          data-full="{{ img | image_url: width: 2400 }}"
+        >
+          <div class="st-cf-img-wrap-{{ section_id }}">
+            <img
+              src="{{ img | image_url: width: 900 }}"
+              alt="{{ cap | escape }}"
+              loading="lazy"
+            >
+          </div>
+          {% if cap != blank %}
+            <div class="st-cf-caption-{{ section_id }}">{{ cap }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      {% for i in (1..5) %}
+        <div class="st-cf-slide-{{ section_id }}" data-index="{{ forloop.index0 }}" data-full="">
+          <div class="st-cf-img-wrap-{{ section_id }}">
+            <div class="st-cf-placeholder-{{ section_id }}">ADD IMAGE</div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+  </div>
+
+  <div class="st-cf-nav-{{ section_id }}" id="st-nav-{{ section_id }}">
+    {% if slide_indices.size > 0 %}
+      {% for i_str in slide_indices %}
+        <button class="st-cf-dot-{{ section_id }}" data-index="{{ forloop.index0 }}"></button>
+      {% endfor %}
+    {% else %}
+      {% for i in (1..5) %}
+        <button class="st-cf-dot-{{ section_id }}" data-index="{{ forloop.index0 }}"></button>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <div class="st-cf-lightbox-{{ section_id }}" id="st-lb-{{ section_id }}">
+    <button class="st-cf-close-{{ section_id }}" id="st-lbclose-{{ section_id }}">&#215;</button>
+    <img src="" alt="">
+  </div>
+</div>
+
+<script>
+(function() {
+  var SID = '{{ section_id }}';
+
+  function initCoverFlow() {
+    var stage   = document.getElementById('st-stage-' + SID);
+    var slides  = Array.from(stage.querySelectorAll('.st-cf-slide-' + SID));
+    var dots    = Array.from(document.querySelectorAll('.st-cf-dot-' + SID));
+    var lb      = document.getElementById('st-lb-' + SID);
+    var lbImg   = lb.querySelector('img');
+    var lbClose = document.getElementById('st-lbclose-' + SID);
+
+    if (!slides.length) return;
+
+    var SPREAD         = {{ section.settings.slide_spread | default: 180 }};
+    var SCALE_STEP     = {{ section.settings.scale_falloff | default: 12 }} / 100;
+    var OPACITY_STEP   = {{ section.settings.opacity_falloff | default: 20 }} / 100;
+    var STACK_COMPRESS = {{ section.settings.stack_compress | default: 5 }} / 10;
+
+    var current    = 0;
+    var total      = slides.length;
+    var dragging   = false;
+    var dragStartX = 0;
+    var dragDelta  = 0;
+
+    function layout(idx) {
+      current = ((idx % total) + total) % total;
+
+      slides.forEach(function(slide, i) {
+        var offset = i - current;
+        if (offset >  total / 2) offset -= total;
+        if (offset < -total / 2) offset += total;
+
+        var absOffset = Math.abs(offset);
+        var dir = offset < 0 ? -1 : offset > 0 ? 1 : 0;
+
+        var xPos;
+        if (offset === 0) {
+          xPos = 0;
+        } else {
+          xPos = dir * (SPREAD + (absOffset - 1) * SPREAD * STACK_COMPRESS);
+        }
+
+        var scale   = Math.max(0.25, 1 - absOffset * SCALE_STEP);
+        var opacity = Math.max(0.1,  1 - absOffset * OPACITY_STEP);
+        var zIndex  = 100 - absOffset * 10;
+        var rotY    = offset === 0 ? 0 : dir * Math.min(absOffset * 8, 40);
+
+        slide.style.transform = 'translateX(' + xPos + 'px) scale(' + scale + ') rotateY(' + rotY + 'deg)';
+        slide.style.opacity   = opacity;
+        slide.style.zIndex    = zIndex;
+        slide.classList.toggle('is-active', offset === 0);
+      });
+
+      dots.forEach(function(dot, i) {
+        dot.classList.toggle('is-active', i === current);
+      });
+    }
+
+    slides.forEach(function(slide, i) {
+      slide.addEventListener('click', function() {
+        if (dragging) return;
+        var offset = i - current;
+        if (offset >  total / 2) offset -= total;
+        if (offset < -total / 2) offset += total;
+        if (offset === 0) {
+          var src = slide.dataset.full;
+          if (src) { lbImg.src = src; lb.classList.add('active'); }
+        } else {
+          layout(current + offset);
+        }
+      });
+    });
+
+    dots.forEach(function(dot, i) {
+      dot.addEventListener('click', function() { layout(i); });
+    });
+
+    lbClose.addEventListener('click', function() { lb.classList.remove('active'); });
+    lb.addEventListener('click', function(e) {
+      if (e.target === lb) lb.classList.remove('active');
+    });
+
+    function onDragStart(x) {
+      dragging   = false;
+      dragStartX = x;
+      dragDelta  = 0;
+    }
+    function onDragMove(x) {
+      dragDelta = x - dragStartX;
+      if (Math.abs(dragDelta) > 5) dragging = true;
+    }
+    function onDragEnd() {
+      if (Math.abs(dragDelta) > 60) {
+        layout(current + (dragDelta < 0 ? 1 : -1));
+      }
+      setTimeout(function() { dragging = false; }, 10);
+    }
+
+    stage.addEventListener('mousedown',  function(e) { onDragStart(e.clientX); });
+    window.addEventListener('mousemove', function(e) { if (dragStartX) onDragMove(e.clientX); });
+    window.addEventListener('mouseup',   function()  { if (dragStartX) { onDragEnd(); dragStartX = 0; } });
+    stage.addEventListener('touchstart', function(e) { onDragStart(e.touches[0].clientX); }, { passive: true });
+    stage.addEventListener('touchmove',  function(e) { onDragMove(e.touches[0].clientX); },  { passive: true });
+    stage.addEventListener('touchend',   function()  { onDragEnd(); dragStartX = 0; });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowLeft')  layout(current - 1);
+      if (e.key === 'ArrowRight') layout(current + 1);
+      if (e.key === 'Escape')     lb.classList.remove('active');
+    });
+
+    layout(0);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCoverFlow);
+  } else {
+    initCoverFlow();
+  }
+  document.addEventListener('shopify:section:load', initCoverFlow);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Cover Flow Gallery",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f0ebe3"
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "label": "Gallery height",
+      "min": 300,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0, "max": 100, "step": 4, "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0, "max": 100, "step": 4, "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Cover Flow"
+    },
+    {
+      "type": "range",
+      "id": "slide_spread",
+      "label": "Spread between slides",
+      "min": 80, "max": 400, "step": 10, "unit": "px",
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "scale_falloff",
+      "label": "Scale falloff per step",
+      "min": 1, "max": 25, "step": 1,
+      "default": 12,
+      "info": "How much smaller each successive slide gets"
+    },
+    {
+      "type": "range",
+      "id": "opacity_falloff",
+      "label": "Opacity falloff per step",
+      "min": 1, "max": 40, "step": 1,
+      "default": 20,
+      "info": "How much more transparent each successive slide gets"
+    },
+    {
+      "type": "range",
+      "id": "stack_compress",
+      "label": "Stack compression",
+      "min": 1, "max": 9, "step": 1,
+      "default": 5,
+      "info": "How tightly side slides bunch together"
+    },
+    {
+      "type": "header",
+      "content": "Captions"
+    },
+    {
+      "type": "color",
+      "id": "caption_color",
+      "label": "Caption color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "caption_font_size",
+      "label": "Caption size",
+      "min": 10, "max": 24, "step": 1, "unit": "px",
+      "default": 13
+    },
+    { "type": "header", "content": "Photo 1" },
+    { "type": "image_picker", "id": "image_1", "label": "Image" },
+    { "type": "text", "id": "caption_1", "label": "Caption" },
+    { "type": "header", "content": "Photo 2" },
+    { "type": "image_picker", "id": "image_2", "label": "Image" },
+    { "type": "text", "id": "caption_2", "label": "Caption" },
+    { "type": "header", "content": "Photo 3" },
+    { "type": "image_picker", "id": "image_3", "label": "Image" },
+    { "type": "text", "id": "caption_3", "label": "Caption" },
+    { "type": "header", "content": "Photo 4" },
+    { "type": "image_picker", "id": "image_4", "label": "Image" },
+    { "type": "text", "id": "caption_4", "label": "Caption" },
+    { "type": "header", "content": "Photo 5" },
+    { "type": "image_picker", "id": "image_5", "label": "Image" },
+    { "type": "text", "id": "caption_5", "label": "Caption" },
+    { "type": "header", "content": "Photo 6" },
+    { "type": "image_picker", "id": "image_6", "label": "Image" },
+    { "type": "text", "id": "caption_6", "label": "Caption" },
+    { "type": "header", "content": "Photo 7" },
+    { "type": "image_picker", "id": "image_7", "label": "Image" },
+    { "type": "text", "id": "caption_7", "label": "Caption" },
+    { "type": "header", "content": "Photo 8" },
+    { "type": "image_picker", "id": "image_8", "label": "Image" },
+    { "type": "text", "id": "caption_8", "label": "Caption" },
+    { "type": "header", "content": "Photo 9" },
+    { "type": "image_picker", "id": "image_9", "label": "Image" },
+    { "type": "text", "id": "caption_9", "label": "Caption" },
+    { "type": "header", "content": "Photo 10" },
+    { "type": "image_picker", "id": "image_10", "label": "Image" },
+    { "type": "text", "id": "caption_10", "label": "Caption" },
+    { "type": "header", "content": "Photo 11" },
+    { "type": "image_picker", "id": "image_11", "label": "Image" },
+    { "type": "text", "id": "caption_11", "label": "Caption" },
+    { "type": "header", "content": "Photo 12" },
+    { "type": "image_picker", "id": "image_12", "label": "Image" },
+    { "type": "text", "id": "caption_12", "label": "Caption" },
+    { "type": "header", "content": "Photo 13" },
+    { "type": "image_picker", "id": "image_13", "label": "Image" },
+    { "type": "text", "id": "caption_13", "label": "Caption" },
+    { "type": "header", "content": "Photo 14" },
+    { "type": "image_picker", "id": "image_14", "label": "Image" },
+    { "type": "text", "id": "caption_14", "label": "Caption" },
+    { "type": "header", "content": "Photo 15" },
+    { "type": "image_picker", "id": "image_15", "label": "Image" },
+    { "type": "text", "id": "caption_15", "label": "Caption" },
+    { "type": "header", "content": "Photo 16" },
+    { "type": "image_picker", "id": "image_16", "label": "Image" },
+    { "type": "text", "id": "caption_16", "label": "Caption" },
+    { "type": "header", "content": "Photo 17" },
+    { "type": "image_picker", "id": "image_17", "label": "Image" },
+    { "type": "text", "id": "caption_17", "label": "Caption" },
+    { "type": "header", "content": "Photo 18" },
+    { "type": "image_picker", "id": "image_18", "label": "Image" },
+    { "type": "text", "id": "caption_18", "label": "Caption" },
+    { "type": "header", "content": "Photo 19" },
+    { "type": "image_picker", "id": "image_19", "label": "Image" },
+    { "type": "text", "id": "caption_19", "label": "Caption" },
+    { "type": "header", "content": "Photo 20" },
+    { "type": "image_picker", "id": "image_20", "label": "Image" },
+    { "type": "text", "id": "caption_20", "label": "Caption" }
+  ],
+  "presets": [
+    {
+      "name": "Cover Flow Gallery"
+    }
+  ]
+}
+{% endschema %}
+
+

@@ -1,0 +1,1670 @@
+{% doc %}
+  @prompt
+    An interactive size chart table with 20 ROWS and 5 COLUMNS, And add a button on the top to switch the view from one table to another (the use will be to show imperial vs metric units).
+    when the row or column is empty, it should be hidden. no radius on any of the containers. add padding in between between the imperial to metric buttons
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-size-chart-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Make entire first column bold */
+.ai-size-chart-table-{{ ai_gen_id }} th:first-child,
+.ai-size-chart-table-{{ ai_gen_id }} td:first-child {
+  font-weight: 700;
+}
+
+
+  .ai-size-chart-header-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 20px;
+  }
+
+  .ai-size-chart-toggle-{{ ai_gen_id }} {
+    padding: 12px 24px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    border: 1px solid {{ block.settings.button_border_color }};
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font: 'PT Mono';
+    text-transform: uppercase;
+  }
+
+  .ai-size-chart-toggle-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_text_color }};
+  }
+
+  .ai-size-chart-toggle-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.button_active_background }};
+    color: {{ block.settings.button_active_text_color }};
+    border-color: {{ block.settings.button_active_border_color }};
+  }
+
+  .ai-size-chart-table-container-{{ ai_gen_id }} {
+    width: 100%;
+    overflow-x: auto;}
+
+  .ai-size-chart-table-{{ ai_gen_id }} {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: {{ block.settings.table_background }};
+    display: none;
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }}.active {
+    display: table;
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} th,
+  .ai-size-chart-table-{{ ai_gen_id }} td {
+    padding: {{ block.settings.cell_padding }}px;
+    text-align: {{ block.settings.text_alignment }};
+    border: 1px solid {{ block.settings.border_color }};
+    border-left: none;
+    border-right:none;
+    font-size: {{ block.settings.text_size }}px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} th {
+    background-color: {{ block.settings.header_background }};
+    color: {{ block.settings.header_text_color }};
+    font-weight: 600;
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} tr:nth-child(even) td {
+    background-color: {{ block.settings.row_alternate_background }};
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} tr:hover td {
+    background-color: {{ block.settings.row_hover_background }};
+    color: #F9F8F6;
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} .ai-size-chart-row-hidden-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-size-chart-table-{{ ai_gen_id }} .ai-size-chart-col-hidden-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-size-chart-header-{{ ai_gen_id }} {
+      gap: 10px;
+    }
+
+    .ai-size-chart-toggle-{{ ai_gen_id }} {
+      padding: 10px 16px;
+      font-size: 12px;
+    }
+
+    .ai-size-chart-table-{{ ai_gen_id }} th,
+    .ai-size-chart-table-{{ ai_gen_id }} td {
+      padding: {{ block.settings.cell_padding | times: 0.7 }}px;
+      font-size: {{ block.settings.text_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<size-chart-{{ ai_gen_id }} class="ai-size-chart-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-size-chart-header-{{ ai_gen_id }}">
+    <button 
+      class="ai-size-chart-toggle-{{ ai_gen_id }} active" 
+      data-table="imperial"
+      aria-pressed="true"
+    >
+      {{ block.settings.imperial_label }}
+    </button>
+    <button 
+      class="ai-size-chart-toggle-{{ ai_gen_id }}" 
+      data-table="metric"
+      aria-pressed="false"
+    >
+      {{ block.settings.metric_label }}
+    </button>
+  </div>
+
+  <div class="ai-size-chart-table-container-{{ ai_gen_id }}">
+    <table class="ai-size-chart-table-{{ ai_gen_id }} active" id="imperial-table-{{ ai_gen_id }}">
+      <thead>
+        <tr>
+          {% for i in (1..5) %}
+            {% assign header_key = 'imperial_header_' | append: i %}
+            {% assign header_value = block.settings[header_key] %}
+            {% if header_value != blank %}
+              <th>{{ header_value }}</th>
+            {% else %}
+              <th class="ai-size-chart-col-hidden-{{ ai_gen_id }}"></th>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in (1..20) %}
+          {% assign has_content = false %}
+          {% capture row_content %}
+            {% for col in (1..5) %}
+              {% assign cell_key = 'imperial_row_' | append: row | append: '_col_' | append: col %}
+              {% assign cell_value = block.settings[cell_key] %}
+              {% assign header_key = 'imperial_header_' | append: col %}
+              {% assign header_value = block.settings[header_key] %}
+              {% if cell_value != blank and header_value != blank %}
+                {% assign has_content = true %}
+                <td>{{ cell_value }}</td>
+              {% elsif header_value != blank %}
+                <td></td>
+              {% else %}
+                <td class="ai-size-chart-col-hidden-{{ ai_gen_id }}"></td>
+              {% endif %}
+            {% endfor %}
+          {% endcapture %}
+          {% if has_content %}
+            <tr>{{ row_content }}</tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <table class="ai-size-chart-table-{{ ai_gen_id }}" id="metric-table-{{ ai_gen_id }}">
+      <thead>
+        <tr>
+          {% for i in (1..5) %}
+            {% assign header_key = 'metric_header_' | append: i %}
+            {% assign header_value = block.settings[header_key] %}
+            {% if header_value != blank %}
+              <th>{{ header_value }}</th>
+            {% else %}
+              <th class="ai-size-chart-col-hidden-{{ ai_gen_id }}"></th>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in (1..20) %}
+          {% assign has_content = false %}
+          {% capture row_content %}
+            {% for col in (1..5) %}
+              {% assign cell_key = 'metric_row_' | append: row | append: '_col_' | append: col %}
+              {% assign cell_value = block.settings[cell_key] %}
+              {% assign header_key = 'metric_header_' | append: col %}
+              {% assign header_value = block.settings[header_key] %}
+              {% if cell_value != blank and header_value != blank %}
+                {% assign has_content = true %}
+                <td>{{ cell_value }}</td>
+              {% elsif header_value != blank %}
+                <td></td>
+              {% else %}
+                <td class="ai-size-chart-col-hidden-{{ ai_gen_id }}"></td>
+              {% endif %}
+            {% endfor %}
+          {% endcapture %}
+          {% if has_content %}
+            <tr>{{ row_content }}</tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</size-chart-{{ ai_gen_id }}>
+
+<script>(function() {
+    class SizeChart{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.toggleButtons = this.querySelectorAll('.ai-size-chart-toggle-{{ ai_gen_id }}');
+        this.tables = this.querySelectorAll('.ai-size-chart-table-{{ ai_gen_id }}');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.toggleButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+            const targetTable = e.target.dataset.table;
+            this.switchTable(targetTable);
+          });
+        });
+      }
+
+      switchTable(targetTable) {
+        this.toggleButtons.forEach(button => {
+          const isActive = button.dataset.table === targetTable;
+          button.classList.toggle('active', isActive);
+          button.setAttribute('aria-pressed', isActive.toString());
+        });
+
+        this.tables.forEach(table => {
+          const isTargetTable = table.id.includes(targetTable);
+          table.classList.toggle('active', isTargetTable);
+        });
+      }
+    }
+
+    customElements.define('size-chart-{{ ai_gen_id }}', SizeChart{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Interactive Size Chart",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Toggle Buttons"
+    },
+    {
+      "type": "text",
+      "id": "imperial_label",
+      "label": "Imperial button label",
+      "default": "Imperial"
+    },
+    {
+      "type": "text",
+      "id": "metric_label",
+      "label": "Metric button label",
+      "default": "Metric"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Button border color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Button hover text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_active_background",
+      "label": "Active button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_active_text_color",
+      "label": "Active button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_active_border_color",
+      "label": "Active button border color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Table Style"
+    },
+    {
+      "type": "color",
+      "id": "table_background",
+      "label": "Table background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "header_background",
+      "label": "Header background",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Header text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "row_alternate_background",
+      "label": "Alternate row background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "row_hover_background",
+      "label": "Row hover background",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "range",
+      "id": "cell_padding",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Cell padding",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Headers"
+    },
+    {
+      "type": "text",
+      "id": "imperial_header_1",
+      "label": "Header 1",
+      "default": "Size"
+    },
+    {
+      "type": "text",
+      "id": "imperial_header_2",
+      "label": "Header 2",
+      "default": "Chest (in)"
+    },
+    {
+      "type": "text",
+      "id": "imperial_header_3",
+      "label": "Header 3",
+      "default": "Waist (in)"
+    },
+    {
+      "type": "text",
+      "id": "imperial_header_4",
+      "label": "Header 4",
+      "default": "Hip (in)"
+    },
+    {
+      "type": "text",
+      "id": "imperial_header_5",
+      "label": "Header 5",
+      "default": "Length (in)"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_1_col_1",
+      "label": "Row 1 Col 1",
+      "default": "XS"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_1_col_2",
+      "label": "Row 1 Col 2",
+      "default": "32-34"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_1_col_3",
+      "label": "Row 1 Col 3",
+      "default": "26-28"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_1_col_4",
+      "label": "Row 1 Col 4",
+      "default": "34-36"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_1_col_5",
+      "label": "Row 1 Col 5",
+      "default": "26"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_2_col_1",
+      "label": "Row 2 Col 1",
+      "default": "S"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_2_col_2",
+      "label": "Row 2 Col 2",
+      "default": "34-36"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_2_col_3",
+      "label": "Row 2 Col 3",
+      "default": "28-30"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_2_col_4",
+      "label": "Row 2 Col 4",
+      "default": "36-38"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_2_col_5",
+      "label": "Row 2 Col 5",
+      "default": "27"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_3_col_1",
+      "label": "Row 3 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_3_col_2",
+      "label": "Row 3 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_3_col_3",
+      "label": "Row 3 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_3_col_4",
+      "label": "Row 3 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_3_col_5",
+      "label": "Row 3 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_4_col_1",
+      "label": "Row 4 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_4_col_2",
+      "label": "Row 4 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_4_col_3",
+      "label": "Row 4 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_4_col_4",
+      "label": "Row 4 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_4_col_5",
+      "label": "Row 4 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 5"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_5_col_1",
+      "label": "Row 5 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_5_col_2",
+      "label": "Row 5 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_5_col_3",
+      "label": "Row 5 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_5_col_4",
+      "label": "Row 5 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_5_col_5",
+      "label": "Row 5 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 6"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_6_col_1",
+      "label": "Row 6 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_6_col_2",
+      "label": "Row 6 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_6_col_3",
+      "label": "Row 6 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_6_col_4",
+      "label": "Row 6 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_6_col_5",
+      "label": "Row 6 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 7"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_7_col_1",
+      "label": "Row 7 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_7_col_2",
+      "label": "Row 7 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_7_col_3",
+      "label": "Row 7 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_7_col_4",
+      "label": "Row 7 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_7_col_5",
+      "label": "Row 7 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 8"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_8_col_1",
+      "label": "Row 8 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_8_col_2",
+      "label": "Row 8 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_8_col_3",
+      "label": "Row 8 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_8_col_4",
+      "label": "Row 8 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_8_col_5",
+      "label": "Row 8 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 9"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_9_col_1",
+      "label": "Row 9 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_9_col_2",
+      "label": "Row 9 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_9_col_3",
+      "label": "Row 9 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_9_col_4",
+      "label": "Row 9 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_9_col_5",
+      "label": "Row 9 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 10"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_10_col_1",
+      "label": "Row 10 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_10_col_2",
+      "label": "Row 10 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_10_col_3",
+      "label": "Row 10 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_10_col_4",
+      "label": "Row 10 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_10_col_5",
+      "label": "Row 10 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 11"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_11_col_1",
+      "label": "Row 11 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_11_col_2",
+      "label": "Row 11 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_11_col_3",
+      "label": "Row 11 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_11_col_4",
+      "label": "Row 11 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_11_col_5",
+      "label": "Row 11 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 12"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_12_col_1",
+      "label": "Row 12 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_12_col_2",
+      "label": "Row 12 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_12_col_3",
+      "label": "Row 12 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_12_col_4",
+      "label": "Row 12 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_12_col_5",
+      "label": "Row 12 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 13"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_13_col_1",
+      "label": "Row 13 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_13_col_2",
+      "label": "Row 13 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_13_col_3",
+      "label": "Row 13 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_13_col_4",
+      "label": "Row 13 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_13_col_5",
+      "label": "Row 13 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 14"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_14_col_1",
+      "label": "Row 14 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_14_col_2",
+      "label": "Row 14 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_14_col_3",
+      "label": "Row 14 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_14_col_4",
+      "label": "Row 14 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_14_col_5",
+      "label": "Row 14 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 15"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_15_col_1",
+      "label": "Row 15 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_15_col_2",
+      "label": "Row 15 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_15_col_3",
+      "label": "Row 15 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_15_col_4",
+      "label": "Row 15 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_15_col_5",
+      "label": "Row 15 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 16"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_16_col_1",
+      "label": "Row 16 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_16_col_2",
+      "label": "Row 16 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_16_col_3",
+      "label": "Row 16 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_16_col_4",
+      "label": "Row 16 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_16_col_5",
+      "label": "Row 16 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 17"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_17_col_1",
+      "label": "Row 17 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_17_col_2",
+      "label": "Row 17 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_17_col_3",
+      "label": "Row 17 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_17_col_4",
+      "label": "Row 17 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_17_col_5",
+      "label": "Row 17 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 18"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_18_col_1",
+      "label": "Row 18 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_18_col_2",
+      "label": "Row 18 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_18_col_3",
+      "label": "Row 18 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_18_col_4",
+      "label": "Row 18 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_18_col_5",
+      "label": "Row 18 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 19"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_19_col_1",
+      "label": "Row 19 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_19_col_2",
+      "label": "Row 19 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_19_col_3",
+      "label": "Row 19 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_19_col_4",
+      "label": "Row 19 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_19_col_5",
+      "label": "Row 19 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Imperial Table Row 20"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_20_col_1",
+      "label": "Row 20 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_20_col_2",
+      "label": "Row 20 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_20_col_3",
+      "label": "Row 20 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_20_col_4",
+      "label": "Row 20 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "imperial_row_20_col_5",
+      "label": "Row 20 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Headers"
+    },
+    {
+      "type": "text",
+      "id": "metric_header_1",
+      "label": "Header 1",
+      "default": "Size"
+    },
+    {
+      "type": "text",
+      "id": "metric_header_2",
+      "label": "Header 2",
+      "default": "Chest (cm)"
+    },
+    {
+      "type": "text",
+      "id": "metric_header_3",
+      "label": "Header 3",
+      "default": "Waist (cm)"
+    },
+    {
+      "type": "text",
+      "id": "metric_header_4",
+      "label": "Header 4",
+      "default": "Hip (cm)"
+    },
+    {
+      "type": "text",
+      "id": "metric_header_5",
+      "label": "Header 5",
+      "default": "Length (cm)"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_1_col_1",
+      "label": "Row 1 Col 1",
+      "default": "XS"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_1_col_2",
+      "label": "Row 1 Col 2",
+      "default": "81-86"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_1_col_3",
+      "label": "Row 1 Col 3",
+      "default": "66-71"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_1_col_4",
+      "label": "Row 1 Col 4",
+      "default": "86-91"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_1_col_5",
+      "label": "Row 1 Col 5",
+      "default": "66"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_2_col_1",
+      "label": "Row 2 Col 1",
+      "default": "S"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_2_col_2",
+      "label": "Row 2 Col 2",
+      "default": "86-91"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_2_col_3",
+      "label": "Row 2 Col 3",
+      "default": "71-76"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_2_col_4",
+      "label": "Row 2 Col 4",
+      "default": "91-97"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_2_col_5",
+      "label": "Row 2 Col 5",
+      "default": "69"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_3_col_1",
+      "label": "Row 3 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_3_col_2",
+      "label": "Row 3 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_3_col_3",
+      "label": "Row 3 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_3_col_4",
+      "label": "Row 3 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_3_col_5",
+      "label": "Row 3 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_4_col_1",
+      "label": "Row 4 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_4_col_2",
+      "label": "Row 4 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_4_col_3",
+      "label": "Row 4 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_4_col_4",
+      "label": "Row 4 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_4_col_5",
+      "label": "Row 4 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 5"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_5_col_1",
+      "label": "Row 5 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_5_col_2",
+      "label": "Row 5 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_5_col_3",
+      "label": "Row 5 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_5_col_4",
+      "label": "Row 5 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_5_col_5",
+      "label": "Row 5 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 6"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_6_col_1",
+      "label": "Row 6 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_6_col_2",
+      "label": "Row 6 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_6_col_3",
+      "label": "Row 6 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_6_col_4",
+      "label": "Row 6 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_6_col_5",
+      "label": "Row 6 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 7"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_7_col_1",
+      "label": "Row 7 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_7_col_2",
+      "label": "Row 7 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_7_col_3",
+      "label": "Row 7 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_7_col_4",
+      "label": "Row 7 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_7_col_5",
+      "label": "Row 7 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 8"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_8_col_1",
+      "label": "Row 8 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_8_col_2",
+      "label": "Row 8 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_8_col_3",
+      "label": "Row 8 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_8_col_4",
+      "label": "Row 8 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_8_col_5",
+      "label": "Row 8 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 9"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_9_col_1",
+      "label": "Row 9 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_9_col_2",
+      "label": "Row 9 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_9_col_3",
+      "label": "Row 9 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_9_col_4",
+      "label": "Row 9 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_9_col_5",
+      "label": "Row 9 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 10"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_10_col_1",
+      "label": "Row 10 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_10_col_2",
+      "label": "Row 10 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_10_col_3",
+      "label": "Row 10 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_10_col_4",
+      "label": "Row 10 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_10_col_5",
+      "label": "Row 10 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 11"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_11_col_1",
+      "label": "Row 11 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_11_col_2",
+      "label": "Row 11 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_11_col_3",
+      "label": "Row 11 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_11_col_4",
+      "label": "Row 11 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_11_col_5",
+      "label": "Row 11 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 12"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_12_col_1",
+      "label": "Row 12 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_12_col_2",
+      "label": "Row 12 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_12_col_3",
+      "label": "Row 12 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_12_col_4",
+      "label": "Row 12 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_12_col_5",
+      "label": "Row 12 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 13"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_13_col_1",
+      "label": "Row 13 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_13_col_2",
+      "label": "Row 13 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_13_col_3",
+      "label": "Row 13 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_13_col_4",
+      "label": "Row 13 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_13_col_5",
+      "label": "Row 13 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 14"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_14_col_1",
+      "label": "Row 14 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_14_col_2",
+      "label": "Row 14 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_14_col_3",
+      "label": "Row 14 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_14_col_4",
+      "label": "Row 14 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_14_col_5",
+      "label": "Row 14 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 15"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_15_col_1",
+      "label": "Row 15 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_15_col_2",
+      "label": "Row 15 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_15_col_3",
+      "label": "Row 15 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_15_col_4",
+      "label": "Row 15 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_15_col_5",
+      "label": "Row 15 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 16"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_16_col_1",
+      "label": "Row 16 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_16_col_2",
+      "label": "Row 16 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_16_col_3",
+      "label": "Row 16 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_16_col_4",
+      "label": "Row 16 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_16_col_5",
+      "label": "Row 16 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 17"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_17_col_1",
+      "label": "Row 17 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_17_col_2",
+      "label": "Row 17 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_17_col_3",
+      "label": "Row 17 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_17_col_4",
+      "label": "Row 17 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_17_col_5",
+      "label": "Row 17 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 18"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_18_col_1",
+      "label": "Row 18 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_18_col_2",
+      "label": "Row 18 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_18_col_3",
+      "label": "Row 18 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_18_col_4",
+      "label": "Row 18 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_18_col_5",
+      "label": "Row 18 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 19"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_19_col_1",
+      "label": "Row 19 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_19_col_2",
+      "label": "Row 19 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_19_col_3",
+      "label": "Row 19 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_19_col_4",
+      "label": "Row 19 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_19_col_5",
+      "label": "Row 19 Col 5"
+    },
+    {
+      "type": "header",
+      "content": "Metric Table Row 20"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_20_col_1",
+      "label": "Row 20 Col 1"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_20_col_2",
+      "label": "Row 20 Col 2"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_20_col_3",
+      "label": "Row 20 Col 3"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_20_col_4",
+      "label": "Row 20 Col 4"
+    },
+    {
+      "type": "text",
+      "id": "metric_row_20_col_5",
+      "label": "Row 20 Col 5"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Interactive Size Chart"
+    }
+  ]
+}
+{% endschema %}
