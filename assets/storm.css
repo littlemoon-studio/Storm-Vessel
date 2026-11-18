@@ -52,3 +52,18 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 /* Mobile menu drawer rows: 44px touch targets */
 .menu-drawer__menu-item { min-height: 44px; }
+
+/* Collection pages on phones: sticky Filter / Sort row, shorter title */
+@media (max-width: 749px) {
+  .facets-toggle {
+    position: sticky;
+    top: var(--header-height, 61px);
+    z-index: 2;
+    background: var(--color-background, var(--storm-cream));
+    border-bottom: 1px solid var(--storm-red);
+  }
+  main[data-template^='collection'] h1 {
+    font-size: clamp(1.6rem, 7vw, 2.5rem) !important;
+    line-height: 1.05;
+  }
+}
