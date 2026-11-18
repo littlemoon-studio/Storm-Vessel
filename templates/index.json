@@ -201,41 +201,14 @@
                   },
                   "blocks": {}
                 },
-                "text_47ATXP": {
-                  "type": "text",
-                  "name": "t:names.text",
-                  "settings": {
-                    "text": "<p><a href=\"/products/slowtide-all-weather-parka-dune\" title=\"Slowtide All Weather Parka - Dune\">SHOP NOW ❯</a></p>",
-                    "width": "fit-content",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
                 "button_hAAkTc": {
                   "type": "button",
                   "name": "t:names.button",
-                  "disabled": true,
                   "settings": {
-                    "label": "Shop now ❯",
+                    "label": "Shop now",
                     "link": "shopify://products/slowtide-all-weather-parka-dune",
                     "open_in_new_tab": false,
-                    "style_class": "link",
+                    "style_class": "button",
                     "width": "fit-content",
                     "custom_width": 100,
                     "width_mobile": "fit-content",
@@ -247,7 +220,6 @@
               "block_order": [
                 "text_p76pLe",
                 "text_tLBGap",
-                "text_47ATXP",
                 "button_hAAkTc"
               ]
             }
@@ -262,14 +234,14 @@
       ],
       "custom_css": [
         ".slide__image-container {border-bottom: solid 1px;}",
-        "h2 {font-size: 60px;}",
+        "h2 {font-size: clamp(2rem, 9vw, 3.75rem); line-height: 1; text-wrap: balance;}",
         "p {font-size: 16px;}"
       ],
       "settings": {
         "icons_style": "none",
         "slideshow_controls_style": "dots",
         "color_scheme": "scheme-fff1d915-f6ba-477e-bf6d-96e14131f913",
-        "autoplay": true,
+        "autoplay": false,
         "autoplay_speed": 5,
         "section_width": "full-width",
         "slide_height": "large",
