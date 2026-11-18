@@ -1,0 +1,65 @@
+{%- comment -%}
+  Storm: which photo should a product card show first?
+  Prints a number: the 0-based position of the chosen photo in product.media, or -1 for "no override, use the normal photo".
+
+  @param {product} product
+  @param {string} mode  first | flat | model | photo_2 | photo_3 | photo_4
+
+  flat   = the first photo whose alt text contains one of the markers in Theme settings → Storm card photos
+           (default markers: flat lay, flatlay, flat-lay, studio). The flatlay tool adds "flat lay" to the alt text it exports.
+  model  = the first photo that is NOT marked as a flat lay (usually the model / lifestyle shot).
+  If no photo matches, nothing is overridden and the card behaves as before.
+{%- endcomment -%}
+{%- liquid
+  assign chosen = -1
+  if product != blank and mode != blank and mode != 'first'
+    case mode
+      when 'photo_2'
+        assign want = 1
+      when 'photo_3'
+        assign want = 2
+      when 'photo_4'
+        assign want = 3
+      else
+        assign want = -1
+    endcase
+
+    if want >= 0
+      if product.media.size > want
+        assign chosen = want
+      endif
+    else
+      assign marker_text = settings.storm_flatlay_markers | default: 'flat lay, flatlay, flat-lay, studio' | downcase
+      assign markers = marker_text | split: ','
+      assign flat_index = -1
+      assign model_index = -1
+      for media in product.media
+        if media.media_type == 'image'
+          assign alt_text = media.alt | downcase
+          assign file_text = media.preview_image.src | split: '/' | last | split: '?' | first | downcase
+          assign is_flat = false
+          for marker in markers
+            assign marker_clean = marker | strip
+            if marker_clean != blank
+              if alt_text contains marker_clean or file_text contains marker_clean
+                assign is_flat = true
+              endif
+            endif
+          endfor
+          if is_flat and flat_index == -1
+            assign flat_index = forloop.index0
+          endif
+          if is_flat == false and model_index == -1
+            assign model_index = forloop.index0
+          endif
+        endif
+      endfor
+      if mode == 'flat'
+        assign chosen = flat_index
+      elsif mode == 'model'
+        assign chosen = model_index
+      endif
+    endif
+  endif
+-%}
+{{- chosen -}}

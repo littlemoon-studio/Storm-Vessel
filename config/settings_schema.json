@@ -2391,5 +2391,21 @@
         "default": "2026-12-26"
       }
     ]
+  },
+  {
+    "name": "Storm card photos",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Product cards can show the flat lay / studio photo or the model photo first (set per section: open a product card's image block and use Card photo). The theme finds a flat lay by looking for these words in the photo's alt text or file name."
+      },
+      {
+        "type": "text",
+        "id": "storm_flatlay_markers",
+        "label": "Flat lay markers",
+        "info": "Comma separated. A photo whose alt text or file name contains one of these is treated as a flat lay / studio photo.",
+        "default": "flat lay, flatlay, flat-lay, studio"
+      }
+    ]
   }
 ]

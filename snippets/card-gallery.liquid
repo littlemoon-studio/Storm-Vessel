@@ -232,6 +232,20 @@
     endif
   endfor
 
+  comment
+    Storm: let the theme editor choose which photo a card shows first (Card photo setting on the product image block).
+  endcomment
+  assign storm_photo_mode = block.settings.storm_card_photo | default: 'first'
+  if storm_photo_mode != 'first'
+    capture storm_photo_index
+      render 'storm-card-photo-index', product: product, mode: storm_photo_mode
+    endcapture
+    assign storm_photo_index = storm_photo_index | strip | plus: 0
+    if storm_photo_index >= 0
+      assign selected_variant_image_index = storm_photo_index
+    endif
+  endif
+
   assign hover_behavior = 'carousel'
 
   if block.settings.image_ratio == 'adapt' and block.settings.constrain_to_viewport

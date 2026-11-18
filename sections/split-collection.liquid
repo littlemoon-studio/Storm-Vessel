@@ -43,7 +43,7 @@
       <ul class="storm-split__grid" role="list">
         {%- if coll != blank -%}
           {%- for product in coll.products limit: section.settings.products_to_show -%}
-            <li>{% render 'storm-product-card', product: product, flush: true %}</li>
+            <li>{% render 'storm-product-card', product: product, flush: true, photo_mode: section.settings.card_photo %}</li>
           {%- endfor -%}
         {%- else -%}
           {%- for i in (1..4) -%}
@@ -148,34 +148,251 @@
   "tag": "section",
   "class": "storm-split-section",
   "settings": [
-    { "type": "header", "content": "Panel" },
-    { "type": "color", "id": "panel_background", "label": "Panel background", "default": "#1E1E1E" },
-    { "type": "color", "id": "panel_text", "label": "Panel text", "default": "#F6E7D2" },
-    { "type": "image_picker", "id": "star_image", "label": "Star image", "info": "Shown inside the star. Leave empty to use the star colour." },
-    { "type": "color", "id": "star_color", "label": "Star colour", "default": "#FFF786" },
-    { "type": "range", "id": "star_size", "label": "Star size", "min": 100, "max": 300, "step": 4, "unit": "px", "default": 184 },
-    { "type": "range", "id": "star_gap", "label": "Gap below star", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 48 },
-    { "type": "textarea", "id": "heading", "label": "Heading", "info": "One line per row. Use the shape controls below to stack it like a tree.", "default": "GIVE\nTHE GIFT OF\nSTORM SURF SHOP" },
-    { "type": "header", "content": "Heading shape" },
-    { "type": "range", "id": "heading_word_spacing", "label": "Word spacing", "min": -60, "max": 40, "step": 5, "unit": "%", "default": -30 },
-    { "type": "range", "id": "heading_line_height", "label": "Line height", "min": 80, "max": 140, "step": 5, "unit": "%", "default": 105 },
-    { "type": "range", "id": "line_1_tracking", "label": "Line 1 tracking", "min": -100, "max": 300, "step": 5, "default": -30 },
-    { "type": "range", "id": "line_1_size", "label": "Line 1 size", "min": 50, "max": 150, "step": 5, "unit": "%", "default": 100 },
-    { "type": "range", "id": "line_2_tracking", "label": "Line 2 tracking", "min": -100, "max": 300, "step": 5, "default": -30 },
-    { "type": "range", "id": "line_2_size", "label": "Line 2 size", "min": 50, "max": 150, "step": 5, "unit": "%", "default": 100 },
-    { "type": "range", "id": "line_3_tracking", "label": "Line 3 tracking", "min": -100, "max": 300, "step": 5, "default": -30 },
-    { "type": "range", "id": "line_3_size", "label": "Line 3 size", "min": 50, "max": 150, "step": 5, "unit": "%", "default": 100 },
-    { "type": "range", "id": "line_4_tracking", "label": "Line 4 tracking", "min": -100, "max": 300, "step": 5, "default": -30 },
-    { "type": "range", "id": "line_4_size", "label": "Line 4 size", "min": 50, "max": 150, "step": 5, "unit": "%", "default": 100 },
-    { "type": "text", "id": "button_label", "label": "Button label", "default": "SHOP STORM BRAND" },
-    { "type": "url", "id": "button_link", "label": "Button link", "info": "Defaults to the collection below." },
-    { "type": "color", "id": "button_background", "label": "Button background", "default": "#F6E7D2" },
-    { "type": "color", "id": "button_text", "label": "Button text", "default": "#000000" },
-    { "type": "header", "content": "Products" },
-    { "type": "collection", "id": "collection", "label": "Collection" },
-    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 2, "max": 24, "step": 2, "default": 8 },
-    { "type": "range", "id": "desktop_height", "label": "Section height (desktop)", "min": 600, "max": 1000, "step": 20, "unit": "px", "default": 820 }
+    {
+      "type": "header",
+      "content": "Panel"
+    },
+    {
+      "type": "color",
+      "id": "panel_background",
+      "label": "Panel background",
+      "default": "#1E1E1E"
+    },
+    {
+      "type": "color",
+      "id": "panel_text",
+      "label": "Panel text",
+      "default": "#F6E7D2"
+    },
+    {
+      "type": "image_picker",
+      "id": "star_image",
+      "label": "Star image",
+      "info": "Shown inside the star. Leave empty to use the star colour."
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star colour",
+      "default": "#FFF786"
+    },
+    {
+      "type": "range",
+      "id": "star_size",
+      "label": "Star size",
+      "min": 100,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 184
+    },
+    {
+      "type": "range",
+      "id": "star_gap",
+      "label": "Gap below star",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "One line per row. Use the shape controls below to stack it like a tree.",
+      "default": "GIVE\nTHE GIFT OF\nSTORM SURF SHOP"
+    },
+    {
+      "type": "header",
+      "content": "Heading shape"
+    },
+    {
+      "type": "range",
+      "id": "heading_word_spacing",
+      "label": "Word spacing",
+      "min": -60,
+      "max": 40,
+      "step": 5,
+      "unit": "%",
+      "default": -30
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "label": "Line height",
+      "min": 80,
+      "max": 140,
+      "step": 5,
+      "unit": "%",
+      "default": 105
+    },
+    {
+      "type": "range",
+      "id": "line_1_tracking",
+      "label": "Line 1 tracking",
+      "min": -100,
+      "max": 300,
+      "step": 5,
+      "default": -30
+    },
+    {
+      "type": "range",
+      "id": "line_1_size",
+      "label": "Line 1 size",
+      "min": 50,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "line_2_tracking",
+      "label": "Line 2 tracking",
+      "min": -100,
+      "max": 300,
+      "step": 5,
+      "default": -30
+    },
+    {
+      "type": "range",
+      "id": "line_2_size",
+      "label": "Line 2 size",
+      "min": 50,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "line_3_tracking",
+      "label": "Line 3 tracking",
+      "min": -100,
+      "max": 300,
+      "step": 5,
+      "default": -30
+    },
+    {
+      "type": "range",
+      "id": "line_3_size",
+      "label": "Line 3 size",
+      "min": 50,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "line_4_tracking",
+      "label": "Line 4 tracking",
+      "min": -100,
+      "max": 300,
+      "step": 5,
+      "default": -30
+    },
+    {
+      "type": "range",
+      "id": "line_4_size",
+      "label": "Line 4 size",
+      "min": 50,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "SHOP STORM BRAND"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Defaults to the collection below."
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#F6E7D2"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 24,
+      "step": 2,
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "card_photo",
+      "label": "Card photo",
+      "info": "Which photo each card shows. Flat lay and model use the alt text of each photo (Theme settings, Storm card photos). If nothing matches, the first photo is used.",
+      "options": [
+        {
+          "value": "first",
+          "label": "First photo (default)"
+        },
+        {
+          "value": "flat",
+          "label": "Flat lay / studio photo"
+        },
+        {
+          "value": "model",
+          "label": "Model / lifestyle photo"
+        },
+        {
+          "value": "photo_2",
+          "label": "2nd photo"
+        },
+        {
+          "value": "photo_3",
+          "label": "3rd photo"
+        },
+        {
+          "value": "photo_4",
+          "label": "4th photo"
+        }
+      ],
+      "default": "first"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Section height (desktop)",
+      "min": 600,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 820
+    }
   ],
-  "presets": [{ "name": "Split collection" }]
+  "presets": [
+    {
+      "name": "Split collection"
+    }
+  ]
 }
 {% endschema %}

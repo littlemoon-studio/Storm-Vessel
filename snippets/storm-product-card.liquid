@@ -1,6 +1,6 @@
 {%- comment -%}
   Storm product card. Swatches show only when the product has 2+ swatch values (e.g. Colour).
-  Usage: {% render 'storm-product-card', product: product, flush: true %}
+  Usage: {% render 'storm-product-card', product: product, flush: true, photo_mode: 'flat' %}  (photo_mode: first | flat | model | photo_2 | photo_3 | photo_4)
 {%- endcomment -%}
 {%- liquid
   assign colour_option = nil
@@ -12,10 +12,22 @@
     endif
   endfor
 -%}
+{%- liquid
+  assign card_media = product.featured_media
+  if photo_mode != blank and photo_mode != 'first'
+    capture photo_index
+      render 'storm-card-photo-index', product: product, mode: photo_mode
+    endcapture
+    assign photo_index = photo_index | strip | plus: 0
+    if photo_index >= 0
+      assign card_media = product.media[photo_index]
+    endif
+  endif
+-%}
 <a href="{{ product.url }}" class="storm-card{% if flush %} storm-card--flush{% endif %}">
   <div class="storm-card__media">
-    {%- if product.featured_media -%}
-      {{ product.featured_media | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 900px) 25vw, 50vw', alt: product.featured_media.alt }}
+    {%- if card_media -%}
+      {{ card_media | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 900px) 25vw, 50vw', alt: card_media.alt }}
     {%- else -%}
       {{ 'product-apparel-1' | placeholder_svg_tag }}
     {%- endif -%}
