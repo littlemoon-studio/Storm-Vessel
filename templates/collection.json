@@ -30,7 +30,7 @@
             "title": "STOCKING\nSTUFFERS",
             "link": "/collections/stocking-stuffers",
             "background": "#640403",
-            "label_color": "#f6e7d2",
+            "label_color": "#e62e09",
             "title_color": "#e62e09"
           }
         },
@@ -52,7 +52,18 @@
             "title": "SURF TRIP\nMUST-HAVES",
             "link": "/collections/surf-trip-must-haves",
             "background": "#e62e09",
-            "label_color": "#000000",
+            "label_color": "#640403",
+            "title_color": "#640403"
+          }
+        },
+        "tile_5": {
+          "type": "tile",
+          "settings": {
+            "label": "STAYING PUT?",
+            "title": "COLD WATER\nWETSUITS",
+            "link": "/collections/wetsuits",
+            "background": "#f6e7d2",
+            "label_color": "#640403",
             "title_color": "#640403"
           }
         }
@@ -61,12 +72,13 @@
         "tile_1",
         "tile_2",
         "tile_3",
-        "tile_4"
+        "tile_4",
+        "tile_5"
       ],
       "name": "Quick tiles",
       "settings": {
         "sticky": "scroll-up",
-        "columns": 4,
+        "columns": 5,
         "tile_height": 160,
         "tile_height_mobile": 112,
         "show_on_collections": "stocking-stuffers, stocking-stuffers-under-50, gift-for-surfers, gifts-4-surfers, storm-apparel, storm-tees, storm-hats, surf-trip-must-haves, holiday-gift-packs"
