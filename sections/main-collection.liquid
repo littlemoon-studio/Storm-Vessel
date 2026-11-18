@@ -154,6 +154,9 @@
             {% content_for 'block', type: 'product-card', id: 'product-card', closest.product: product %}
             {% # theme-check-enable %}
           </li>
+          {%- if forloop.index == 8 and paginate.current_page == 1 and collection.products_count > 8 -%}
+            {% render 'storm-grid-note' %}
+          {%- endif -%}
         {% endfor %}
         {% endcapture %}
         {% render 'product-grid',

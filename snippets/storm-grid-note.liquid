@@ -1,0 +1,67 @@
+{%- comment -%}
+  Storm: one message tile inside the product grid (after the 8th product, first page only).
+  Shows the Canada-only Christmas cutoff and the free-shipping line, so the deadline is visible while browsing.
+  Disappears by itself after the cutoff date. Not shown on pickup-only (surfboard) collections.
+  Information only, never a price. Controlled by Theme settings → Storm holiday messaging.
+{%- endcomment -%}
+{%- liquid
+  assign show_cutoff = false
+  if settings.storm_delivery_note_enabled and settings.storm_cutoff_date != blank
+    assign cutoff_end = settings.storm_cutoff_date | date: '%s' | plus: 86400
+    assign now_s = 'now' | date: '%s' | plus: 0
+    if now_s < cutoff_end
+      assign show_cutoff = true
+    endif
+    assign cutoff_label = settings.storm_cutoff_date | date: '%B %-d'
+  endif
+  assign threshold = settings.storm_free_shipping_threshold | plus: 0
+  assign show_free_shipping = false
+  if settings.storm_free_shipping_enabled and threshold > 0
+    assign show_free_shipping = true
+  endif
+  assign pickup_handles = settings.storm_pickup_collection | downcase | remove: ' ' | split: ','
+  assign is_pickup_collection = false
+  if pickup_handles contains collection.handle
+    assign is_pickup_collection = true
+  endif
+-%}
+{%- if show_cutoff and is_pickup_collection == false -%}
+  <li class="product-grid__item storm-grid-note">
+    <div class="storm-grid-note__inner">
+      <span class="storm-grid-note__star" aria-hidden="true">&#10038;</span>
+      <p class="storm-grid-note__title">Order by {{ cutoff_label }}</p>
+      <p class="storm-grid-note__text">for Christmas delivery in Canada.</p>
+      {%- if show_free_shipping -%}
+        <p class="storm-grid-note__small">Free shipping over {{ threshold | times: 100 | money_without_trailing_zeros }}.</p>
+      {%- endif -%}
+    </div>
+  </li>
+{%- endif -%}
+
+{% stylesheet %}
+  .storm-grid-note { display: flex; }
+  .storm-grid-note__inner {
+    flex: 1;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 24px;
+    border: 1px solid var(--storm-red, #a90707);
+    background: var(--storm-deep, #640403);
+    color: var(--storm-sand, #f6e7d2);
+    text-align: left;
+  }
+  .storm-grid-note__star { font-size: 28px; line-height: 1; margin-block-end: 8px; }
+  .storm-grid-note__title {
+    margin: 0;
+    font-size: clamp(20px, 2.2vw, 30px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+  }
+  .storm-grid-note__text { margin: 0; font-size: 14px; line-height: 1.35; }
+  .storm-grid-note__small { margin: 10px 0 0; font-size: 12px; line-height: 1.35; opacity: 0.9; }
+{% endstylesheet %}
