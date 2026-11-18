@@ -2336,5 +2336,40 @@
         "info": "Comma separated, YYYY-MM-DD, for example: 2026-12-25, 2026-12-26."
       }
     ]
+  },
+  {
+    "name": "Storm holiday messaging",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Short delivery lines on product pages and in the cart. Canada only. Information only, they never change a price."
+      },
+      {
+        "type": "checkbox",
+        "id": "storm_delivery_note_enabled",
+        "label": "Show the Christmas cutoff line",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "storm_cutoff_date",
+        "label": "Last order day for Christmas delivery (Canada)",
+        "info": "Format YYYY-MM-DD. The line disappears the day after.",
+        "default": "2026-12-10"
+      },
+      {
+        "type": "checkbox",
+        "id": "storm_free_shipping_enabled",
+        "label": "Show free shipping line and cart progress bar",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "storm_free_shipping_threshold",
+        "label": "Free shipping threshold (CAD)",
+        "info": "Display only. Your Shopify shipping rates decide the real threshold, so keep this in step with them.",
+        "default": 150
+      }
+    ]
   }
 ]

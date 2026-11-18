@@ -105,7 +105,7 @@
               "type": "_product-list-text",
               "name": "t:names.collection_title",
               "settings": {
-                "text": "<h3>Discover something new</h3>",
+                "text": "<h3>Add a little something</h3>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -442,7 +442,7 @@
       },
       "name": "t:names.products_grid",
       "settings": {
-        "collection": "all",
+        "collection": "stocking-stuffers",
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "max_products": 4,

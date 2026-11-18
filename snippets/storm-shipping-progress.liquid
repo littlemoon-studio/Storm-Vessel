@@ -1,0 +1,50 @@
+{%- comment -%}
+  Storm: free-shipping progress in the cart (page and drawer), plus the delivery note.
+  Counts only items that ship (pickup-only boards are excluded). Information only, never changes a price.
+  The real threshold is set by your Shopify shipping rates; keep Theme settings → Storm holiday messaging in step with them.
+{%- endcomment -%}
+{%- liquid
+  assign threshold_cents = settings.storm_free_shipping_threshold | plus: 0 | times: 100
+  assign eligible = 0
+  for item in cart.items
+    capture item_is_pickup
+      render 'storm-is-pickup-product', product: item.product
+    endcapture
+    unless item_is_pickup contains 'true'
+      assign eligible = eligible | plus: item.final_line_price
+    endunless
+  endfor
+-%}
+{%- if eligible > 0 -%}
+  {%- if settings.storm_free_shipping_enabled and threshold_cents > 0 -%}
+    {%- liquid
+      assign remaining = threshold_cents | minus: eligible
+      assign progress = eligible | times: 100 | divided_by: threshold_cents
+      if progress > 100
+        assign progress = 100
+      endif
+    -%}
+    <div class="storm-ship-progress" role="group" aria-label="Free shipping progress">
+      <p class="storm-ship-progress__text">
+        {%- if remaining <= 0 -%}
+          You've got free shipping in Canada.
+        {%- else -%}
+          You're <strong>{{ remaining | money }}</strong> away from free shipping in Canada.
+        {%- endif -%}
+      </p>
+      <div class="storm-ship-progress__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ progress }}">
+        <span style="width: {{ progress }}%"></span>
+      </div>
+    </div>
+  {%- endif -%}
+  {% render 'storm-delivery-note' %}
+{%- endif -%}
+
+{% stylesheet %}
+  .storm-ship-progress { margin-block-end: 8px; }
+  .storm-ship-progress__text { margin: 0 0 8px; font-size: 14px; line-height: 1.4; color: var(--storm-red, #a90707); }
+  .storm-ship-progress__bar { height: 8px; border: 1px solid var(--storm-red, #a90707); background: transparent; }
+  .storm-ship-progress__bar span { display: block; height: 100%; background: var(--storm-deep, #640403); transition: width 0.3s ease; }
+  @media (prefers-reduced-motion: reduce) { .storm-ship-progress__bar span { transition: none; } }
+  .cart__summary-totals + .storm-delivery-note { margin-block: 12px; }
+{% endstylesheet %}

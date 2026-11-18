@@ -1,0 +1,52 @@
+{%- comment -%}
+  Storm: short delivery reassurance lines for product pages and the cart.
+    1. "Order by Dec 10 for Christmas delivery in Canada." (disappears after the cutoff date)
+    2. "Free shipping in Canada on orders over $150."
+  Canada only: the shop does not ship to the US and has not stated a Christmas cutoff for other countries.
+  Controlled by Theme settings → Storm holiday messaging. Information only, it never changes a price.
+{%- endcomment -%}
+{%- liquid
+  assign show_cutoff = false
+  if settings.storm_delivery_note_enabled and settings.storm_cutoff_date != blank
+    assign cutoff_end = settings.storm_cutoff_date | date: '%s' | plus: 86400
+    assign now_s = 'now' | date: '%s' | plus: 0
+    if now_s < cutoff_end
+      assign show_cutoff = true
+    endif
+    assign cutoff_label = settings.storm_cutoff_date | date: '%B %-d'
+  endif
+
+  assign show_free_shipping = false
+  assign threshold = settings.storm_free_shipping_threshold | plus: 0
+  if settings.storm_free_shipping_enabled and threshold > 0
+    assign show_free_shipping = true
+  endif
+-%}
+{%- if show_cutoff or show_free_shipping -%}
+  <ul class="storm-delivery-note" role="list">
+    {%- if show_cutoff -%}
+      <li>Order by {{ cutoff_label }} for Christmas delivery in Canada.</li>
+    {%- endif -%}
+    {%- if show_free_shipping -%}
+      <li>Free shipping in Canada on orders over {{ threshold | times: 100 | money_without_trailing_zeros }}.</li>
+    {%- endif -%}
+  </ul>
+{%- endif -%}
+
+{% stylesheet %}
+  .storm-delivery-note {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--storm-red, #a90707);
+  }
+  .storm-delivery-note li::before {
+    content: '\2736';
+    margin-inline-end: 8px;
+  }
+{% endstylesheet %}
