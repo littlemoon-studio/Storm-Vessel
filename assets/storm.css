@@ -67,3 +67,73 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     line-height: 1.05;
   }
 }
+
+
+/* ==========================================================================
+   Storm polish layer
+   One set of motion values, quiet interaction states, and small defaults that
+   make the site feel finished. Nothing here changes the layout.
+   ========================================================================== */
+:root {
+  --storm-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --storm-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --storm-dur-fast: 0.15s;
+  --storm-dur: 0.3s;
+  --storm-dur-slow: 0.6s;
+}
+
+/* Page defaults */
+html {
+  scroll-padding-top: calc(var(--header-height, 61px) + 16px);   /* anchors and focus never hide under the sticky header */
+  scrollbar-gutter: stable;                                       /* opening a drawer doesn't nudge the page sideways */
+  -webkit-tap-highlight-color: transparent;
+}
+::selection { background: var(--storm-red); color: var(--storm-cream); }
+dialog, .menu-drawer, .cart-drawer__dialog, .facets--drawer { overscroll-behavior: contain; }
+a, button, [role='button'], summary, label, input, select { touch-action: manipulation; }   /* no tap delay */
+h1, h2, h3, .storm-tile__title, .storm-split__heading { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+.shopify-section[id*='__footer'] { content-visibility: auto; contain-intrinsic-size: auto 640px; }
+
+/* Buttons: one feel (quick ease, small press) */
+.button, .storm-split__button, .storm-sticky-atc__button {
+  transition: background-color var(--storm-dur-fast) var(--storm-ease), color var(--storm-dur-fast) var(--storm-ease),
+    border-color var(--storm-dur-fast) var(--storm-ease), transform var(--storm-dur-fast) var(--storm-ease);
+}
+.button:active:not(:disabled), .storm-split__button:active, .storm-sticky-atc__button:active { transform: translateY(1px); }
+.storm-card:active, .card-gallery:active { opacity: 0.94; }
+
+/* Phones: never let iOS zoom into a field, calmer announcement bar */
+@media (max-width: 749px) {
+  input, select, textarea { font-size: 16px; }
+  [id*='header_announcements'] :is(p, strong, span) { font-size: 12px; line-height: 1.25; letter-spacing: 0; }
+}
+
+/* Lazy images fade in instead of popping (storm-polish.js adds and removes these classes) */
+.storm-img-fade { opacity: 0; }
+.storm-img-fade.storm-img-in { opacity: 1; transition: opacity 0.4s var(--storm-ease); }
+
+/* Thin loading bar for filters, cart and search */
+#storm-progress {
+  position: fixed; inset-block-start: 0; inset-inline: 0; height: 3px; z-index: 200;
+  background: var(--storm-deep); transform: scaleX(0); transform-origin: left; opacity: 0; pointer-events: none;
+}
+#storm-progress.is-on { opacity: 1; animation: storm-progress 8s cubic-bezier(0.1, 0.6, 0.2, 1) forwards; }
+#storm-progress.is-done { opacity: 0; transform: scaleX(1); transition: transform 0.2s ease-out, opacity 0.25s ease 0.15s; }
+@keyframes storm-progress { from { transform: scaleX(0.02); } to { transform: scaleX(0.92); } }
+
+/* Home sections rise in once as they scroll into view */
+@media (prefers-reduced-motion: no-preference) {
+  .storm-reveal { opacity: 0; transform: translateY(18px); transition: opacity var(--storm-dur-slow) var(--storm-ease), transform var(--storm-dur-slow) var(--storm-ease); }
+  .storm-reveal.storm-in { opacity: 1; transform: none; }
+}
+
+/* Gentle parallax (desktop, browsers with scroll-driven animations, no reduced motion) */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 750px) and (hover: hover) {
+    [id$='storm_slideshow'] .slide__image { transform: scale(1.12); animation: storm-hero-parallax linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
+    .storm-split__star { animation: storm-star-turn linear both; animation-timeline: view(); animation-range: cover; }
+  }
+}
+@keyframes storm-hero-parallax { to { transform: scale(1.12) translateY(5%); } }
+@keyframes storm-star-turn { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
