@@ -43,7 +43,9 @@
             {%- if value.swatch.image -%}
               <span class="storm-card__swatch" style="background-image: url({{ value.swatch.image | image_url: width: 24 }});" title="{{ value | escape }}"></span>
             {%- else -%}
-              <span class="storm-card__swatch" style="background-color: {{ value.swatch.color }};" title="{{ value | escape }}"></span>
+              {%- capture storm_split -%}{% render 'storm-swatch-split', name: value.name %}{%- endcapture -%}
+              {%- assign storm_split = storm_split | strip -%}
+              <span class="storm-card__swatch" style="background: {% if storm_split != blank %}{{ storm_split }}{% else %}{{ value.swatch.color }}{% endif %};" title="{{ value | escape }}"></span>
             {%- endif -%}
           {%- endfor -%}
         </span>

@@ -1,0 +1,57 @@
+{%- comment -%}
+  Storm: two-colour (split) swatch background. Prints a CSS gradient, or nothing.
+  A colour value named "Black/Red", "Black & Red" or "Black + Red" is split in half when BOTH words are in the
+  colour dictionary (Theme settings → Storm swatch colours). A line can also name the whole value:
+  "black/red = #111111 #a90707". Swatches that use an image (prints, camo) are never changed.
+
+  @param {string} name - the colour option value
+{%- endcomment -%}
+{%- liquid
+  assign split_css = ''
+  assign dict = settings.storm_swatch_colours | newline_to_br | split: '<br />'
+  assign wanted = name | downcase | strip | replace: ' & ', '/' | replace: ' + ', '/' | replace: ' and ', '/' | replace: ' / ', '/' | replace: ' - ', '/'
+  assign hex_a = ''
+  assign hex_b = ''
+  for line in dict
+    assign pair = line | split: '='
+    if pair.size < 2
+      continue
+    endif
+    assign key = pair[0] | strip | downcase | replace: ' / ', '/'
+    assign val = pair[1] | strip
+    if key == wanted and val contains ' '
+      assign both = val | split: ' '
+      assign hex_a = both[0]
+      assign hex_b = both[1]
+      break
+    endif
+  endfor
+  if hex_a == '' and wanted contains '/'
+    assign parts = wanted | split: '/'
+    if parts.size >= 2
+      assign want_a = parts[0] | strip
+      assign want_b = parts[1] | strip
+      for line in dict
+        assign pair = line | split: '='
+        if pair.size < 2
+          continue
+        endif
+        assign key = pair[0] | strip | downcase
+        assign val = pair[1] | strip
+        if val contains ' '
+          continue
+        endif
+        if key == want_a
+          assign hex_a = val
+        endif
+        if key == want_b
+          assign hex_b = val
+        endif
+      endfor
+    endif
+  endif
+  if hex_a != '' and hex_b != ''
+    assign split_css = 'linear-gradient(135deg, ' | append: hex_a | append: ' 0 50%, ' | append: hex_b | append: ' 50% 100%)'
+  endif
+-%}
+{{- split_css -}}

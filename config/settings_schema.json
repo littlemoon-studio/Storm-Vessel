@@ -2399,6 +2399,21 @@
     ]
   },
   {
+    "name": "Storm swatch colours",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "A colour value named like Black/Red, Black & Red or Black + Red shows as a swatch split in half, when both colour words are in this list. Add one line per colour: name = #hex. To set a whole name, give two codes: black/red = #111111 #A90707. Swatches that use an image (prints, camo) are not changed."
+      },
+      {
+        "type": "textarea",
+        "id": "storm_swatch_colours",
+        "label": "Colour list",
+        "default": "black = #111111\nwhite = #FFFFFF\ngrey = #8A8A8A\ngray = #8A8A8A\ncharcoal = #3A3A3A\nred = #C21807\nburgundy = #6D1020\norange = #F26A21\nyellow = #F2C230\ngreen = #2E7D4F\nolive = #6B6B2F\nforest = #08341C\nteal = #1F7A7A\nblue = #2F5DA8\nnavy = #14233F\npurple = #6A3FA0\npink = #E58AA8\nbrown = #6B4428\ntan = #C8A878\ncream = #F4F0E7\nsand = #E6D5B8"
+      }
+    ]
+  },
+  {
     "name": "Storm card photos",
     "settings": [
       {
