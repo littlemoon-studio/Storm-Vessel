@@ -4,6 +4,7 @@ html:root {
   --font-subheading--family: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --font-heading--family: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --font-heading--weight: 600;
+  --font-accent--family: 'PT Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;   /* product titles, prices, marquee */
   --storm-red: #A90707;
   --storm-deep: #640403;
   --storm-cream: #F4F0E7;
