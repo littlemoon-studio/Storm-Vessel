@@ -115,6 +115,9 @@ class LocalizationFormComponent extends Component {
   resizeLanguageInput() {
     const { languageInput } = this.refs;
 
+    // Storm: stores with no language selector (single language) have no languageInput; nothing to resize.
+    if (!languageInput) return;
+
     // Hide all options except the selected option
     for (const option of languageInput.options) {
       if (!option.selected) {

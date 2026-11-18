@@ -76,8 +76,10 @@
       {% render 'quick-add-modal' %}
     {% endif %}
 <script>
-window.onload = function() {
+window.addEventListener('load', function() {
   const links = document.querySelectorAll('.collection-links__link');
+  /* Storm: only pages that use the collection-links block need this; other pages have no links. */
+  if (!links.length) return;
   let lastHovered = null;
   links[0].classList.add('active-collection-link');
 lastHovered = links[0];
@@ -100,7 +102,7 @@ lastHovered = links[0];
       }
     });
   });
-};
+});
 </script>
 
 <script>
