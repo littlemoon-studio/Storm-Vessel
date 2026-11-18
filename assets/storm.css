@@ -317,3 +317,8 @@ product-card product-price .price {
   font-family: var(--font-accent--family); font-size: 11px; line-height: 1; color: var(--storm-red); align-self: center; white-space: nowrap;
 }
 .product-card .strikethrough-variant, .product-card .variant-option__button-label--has-swatch .strikethrough-variant { border-radius: 50%; overflow: hidden; }
+
+/* Card swatch row: sits right of the price, drops under it when the card is narrow */
+.product-card .group-block-content:has(> product-swatches) { flex-wrap: wrap; align-items: center; row-gap: 8px; }
+.product-card product-swatches { width: auto; flex: 0 0 auto; min-width: 116px; margin-inline-start: auto; overflow: visible; }
+.product-card .variant-option--swatches overflow-list { min-width: 116px; }
