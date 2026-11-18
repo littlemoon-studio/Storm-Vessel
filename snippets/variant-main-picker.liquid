@@ -296,6 +296,9 @@
   }
 {% endstylesheet %}
 
+{%- comment -%} Storm: refine chips (thickness, entry, hood) for wetsuit-style products {%- endcomment -%}
+{% render 'storm-refine', product: product_resource %}
+
 {% unless product_resource.has_only_default_variant %}
   {% liquid
     assign button_background_brightness = section.settings.color_scheme.settings.foreground | color_brightness

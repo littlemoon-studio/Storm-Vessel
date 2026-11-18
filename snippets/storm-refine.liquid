@@ -1,0 +1,132 @@
+{%- comment -%}
+  Storm: "Refine" chips for wetsuit-style products (thickness, entry, hood, boot style, glove style).
+  Shows the other versions of the same product line (same brand, line, fit and category) as chips, so a shopper who knows
+  what they want can jump from a 4mm to a 5mm, from chest zip to back zip, from hooded to hoodless.
+
+  Data comes from the product's custom metafields: thickness, entry, wetsuit_type (hood), boot_style, glove_style,
+  and collection (the product line), fitt (fit) and category. A product without a line, a category and a thickness
+  shows no chips. The siblings are read from a tiny JSON view (templates/collection.storm-json.liquid).
+  Rendered from snippets/variant-main-picker.liquid.
+
+  @param {product} product
+{%- endcomment -%}
+{%- assign storm_th = product.metafields.custom.thickness.value -%}
+{%- assign storm_line = product.metafields.custom.collection.value | first -%}
+{%- assign storm_cat = product.metafields.custom.category.value -%}
+{%- if storm_th != blank and storm_line != blank and storm_cat != blank -%}
+  {%- assign storm_fit = product.metafields.custom.fitt.value | first -%}
+  <storm-refine
+    class="storm-refine"
+    data-handle="{{ product.handle | escape }}"
+    data-vendor="{{ product.vendor | escape }}"
+    data-line="{{ storm_line | escape }}"
+    data-fit="{{ storm_fit | escape }}"
+    data-category="{{ storm_cat | escape }}"
+    data-th="{{ storm_th | escape }}"
+    data-en="{{ product.metafields.custom.entry.value | escape }}"
+    data-ho="{{ product.metafields.custom.wetsuit_type.value | escape }}"
+    data-bs="{{ product.metafields.custom.boot_style.value | escape }}"
+    data-gs="{{ product.metafields.custom.glove_style.value | escape }}"
+    hidden
+  ></storm-refine>
+{%- endif -%}
+
+{% stylesheet %}
+  .storm-refine { display: block; margin-block-end: 20px; }
+  .storm-refine[data-state='loading'] { min-height: 76px; }
+  .storm-refine__group { margin: 0 0 14px; padding: 0; border: 0; }
+  .storm-refine__legend { margin: 0 0 8px; padding: 0; font-size: 13px; color: var(--storm-red); }
+  .storm-refine__legend strong { font-weight: 700; margin-inline-start: 6px; }
+  .storm-refine__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .storm-refine__chip {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 64px; padding: 0 16px;
+    border: 1px solid var(--storm-red); background: transparent; color: var(--storm-red); text-decoration: none;
+    font-size: 14px; line-height: 1; white-space: nowrap;
+    transition: background-color var(--storm-dur-fast) var(--storm-ease), color var(--storm-dur-fast) var(--storm-ease);
+  }
+  a.storm-refine__chip:hover { background: var(--storm-paper); }
+  .storm-refine__chip[aria-current='true'] { background: var(--storm-red); color: var(--storm-cream); cursor: default; }
+  .storm-refine__chip[data-unavailable] { border-style: dashed; opacity: 0.55; }
+  .storm-refine__chip:focus-visible { outline: 3px solid var(--storm-red); outline-offset: 2px; }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('storm-refine')) {
+    customElements.define(
+      'storm-refine',
+      class StormRefine extends HTMLElement {
+        connectedCallback() {
+          if (this.dataset.ready) return;
+          this.dataset.ready = '1';
+          this.dataset.state = 'loading';
+          this.hidden = false;
+          this.load().catch(() => this.remove());
+        }
+
+        async load() {
+          const d = this.dataset;
+          const params = new URLSearchParams({ view: 'storm-json' });
+          params.set('filter.p.m.custom.collection', d.line);
+          params.set('filter.p.m.custom.category', d.category);
+          if (d.fit) params.set('filter.p.m.custom.fitt', d.fit);
+          const key = 'storm-refine:' + params.toString();
+          let data = null;
+          try { data = JSON.parse(sessionStorage.getItem(key)); } catch (e) { /* storage may be blocked */ }
+          if (!data) {
+            const response = await fetch('/collections/all?' + params.toString());
+            if (!response.ok) throw new Error('refine lookup failed');
+            data = JSON.parse(await response.text());
+            try { sessionStorage.setItem(key, JSON.stringify(data)); } catch (e) { /* ignore */ }
+          }
+
+          const norm = (v) => (Array.isArray(v) ? v[0] : v) || '';
+          const siblings = (data.products || []).filter(
+            (p) => norm(p.v) === d.vendor && norm(p.c) === d.line && norm(p.g) === d.category && (!d.fit || norm(p.f) === d.fit)
+          );
+          const current = { h: d.handle, th: d.th, en: d.en, ho: d.ho, bs: d.bs, gs: d.gs };
+          const dims = [
+            { k: 'th', label: 'Thickness', sort: (a, b) => parseFloat(a) - parseFloat(b) },
+            { k: 'en', label: 'Entry' },
+            { k: 'ho', label: 'Hood' },
+            { k: 'bs', label: 'Boot style' },
+            { k: 'gs', label: 'Glove style' },
+          ].filter((x) => current[x.k]);
+
+          const groups = [];
+          for (const dim of dims) {
+            const values = [...new Set(siblings.map((p) => norm(p[dim.k])).filter(Boolean))];
+            if (values.length < 2) continue;
+            if (dim.sort) values.sort(dim.sort); else values.sort();
+            const others = dims.filter((x) => x.k !== dim.k);
+            const chips = values.map((value) => {
+              if (value === current[dim.k]) return { value, current: true };
+              // the closest sibling: same value here, matching as many other specs as possible, in stock first
+              const candidates = siblings.filter((p) => norm(p[dim.k]) === value && p.h !== d.handle);
+              candidates.sort((a, b) => {
+                const score = (p) => others.filter((x) => norm(p[x.k]) === current[x.k]).length * 10 + (p.a ? 1 : 0);
+                return score(b) - score(a);
+              });
+              const best = candidates[0];
+              return best ? { value, url: best.u, title: best.t, available: best.a } : null;
+            }).filter(Boolean);
+            if (chips.length > 1) groups.push({ label: dim.label, current: current[dim.k], chips });
+          }
+
+          if (!groups.length) { this.remove(); return; }
+          const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+          this.innerHTML = groups.map((g) => `
+            <div class="storm-refine__group" role="group" aria-label="${esc(g.label)}">
+              <p class="storm-refine__legend">${esc(g.label)}<strong>${esc(g.current)}</strong></p>
+              <div class="storm-refine__chips">
+                ${g.chips.map((c) => c.current
+                  ? `<span class="storm-refine__chip" aria-current="true">${esc(c.value)}</span>`
+                  : `<a class="storm-refine__chip" href="${esc(c.url)}" title="${esc(c.title)}"${c.available ? '' : ' data-unavailable'}>${esc(c.value)}</a>`
+                ).join('')}
+              </div>
+            </div>`).join('');
+          delete this.dataset.state;
+        }
+      }
+    );
+  }
+{% endjavascript %}
