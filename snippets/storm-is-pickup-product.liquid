@@ -11,7 +11,7 @@
   assign storm_pickup_result = false
   if settings.storm_pickup_enabled and product != blank
     assign pickup_tag = settings.storm_pickup_tag | strip | downcase
-    assign pickup_collection = settings.storm_pickup_collection | strip | downcase
+    assign pickup_collections = settings.storm_pickup_collection | downcase | remove: ' ' | split: ','
     if pickup_tag != blank
       for product_tag in product.tags
         assign product_tag_lower = product_tag | downcase
@@ -21,9 +21,9 @@
         endif
       endfor
     endif
-    if storm_pickup_result == false and pickup_collection != blank
+    if storm_pickup_result == false and pickup_collections.size > 0
       for product_collection in product.collections
-        if product_collection.handle == pickup_collection
+        if pickup_collections contains product_collection.handle
           assign storm_pickup_result = true
           break
         endif

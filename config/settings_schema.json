@@ -2301,8 +2301,8 @@
       {
         "type": "text",
         "id": "storm_pickup_collection",
-        "label": "Pickup-only collection handle",
-        "info": "Products in this collection are also treated as pickup only. Leave blank to use the tag only.",
+        "label": "Pickup-only collection handles",
+        "info": "Products in these collections are also treated as pickup only, and these collection pages show a pickup notice. Comma separated, for example: all-surfboards, longboards. Leave blank to use the tag only.",
         "default": "all-surfboards"
       },
       {
@@ -2375,6 +2375,20 @@
         "id": "storm_sticky_atc_enabled",
         "label": "Mobile sticky add-to-cart bar on product pages",
         "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "storm_snow_enabled",
+        "label": "Falling snow effect",
+        "info": "Soft red and sand flakes across the page. Skipped automatically for visitors who ask for reduced motion and on low-power phones.",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "storm_snow_until",
+        "label": "Snow last day",
+        "info": "Format YYYY-MM-DD. The snow stops after this day.",
+        "default": "2026-12-26"
       }
     ]
   }

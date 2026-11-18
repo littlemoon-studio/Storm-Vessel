@@ -19,7 +19,7 @@
         class="storm-tile{% if template.name == 'collection' and block.settings.link == collection.url %} storm-tile--current{% endif %}"
         href="{{ block.settings.link | default: '#' }}"
         {% if template.name == 'collection' and block.settings.link == collection.url %}aria-current="page"{% endif %}
-        style="--tile-bg: {{ block.settings.background }}; --tile-label: {{ block.settings.label_color }}; --tile-title: {{ block.settings.title_color }};"
+        style="--i: {{ forloop.index0 }}; --tile-bg: {{ block.settings.background }}; --tile-label: {{ block.settings.label_color }}; --tile-title: {{ block.settings.title_color }};"
         {{ block.shopify_attributes }}
       >
         <span class="storm-tile__label">{{ block.settings.label | escape }}</span>
@@ -58,6 +58,12 @@
     min-width: 0;
   }
   .storm-tile:hover { filter: brightness(1.12); }
+  @media (prefers-reduced-motion: no-preference) {
+    .storm-tile { animation: storm-tile-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 70ms); }
+    .storm-tile__title { transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1); }
+    .storm-tile:hover .storm-tile__title, .storm-tile:focus-visible .storm-tile__title { transform: translateY(-4px); }
+  }
+  @keyframes storm-tile-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
   .storm-tile--current { box-shadow: inset 0 -6px 0 var(--tile-title); }
   .storm-tile:focus-visible { outline: 3px solid #f6e7d2; outline-offset: -6px; }
   .storm-tile__label {

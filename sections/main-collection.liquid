@@ -1,5 +1,12 @@
+{%- comment -%} Storm: pickup-only notice on surfboard collection pages {%- endcomment -%}
+{%- assign storm_pickup_handles = settings.storm_pickup_collection | downcase | remove: ' ' | split: ',' -%}
+{%- if settings.storm_pickup_enabled and storm_pickup_handles contains collection.handle -%}
+  <div class="storm-pickup-collection-note">{% render 'storm-pickup-notice' %}</div>
+{%- endif -%}
 
 {% stylesheet %}
+  .storm-pickup-collection-note { max-width: var(--page-width, 1440px); margin: 0 auto; padding: 0 var(--page-margin, 16px); }
+  .storm-pickup-collection-note .storm-pickup-notice { margin-block: 0 24px; }
   .main-collection-grid {
     grid-column: var(--grid-column--mobile);
     @media screen and (width >= 750px) {
