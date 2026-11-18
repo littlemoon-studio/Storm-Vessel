@@ -100,6 +100,18 @@
   </div>
 </div>
 
+{%- comment -%} Storm: surfboard pickup gate (see snippets/storm-pickup-gate.liquid) {%- endcomment -%}
+{%- capture storm_gate_html -%}{% render 'storm-pickup-gate' %}{%- endcapture -%}
+{%- assign storm_gate_block = false -%}
+{%- assign storm_gate_active = false -%}
+{%- if storm_gate_html contains 'data-active' -%}
+  {%- assign storm_gate_active = true -%}
+  {%- unless storm_gate_html contains 'data-ready="true"' -%}
+    {%- assign storm_gate_block = true -%}
+  {%- endunless -%}
+{%- endif -%}
+{{ storm_gate_html }}
+
 <div class="cart__ctas">
   <button
     type="submit"
@@ -109,12 +121,15 @@
     {% if cart == empty %}
       disabled
     {% endif %}
+    {% if storm_gate_block %}
+      aria-disabled="true"
+    {% endif %}
     form="cart-form"
   >
     {{ 'content.checkout' | t }}
   </button>
 
-  {% if additional_checkout_buttons and settings.show_accelerated_checkout_buttons %}
+  {% if additional_checkout_buttons and settings.show_accelerated_checkout_buttons and storm_gate_active == false %}
     <div class="additional-checkout-buttons additional-checkout-buttons--vertical">
       {{ content_for_additional_checkout_buttons }}
     </div>

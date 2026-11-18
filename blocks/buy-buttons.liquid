@@ -35,6 +35,8 @@
     endif
   endif
 %}
+{%- comment -%} Storm: pickup-only products (surfboards) get a notice and no accelerated checkout. {%- endcomment -%}
+{%- capture storm_is_pickup -%}{% render 'storm-is-pickup-product', product: product %}{%- endcapture -%}
 
 {% stylesheet %}
   .buy-buttons-block {
@@ -215,6 +217,9 @@
 >
   {%- if product != blank -%}
     {%- assign product_form_id = 'BuyButtons-ProductForm-' | append: block.id -%}
+    {%- if storm_is_pickup contains 'true' -%}
+      {% render 'storm-pickup-notice' %}
+    {%- endif -%}
     <product-form-component
       data-section-id="{{ section.id }}"
       data-product-id="{{ product.id }}"
@@ -254,11 +259,13 @@
               {{- 'icon-error.svg' | inline_asset_content -}}
             </span>
           </span>
-          {% content_for 'block',
-            type: 'accelerated-checkout',
-            id: 'accelerated-checkout',
-            can_add_to_cart: can_add_to_cart
-          %}
+          {%- unless storm_is_pickup contains 'true' -%}
+            {% content_for 'block',
+              type: 'accelerated-checkout',
+              id: 'accelerated-checkout',
+              can_add_to_cart: can_add_to_cart
+            %}
+          {%- endunless -%}
         </div>
       {%- endform -%}
     </product-form-component>

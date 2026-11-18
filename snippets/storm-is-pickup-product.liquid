@@ -1,0 +1,34 @@
+{%- comment -%}
+  Storm: outputs the word "true" when a product is pickup-only (surfboards), otherwise nothing.
+  A product counts as pickup-only if it carries the tag set in Theme settings → Storm board pickup,
+  or belongs to the collection handle set there.
+
+  Usage:
+    {%- capture is_pickup -%}{% render 'storm-is-pickup-product', product: product %}{%- endcapture -%}
+    {%- if is_pickup contains 'true' -%} ... {%- endif -%}
+{%- endcomment -%}
+{%- liquid
+  assign storm_pickup_result = false
+  if settings.storm_pickup_enabled and product != blank
+    assign pickup_tag = settings.storm_pickup_tag | strip | downcase
+    assign pickup_collection = settings.storm_pickup_collection | strip | downcase
+    if pickup_tag != blank
+      for product_tag in product.tags
+        assign product_tag_lower = product_tag | downcase
+        if product_tag_lower == pickup_tag
+          assign storm_pickup_result = true
+          break
+        endif
+      endfor
+    endif
+    if storm_pickup_result == false and pickup_collection != blank
+      for product_collection in product.collections
+        if product_collection.handle == pickup_collection
+          assign storm_pickup_result = true
+          break
+        endif
+      endfor
+    endif
+  endif
+-%}
+{%- if storm_pickup_result -%}true{%- endif -%}

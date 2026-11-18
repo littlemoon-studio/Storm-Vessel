@@ -1,0 +1,329 @@
+{%- comment -%}
+  Storm: surfboard pickup gate, rendered inside snippets/cart-summary.liquid (cart page and cart drawer).
+
+  When the cart holds a pickup-only product (see storm-is-pickup-product) it shows a panel with:
+    - a required checkbox accepting the pickup-only terms
+    - a required "pickup day" date field
+  Both are saved as cart attributes ("Pickup terms accepted", "Board pickup date") which show up
+  on the order under Additional details. The Check out button is blocked until both are valid.
+
+  Output markers read by cart-summary.liquid:
+    data-active       the cart has a pickup-only item
+    data-ready="true" terms accepted and a usable date saved
+
+  When the cart has no pickup-only item but old pickup attributes are still saved, a hidden
+  <storm-pickup-gate data-clear> clears them so they don't land on ordinary orders.
+
+  This is a deterrent, not a hard block: someone who types /checkout directly skips the cart.
+{%- endcomment -%}
+{%- liquid
+  assign gate_titles = ''
+  assign gate_count = 0
+  for item in cart.items
+    capture item_is_pickup
+      render 'storm-is-pickup-product', product: item.product
+    endcapture
+    if item_is_pickup contains 'true'
+      assign gate_count = gate_count | plus: 1
+      assign gate_titles = gate_titles | append: item.product.title | append: '||'
+    endif
+  endfor
+
+  assign saved_date = cart.attributes['Board pickup date']
+  assign saved_terms = cart.attributes['Pickup terms accepted']
+-%}
+
+{%- if gate_count > 0 -%}
+  {%- liquid
+    assign pickup_days = settings.storm_pickup_days | plus: 0
+    assign pickup_phone = settings.storm_pickup_phone | strip
+    assign pickup_phone_href = pickup_phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '.'
+    assign now_s = 'now' | date: '%s' | plus: 0
+    assign min_date = now_s | plus: 86400 | date: '%Y-%m-%d'
+    assign min_num = min_date | remove: '-' | plus: 0
+    assign max_date = ''
+    if pickup_days > 0
+      assign max_seconds = pickup_days | times: 86400
+      assign max_date = now_s | plus: max_seconds | date: '%Y-%m-%d'
+    endif
+
+    assign gate_ready = false
+    if saved_terms == 'Yes' and saved_date != blank
+      assign saved_num = saved_date | remove: '-' | plus: 0
+      if saved_num >= min_num
+        assign gate_ready = true
+      endif
+    endif
+    assign title_list = gate_titles | split: '||'
+  -%}
+  <storm-pickup-gate
+    class="storm-pickup-gate"
+    data-active
+    data-ready="{{ gate_ready }}"
+    data-days="{{ pickup_days }}"
+    data-closed-dates="{{ settings.storm_pickup_closed_dates | escape }}"
+    data-closed-weekdays="{{ settings.storm_pickup_closed_weekdays | escape }}"
+  >
+    <fieldset class="storm-pickup-gate__fieldset">
+      <legend class="storm-pickup-gate__legend">Surfboard pickup</legend>
+
+      <p class="storm-pickup-gate__text">
+        {%- for title in title_list -%}
+          {%- if title != blank -%}<strong>{{ title | escape }}</strong>{% unless forloop.last %}, {% endunless %}{%- endif -%}
+        {%- endfor %}
+        is pickup only. We don't ship surfboards.
+        Collect it at Storm Surf Shop in Tofino
+        {%- if pickup_days > 0 %} within {{ pickup_days }} day{% if pickup_days != 1 %}s{% endif %} of your purchase{% endif -%}.
+      </p>
+
+      <label class="storm-pickup-gate__check">
+        <input
+          type="checkbox"
+          name="attributes[Pickup terms accepted]"
+          value="Yes"
+          form="cart-form"
+          {% if saved_terms == 'Yes' %}checked{% endif %}
+          required
+        >
+        <span>I understand this board is pickup only and I will collect it from the shop.</span>
+      </label>
+
+      <label class="storm-pickup-gate__date">
+        <span class="storm-pickup-gate__date-label">When will you pick up your board?</span>
+        <input
+          type="date"
+          name="attributes[Board pickup date]"
+          form="cart-form"
+          min="{{ min_date }}"
+          {% if max_date != blank %}max="{{ max_date }}"{% endif %}
+          value="{{ saved_date | escape }}"
+          required
+        >
+      </label>
+
+      <p class="storm-pickup-gate__error" data-error role="alert" aria-live="polite" hidden></p>
+
+      {%- if pickup_phone != blank -%}
+        <p class="storm-pickup-gate__call">
+          Need a different plan? <a href="tel:{{ pickup_phone_href }}">Call the shop on {{ pickup_phone | escape }}</a>.
+        </p>
+      {%- endif -%}
+    </fieldset>
+  </storm-pickup-gate>
+{%- elsif saved_date != blank or saved_terms != blank -%}
+  <storm-pickup-gate data-clear hidden></storm-pickup-gate>
+{%- endif -%}
+
+{% stylesheet %}
+  storm-pickup-gate { display: block; }
+  .storm-pickup-gate { margin-block: 16px; }
+  .storm-pickup-gate__fieldset {
+    margin: 0;
+    padding: 14px 16px 16px;
+    border: 1px solid var(--storm-deep, #640403);
+    background: var(--storm-paper, #f9f5ee);
+    color: var(--storm-red, #a90707);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+  .storm-pickup-gate__legend {
+    padding-inline: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--storm-deep, #640403);
+  }
+  .storm-pickup-gate__text,
+  .storm-pickup-gate__call,
+  .storm-pickup-gate__error { margin: 0; font-size: 14px; line-height: 1.45; }
+  .storm-pickup-gate__check {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 14px;
+    line-height: 1.45;
+    cursor: pointer;
+  }
+  .storm-pickup-gate__check input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--storm-deep, #640403); }
+  .storm-pickup-gate__date { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+  .storm-pickup-gate__date-label { font-weight: 700; }
+  .storm-pickup-gate__date input {
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--storm-red, #a90707);
+    background: #fff;
+    color: var(--storm-red, #a90707);
+    font: inherit;
+    border-radius: 0;
+  }
+  .storm-pickup-gate__error { color: var(--storm-deep, #640403); font-weight: 700; }
+  .storm-pickup-gate a { color: inherit; text-decoration: underline; text-underline-offset: 0.15em; }
+  .cart__checkout-button[aria-disabled='true'] { opacity: 0.55; cursor: not-allowed; }
+{% endstylesheet %}
+
+{% javascript %}
+  /* Storm pickup gate. Delegated handlers so it survives the cart's DOM morphing. */
+  (() => {
+    if (window.__stormPickupGate) return;
+    window.__stormPickupGate = true;
+
+    const DATE_KEY = 'Board pickup date';
+    const TERMS_KEY = 'Pickup terms accepted';
+    const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+    const parseList = (value) =>
+      (value || '')
+        .split(',')
+        .map((v) => v.trim().toLowerCase())
+        .filter(Boolean);
+
+    const toDate = (iso) => new Date(`${iso}T12:00:00`);
+
+    /* Returns an error message, or '' when the gate is satisfied. */
+    const validate = (gate) => {
+      const terms = gate.querySelector('input[type="checkbox"]');
+      const dateInput = gate.querySelector('input[type="date"]');
+      if (!terms || !dateInput) return '';
+      if (!terms.checked) return 'Please confirm that your board is pickup only.';
+      if (!dateInput.value) return 'Choose the day you will pick up your board.';
+
+      const chosen = toDate(dateInput.value);
+      if (Number.isNaN(chosen.getTime())) return 'Choose a valid pickup day.';
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (chosen <= today) return 'Choose a pickup day after today.';
+
+      const days = Number(gate.dataset.days || 0);
+      if (days > 0) {
+        const latest = new Date(today);
+        latest.setDate(latest.getDate() + days);
+        if (chosen > latest) return `Choose a pickup day within ${days} day${days === 1 ? '' : 's'}.`;
+      }
+
+      if (parseList(gate.dataset.closedDates).includes(dateInput.value)) return 'The shop is closed that day. Please choose another.';
+      const closedWeekdays = parseList(gate.dataset.closedWeekdays).map((d) => d.slice(0, 3));
+      if (closedWeekdays.includes(WEEKDAYS[chosen.getDay()])) return 'The shop is closed that day of the week. Please choose another.';
+      return '';
+    };
+
+    const buttonFor = (gate) => {
+      let el = gate;
+      while (el) {
+        const btn = el.querySelector && el.querySelector('.cart__checkout-button');
+        if (btn) return btn;
+        el = el.parentElement;
+      }
+      return null;
+    };
+
+    const gateFor = (node) => {
+      let el = node;
+      while (el) {
+        const gate = el.querySelector && el.querySelector('storm-pickup-gate[data-active]');
+        if (gate) return gate;
+        el = el.parentElement;
+      }
+      return null;
+    };
+
+    const showError = (gate, message) => {
+      const box = gate.querySelector('[data-error]');
+      if (!box) return;
+      box.textContent = message;
+      box.hidden = !message;
+    };
+
+    const refresh = (gate, announce) => {
+      const message = validate(gate);
+      const btn = buttonFor(gate);
+      if (btn) {
+        if (message) btn.setAttribute('aria-disabled', 'true');
+        else btn.removeAttribute('aria-disabled');
+      }
+      showError(gate, announce ? message : '');
+      return message;
+    };
+
+    let saveTimer = null;
+    const persist = (gate) => {
+      const terms = gate.querySelector('input[type="checkbox"]');
+      const dateInput = gate.querySelector('input[type="date"]');
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            attributes: { [TERMS_KEY]: terms && terms.checked ? 'Yes' : '', [DATE_KEY]: dateInput ? dateInput.value : '' },
+          }),
+        }).catch(() => {});
+      }, 300);
+    };
+
+    document.addEventListener('input', (event) => {
+      const gate = event.target.closest && event.target.closest('storm-pickup-gate[data-active]');
+      if (!gate) return;
+      refresh(gate, true);
+      persist(gate);
+    });
+
+    const block = (event, gate, message) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      showError(gate, message);
+      gate.scrollIntoView({ block: 'center', behavior: reduceMotion() ? 'auto' : 'smooth' });
+      const target = gate.querySelector('input[type="checkbox"]:not(:checked), input[type="date"]');
+      if (target) target.focus({ preventScroll: true });
+    };
+
+    document.addEventListener(
+      'click',
+      (event) => {
+        const btn = event.target.closest && event.target.closest('.cart__checkout-button');
+        if (!btn) return;
+        const gate = gateFor(btn);
+        if (!gate) return;
+        const message = validate(gate);
+        if (message) block(event, gate, message);
+      },
+      true
+    );
+
+    document.addEventListener(
+      'submit',
+      (event) => {
+        const submitter = event.submitter;
+        if (!submitter || submitter.name !== 'checkout') return;
+        const gate = gateFor(submitter);
+        if (!gate) return;
+        const message = validate(gate);
+        if (message) block(event, gate, message);
+      },
+      true
+    );
+
+    if (!customElements.get('storm-pickup-gate')) {
+      customElements.define(
+        'storm-pickup-gate',
+        class StormPickupGate extends HTMLElement {
+          connectedCallback() {
+            if (this.hasAttribute('data-clear')) {
+              fetch('/cart/update.js', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ attributes: { [TERMS_KEY]: '', [DATE_KEY]: '' } }),
+              }).catch(() => {});
+              return;
+            }
+            refresh(this, false);
+          }
+        }
+      );
+    }
+  })();
+{% endjavascript %}

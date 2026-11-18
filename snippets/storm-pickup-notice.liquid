@@ -1,0 +1,49 @@
+{%- comment -%}
+  Storm: pickup-only banner shown above the buy buttons on surfboard product pages.
+  Only render this for pickup-only products (see storm-is-pickup-product).
+  Copy is driven by Theme settings → Storm board pickup. Nothing is claimed about a pickup
+  window or a phone number unless Christina has filled them in.
+{%- endcomment -%}
+{%- assign pickup_days = settings.storm_pickup_days | plus: 0 -%}
+{%- assign pickup_phone = settings.storm_pickup_phone | strip -%}
+{%- assign pickup_phone_href = pickup_phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '.' -%}
+
+<aside class="storm-pickup-notice" role="note" aria-label="Surfboard pickup only">
+  <p class="storm-pickup-notice__title">Pickup only</p>
+  <p class="storm-pickup-notice__text">
+    We don't ship surfboards. You collect your board at Storm Surf Shop in Tofino
+    {%- if pickup_days > 0 %}, within {{ pickup_days }} day{% if pickup_days != 1 %}s{% endif %} of your purchase{% endif -%}.
+    You'll choose your pickup day in your cart before you check out.
+    {%- if pickup_phone != blank %}
+      Questions? <a href="tel:{{ pickup_phone_href }}">Call the shop on {{ pickup_phone | escape }}</a>.
+    {%- endif -%}
+  </p>
+</aside>
+
+{% stylesheet %}
+  .storm-pickup-notice {
+    margin-block-end: 16px;
+    padding: 14px 16px;
+    border: 1px solid var(--storm-deep, #640403);
+    background: var(--storm-paper, #f9f5ee);
+    color: var(--storm-red, #a90707);
+  }
+  .storm-pickup-notice__title {
+    margin: 0 0 6px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--storm-deep, #640403);
+  }
+  .storm-pickup-notice__text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .storm-pickup-notice__text a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+{% endstylesheet %}

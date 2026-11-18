@@ -2277,5 +2277,58 @@
         "default": 700
       }
     ]
+  },
+  {
+    "name": "Storm board pickup",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Surfboards are sold online for in-store pickup only. These settings control the pickup notice on product pages and the pickup-day step in the cart."
+      },
+      {
+        "type": "checkbox",
+        "id": "storm_pickup_enabled",
+        "label": "Enable pickup-only rules",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "storm_pickup_tag",
+        "label": "Pickup-only product tag",
+        "info": "Any product with this tag is treated as pickup only.",
+        "default": "pickup-only"
+      },
+      {
+        "type": "text",
+        "id": "storm_pickup_collection",
+        "label": "Pickup-only collection handle",
+        "info": "Products in this collection are also treated as pickup only. Leave blank to use the tag only.",
+        "default": "all-surfboards"
+      },
+      {
+        "type": "number",
+        "id": "storm_pickup_days",
+        "label": "Pickup window (days)",
+        "info": "Boards must be collected within this many days of purchase. Leave blank to make no promise about a window."
+      },
+      {
+        "type": "text",
+        "id": "storm_pickup_phone",
+        "label": "Shop phone number",
+        "info": "Shows a Call the shop link. Leave blank to hide it."
+      },
+      {
+        "type": "text",
+        "id": "storm_pickup_closed_weekdays",
+        "label": "Closed weekdays",
+        "info": "Comma separated, for example: Mon, Tue. Blocks those days in the pickup date."
+      },
+      {
+        "type": "text",
+        "id": "storm_pickup_closed_dates",
+        "label": "Closed dates",
+        "info": "Comma separated, YYYY-MM-DD, for example: 2026-12-25, 2026-12-26."
+      }
+    ]
   }
 ]
