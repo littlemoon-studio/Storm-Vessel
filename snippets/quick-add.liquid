@@ -239,7 +239,14 @@
         value="{% if product.selected_or_first_available_variant.quantity_rule.min %}{{ product.selected_or_first_available_variant.quantity_rule.min }}{% else %}1{% endif %}"
       >
       {% comment %} If there is one variant option but it's swatches or if it's a single variant product, then use add to cart button {% endcomment %}
-      {%- if product.variants.size == 1 or product.options.size == 1 -%}
+      {%- comment -%}
+        Storm: only a true single-variant product is added with one tap. Anything with sizes or colours opens the quick view
+        drawer so nobody gets a default size by accident, and surfboards open it so the pickup-only notice is seen first.
+      {%- endcomment -%}
+      {%- capture storm_qa_pickup_only -%}{% render 'storm-is-pickup-product', product: product %}{%- endcapture -%}
+      {%- assign storm_qa_is_board = false -%}
+      {%- if storm_qa_pickup_only contains 'true' -%}{%- assign storm_qa_is_board = true -%}{%- endif -%}
+      {%- if product.variants.size == 1 and storm_qa_is_board == false -%}
         {% render 'add-to-cart-button',
           add_to_cart_text: add_to_cart_text,
           class: 'button quick-add__button quick-add__button--add',
@@ -248,7 +255,7 @@
           product: product
         %}
       {%- endif -%}
-      {%- if product.variants.size > 1 -%}
+      {%- if product.variants.size > 1 or storm_qa_is_board -%}
         <button
           class="button quick-add__button quick-add__button--choose"
           {% comment %} type="submit" is the default, so we explicitly set it to "button" to prevent the ProductFormComponent.handleSubmit from being triggered {% endcomment %}
@@ -265,7 +272,7 @@
               {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
             </span>
             <span class="add-to-cart-text__content is-visually-hidden-mobile">
-              {{ add_to_cart_text }}
+              Quick view
             </span>
           </span>
         </button>

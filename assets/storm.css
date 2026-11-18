@@ -226,3 +226,46 @@ product-card product-price .price {
   .cart-page .cart__summary-inner { padding: 18px; }
   .cart-page__trust { margin-block-start: 32px; }
 }
+
+/* ==========================================================================
+   Quick view drawer (desktop: slides in from the right, phone: bottom sheet)
+   ========================================================================== */
+@media (width >= 750px) {
+  .quick-add-modal {
+    position: fixed;
+    inset: 0 0 0 auto;
+    margin: 0;
+    width: min(1000px, 94vw);
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    border: 0;
+    border-left: 1px solid var(--storm-red);
+    border-radius: 0;
+    box-shadow: -28px 0 70px rgba(0, 0, 0, 0.22);
+    background: var(--storm-cream);
+  }
+  .quick-add-modal[open] { animation: storm-drawer-in 0.42s var(--storm-ease) both; }
+  .quick-add-modal.dialog-closing { animation: storm-drawer-out 0.26s var(--storm-ease) both; }
+  .quick-add-modal__content { height: 100%; max-height: 100dvh; max-width: none; }
+  .quick-add-modal::backdrop { background: rgba(30, 30, 30, 0.45); }
+}
+@keyframes storm-drawer-in { from { transform: translateX(32px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes storm-drawer-out { to { transform: translateX(32px); opacity: 0; } }
+
+.quick-add-modal__close { border: 1px solid var(--storm-red); background: var(--storm-cream); color: var(--storm-red); border-radius: 0; }
+.quick-add-modal__close:hover { background: var(--storm-deep); color: var(--storm-sand); }
+
+/* Phones: bottom sheet that never covers the whole screen */
+@media (width < 750px) {
+  .quick-add-modal { max-height: 92dvh; border-top: 1px solid var(--storm-red); background: var(--storm-cream); }
+  .quick-add-modal[open] { animation: storm-sheet-in 0.38s var(--storm-ease) both; }
+  .quick-add-modal.dialog-closing { animation: storm-sheet-out 0.24s var(--storm-ease) both; }
+}
+@keyframes storm-sheet-in { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes storm-sheet-out { to { transform: translateY(40px); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-add-modal[open], .quick-add-modal.dialog-closing { animation: none; }
+}
