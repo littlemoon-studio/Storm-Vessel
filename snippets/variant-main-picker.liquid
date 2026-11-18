@@ -325,14 +325,21 @@
       {%- for product_option in product_resource.options_with_values -%}
         {%- liquid
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
-          assign variant_style = block.settings.variant_style
+          comment
+            Storm: normalise the style so an unexpected stored value (e.g. "dropdown" without the s)
+            can never hide the picker. Anything that is not 'dropdowns' renders as buttons.
+          endcomment
+          assign picker_style = block.settings.variant_style
+          if picker_style == 'dropdown'
+            assign picker_style = 'dropdowns'
+          endif
+          if picker_style != 'dropdowns'
+            assign picker_style = 'buttons'
+          endif
+          assign variant_style = picker_style
 
           if swatch_count > 0 and block.settings.show_swatches
-            if block.settings.variant_style == 'dropdown'
-              assign variant_style = 'swatch'
-            else
-              assign variant_style = 'swatch'
-            endif
+            assign variant_style = 'swatch'
           endif
 
           if variant_style == 'buttons' and settings.variant_button_width == 'equal-width-buttons'
@@ -342,7 +349,7 @@
           endif
         -%}
 
-        {%- if variant_style == 'swatch' or block.settings.variant_style == 'buttons' -%}
+        {%- if variant_style == 'swatch' or picker_style == 'buttons' -%}
           <fieldset
             class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
             {{ option_id_attribute }}
@@ -408,7 +415,7 @@
               </style>
             {% endif %}
           </fieldset>
-        {%- elsif block.settings.variant_style == 'dropdowns' -%}
+        {%- elsif picker_style == 'dropdowns' -%}
           {%
             # There is an opportunity to build a custom select component that will allow us to style the select element further (animation for dropdown, swatches shown in the dropdown options, etc)
             # It's too bad as it mean rebuilding baked in behaviours but I think we've already done that for the locale selectors

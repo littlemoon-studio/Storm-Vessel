@@ -316,7 +316,7 @@
                   "type": "variant-picker",
                   "settings": {
                     "product": "{{ closest.product }}",
-                    "variant_style": "dropdown",
+                    "variant_style": "buttons",
                     "show_swatches": true,
                     "alignment": "left",
                     "padding-block-start": 0,
@@ -742,7 +742,7 @@
               "disabled": true,
               "settings": {
                 "product": "{{ closest.product }}",
-                "variant_style": "dropdown",
+                "variant_style": "buttons",
                 "show_swatches": true,
                 "alignment": "left",
                 "padding-block-start": 0,
