@@ -28,7 +28,7 @@
           "settings": {
             "label": "GIFTS UNDER $50",
             "title": "STOCKING\nSTUFFERS",
-            "link": "shopify://collections/stocking-stuffers-under-50",
+            "link": "shopify://collections/stocking-stuffers",
             "background": "#640403",
             "label_color": "#e62e09",
             "title_color": "#e62e09"
@@ -609,7 +609,7 @@
       },
       "name": "[NEW] Product list",
       "settings": {
-        "collection": "stocking-stuffers-under-50",
+        "collection": "stocking-stuffers",
         "layout_type": "carousel",
         "carousel_on_mobile": true,
         "max_products": 11,
