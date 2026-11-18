@@ -30,7 +30,7 @@
             "title": "STOCKING\nSTUFFERS",
             "link": "/collections/stocking-stuffers",
             "background": "#640403",
-            "label_color": "#f6e7d2",
+            "label_color": "#e62e09",
             "title_color": "#e62e09"
           }
         },
@@ -52,7 +52,7 @@
             "title": "SURF TRIP\nMUST-HAVES",
             "link": "/collections/surf-trip-must-haves",
             "background": "#e62e09",
-            "label_color": "#000000",
+            "label_color": "#640403",
             "title_color": "#640403"
           }
         }
@@ -1402,7 +1402,7 @@
           "settings": {
             "media_type": "image",
             "image": "shopify://shop_images/Christmas_gift_card_mockup_3c3c3694-e20f-4d6c-8809-8e05141b260a.png",
-            "link": "",
+            "link": "shopify://collections/gift-card",
             "video": "shopify://files/videos/copy_AE8DEA19-22B3-4552-B98F-AD484501F6EE 2.mov",
             "video_loop": true,
             "video_autoplay": true,
