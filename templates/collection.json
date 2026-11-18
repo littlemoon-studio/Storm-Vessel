@@ -93,11 +93,11 @@
           "settings": {
             "text": "<h1>{{ closest.collection.title }}</h1>",
             "width": "fit-content",
-            "max_width": "narrow",
+            "max_width": "none",
             "alignment": "left",
             "type_preset": "h2",
             "font": "var(--font-tertiary--family)",
-            "font_size": "var(--font-size--heading-lg)",
+            "font_size": "2.5rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
