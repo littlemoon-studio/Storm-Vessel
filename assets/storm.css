@@ -147,3 +147,12 @@ p, li { text-wrap: pretty; }
 /* Quick-add button: visual size stays 36px, the tappable area becomes 44px */
 .quick-add__button { position: relative; }
 .quick-add__button::before { content: ''; position: absolute; inset: -4px; }
+
+/* Product cards everywhere (rows, collection grids, search): title and price in PT Mono 15px, as in the design spec */
+product-card [class*='__product_title'] :is(p, h2, h3, h4),
+product-card product-price,
+product-card product-price .price {
+  font-family: var(--font-accent--family);
+  font-size: 15px;
+  line-height: 1.15;
+}
