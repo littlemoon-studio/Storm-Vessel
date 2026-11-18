@@ -22,7 +22,19 @@
 
       <fieldset class="variant-option variant-option--buttons variant-option--swatches">
         {% capture children %}
-        {%- for product_option_value in product_option.values limit: 4 -%}
+        {%- liquid
+          assign storm_avail_total = 0
+          assign storm_shown = 0
+          for pov in product_option.values
+            if pov.available
+              assign storm_avail_total = storm_avail_total | plus: 1
+            endif
+          endfor
+        -%}
+        {%- for product_option_value in product_option.values -%}
+          {%- unless product_option_value.available -%}{%- continue -%}{%- endunless -%}
+          {%- if storm_shown >= 4 -%}{%- break -%}{%- endif -%}
+          {%- assign storm_shown = storm_shown | plus: 1 -%}
           {% liquid
             assign featured_media = product_option_value.variant.featured_media
 
@@ -66,8 +78,8 @@
             </label>
           </li>
         {%- endfor -%}
-        {%- if product_option.values.size > 4 -%}
-          <li class="storm-swatch-more" aria-label="{{ product_option.values.size | minus: 4 }} more colours">+{{ product_option.values.size | minus: 4 }}</li>
+        {%- if storm_avail_total > 4 -%}
+          <li class="storm-swatch-more" aria-label="{{ storm_avail_total | minus: 4 }} more colours">+{{ storm_avail_total | minus: 4 }}</li>
         {%- endif -%}
         <li
           slot="more"

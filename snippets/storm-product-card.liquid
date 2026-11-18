@@ -42,7 +42,19 @@
       <span class="storm-card__price">{% if product.price_varies %}From {% endif %}{{ product.price | money_with_currency }}</span>
       {%- if colour_option -%}
         <span class="storm-card__swatches">
-          {%- for value in colour_option.values limit: 4 -%}
+          {%- liquid
+            assign card_avail_total = 0
+            assign card_shown = 0
+            for cv in colour_option.values
+              if cv.available
+                assign card_avail_total = card_avail_total | plus: 1
+              endif
+            endfor
+          -%}
+          {%- for value in colour_option.values -%}
+            {%- unless value.available -%}{%- continue -%}{%- endunless -%}
+            {%- if card_shown >= 4 -%}{%- break -%}{%- endif -%}
+            {%- assign card_shown = card_shown | plus: 1 -%}
             {%- if value.swatch.image -%}
               <span class="storm-card__swatch" style="background-image: url({{ value.swatch.image | image_url: width: 24 }});" title="{{ value | escape }}"></span>
             {%- else -%}
@@ -62,7 +74,7 @@
               <span class="storm-card__swatch" style="background: {{ card_swatch_bg }};" title="{{ value | escape }}"></span>
             {%- endif -%}
           {%- endfor -%}
-          {%- if colour_option.values.size > 4 -%}<span class="storm-card__more">+{{ colour_option.values.size | minus: 4 }}</span>{%- endif -%}
+          {%- if card_avail_total > 4 -%}<span class="storm-card__more">+{{ card_avail_total | minus: 4 }}</span>{%- endif -%}
         </span>
       {%- endif -%}
     </div>
