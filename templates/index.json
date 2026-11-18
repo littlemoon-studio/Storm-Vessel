@@ -19,8 +19,8 @@
             "title": "STORM\nBRAND",
             "link": "/collections/storm-apparel",
             "background": "#1e1e1e",
-            "label_color": "#f9f5ee",
-            "title_color": "#f6e7d2"
+            "label_color": "#EFFF64",
+            "title_color": "#EFFF64"
           }
         },
         "tile_2": {
@@ -40,9 +40,9 @@
             "label": "SKIP THE GUESSWORK",
             "title": "GIFTS 4\nSURFERS",
             "link": "shopify://collections/gift-for-surfers",
-            "background": "#95D2E8",
-            "label_color": "#042E99",
-            "title_color": "#042E99"
+            "background": "#E62E09",
+            "label_color": "#95D2E8",
+            "title_color": "#95D2E8"
           }
         },
         "tile_4": {
@@ -51,7 +51,7 @@
             "label": "FLYING SOUTH?",
             "title": "SURF TRIP\nMUST-HAVES",
             "link": "/collections/surf-trip-must-haves",
-            "background": "#e62e09",
+            "background": "#95D2E8",
             "label_color": "#640403",
             "title_color": "#640403"
           }
