@@ -1,0 +1,56 @@
+{%- comment -%}
+  Storm: phone-only checkout bar on the cart page. Shows the total and a Check out button while the real
+  Check out button is off screen. It clicks the real button, so the board pickup rules still apply.
+{%- endcomment -%}
+{%- unless cart.empty? -%}
+  <storm-cart-sticky class="storm-cart-sticky" hidden>
+    <span class="storm-cart-sticky__total">{{ cart.total_price | money_with_currency }}</span>
+    <button type="button" class="storm-cart-sticky__button" data-storm-sticky-checkout>Check out</button>
+  </storm-cart-sticky>
+{%- endunless -%}
+
+{% stylesheet %}
+  storm-cart-sticky { display: none; }
+  @media screen and (max-width: 749px) {
+    storm-cart-sticky.is-visible {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 6;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      background: var(--storm-cream); border-top: 1px solid var(--storm-red);
+    }
+    .storm-cart-sticky__total { font-family: var(--font-accent--family); font-size: 16px; color: var(--storm-red); }
+    .storm-cart-sticky__button {
+      min-height: 49px; padding: 0 28px; border: 0; border-radius: 0; background: var(--storm-deep); color: var(--storm-paper);
+      font: inherit; font-size: 14px; font-weight: 700; text-transform: uppercase; cursor: pointer;
+    }
+    .storm-cart-sticky__button:active { transform: translateY(1px); }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('storm-cart-sticky')) {
+    customElements.define(
+      'storm-cart-sticky',
+      class StormCartSticky extends HTMLElement {
+        connectedCallback() {
+          this.button = this.querySelector('[data-storm-sticky-checkout]');
+          this.real = () => document.querySelector('.cart-page .cart__checkout-button');
+          this.onClick = () => { const r = this.real(); if (r) r.click(); };
+          if (this.button) this.button.addEventListener('click', this.onClick);
+          const target = this.real();
+          if (!target) return;
+          this.observer = new IntersectionObserver(([entry]) => {
+            const show = !entry.isIntersecting;
+            this.classList.toggle('is-visible', show);
+            this.hidden = !show;
+          });
+          this.observer.observe(target);
+        }
+        disconnectedCallback() {
+          if (this.observer) this.observer.disconnect();
+          if (this.button && this.onClick) this.button.removeEventListener('click', this.onClick);
+        }
+      }
+    );
+  }
+{% endjavascript %}

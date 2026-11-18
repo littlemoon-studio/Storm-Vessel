@@ -37,7 +37,7 @@
       </div>
     </div>
   {%- endif -%}
-  {% render 'storm-delivery-note' %}
+  {%- unless show_note == false -%}{% render 'storm-delivery-note' %}{%- endunless -%}
 {%- endif -%}
 
 {% stylesheet %}

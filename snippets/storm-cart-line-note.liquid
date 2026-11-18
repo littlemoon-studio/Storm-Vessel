@@ -1,0 +1,20 @@
+{%- comment -%}
+  Storm: one quiet line under each cart item saying how it gets to the customer.
+  - Surfboards: "Pickup only", collected at the shop in Tofino.
+  - Everything else: ships from Tofino, and says so when pickup in Tofino is available for that item.
+  @param {object} item  cart line item
+{%- endcomment -%}
+{%- capture storm_item_pickup_only -%}{% render 'storm-is-pickup-product', product: item.product %}{%- endcapture -%}
+{%- assign storm_pickup_stores = item.variant.store_availabilities | where: 'pick_up_enabled', true -%}
+<p class="storm-line-note">
+  {%- if storm_item_pickup_only contains 'true' -%}
+    <span class="storm-line-note__tag">Pickup only</span>
+    <span>Collect at Storm Surf Shop, Tofino</span>
+  {%- else -%}
+    <span>Ships from Tofino</span>
+    {%- if storm_pickup_stores.size > 0 -%}
+      <span class="storm-line-note__sep" aria-hidden="true">&#183;</span>
+      <span>Pickup in Tofino available at checkout</span>
+    {%- endif -%}
+  {%- endif -%}
+</p>

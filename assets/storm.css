@@ -167,3 +167,61 @@ product-card product-price .price {
   color: var(--storm-red); text-decoration: underline; text-underline-offset: 0.2em;
 }
 .storm-gate-hint { margin: 0 0 8px; font-size: 13px; line-height: 1.35; color: var(--storm-deep); font-weight: 600; text-align: center; }
+
+/* ==========================================================================
+   Cart page ("bag" page): clear items on the left, a quiet summary on the right
+   ========================================================================== */
+.cart-page__title .cart-title { margin-block-end: 4px; }
+.storm-cart-sub { margin-block-end: 20px; }
+.storm-cart-sub .storm-delivery-note { margin: 0; flex-direction: row; flex-wrap: wrap; gap: 4px 20px; }
+
+/* Item rows: real thumbnails, one clear hierarchy, hairlines between items */
+.cart-page .cart-items__table-row {
+  --storm-thumb: clamp(5.5rem, 26cqi, 9rem);
+  grid-template-columns: var(--storm-thumb) minmax(0, 1fr) minmax(5rem, auto);
+  padding-block: 20px;
+  margin-bottom: 0;
+  border-top: 1px solid var(--storm-red);
+}
+.cart-page .cart-items__table tbody tr:last-child { border-bottom: 1px solid var(--storm-red); }
+@container cart-items (width >= 720px) {
+  .cart-page .cart-items__table-row { grid-template-columns: var(--storm-thumb) minmax(0, 1fr) auto minmax(6rem, auto); }
+}
+.cart-page .cart-items__media-container { background: #fff; border: 1px solid var(--storm-red); }
+.cart-page .cart-items__title { font-family: var(--font-accent--family); font-size: 15px; line-height: 1.2; }
+.cart-page .cart-items__details { font-size: 13px; }
+.cart-page .cart-items__details .cart-items__variants { color: var(--storm-red); }
+.cart-page .cart-items__price { font-family: var(--font-accent--family); font-size: 15px; }
+.cart-page .cart-items__quantity { max-width: 9rem; }
+
+/* Line note: how this item reaches you */
+.storm-line-note { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; margin: 6px 0 0 !important; font-size: 12px; line-height: 1.35; color: var(--storm-red); opacity: 0.85; }
+.storm-line-note__tag { padding: 1px 6px; border: 1px solid var(--storm-deep); background: var(--storm-deep); color: var(--storm-sand); font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; opacity: 1; }
+.storm-line-note__sep { opacity: 0.6; }
+.cart-drawer__items .storm-line-note { font-size: 11px; }
+
+/* Summary panel */
+.cart-page .cart__summary-inner { background: var(--storm-paper); border: 1px solid var(--storm-red); padding: 24px; }
+.storm-summary-title { margin: 0 0 14px; font-size: 14px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--storm-deep); }
+.cart-page .cart__summary-inner .storm-ship-progress { margin-block-end: 14px; }
+
+.storm-continue { display: inline-block; margin-block-start: 18px; font-size: 14px; font-weight: 600; color: var(--storm-red); text-decoration: underline; text-underline-offset: 0.2em; }
+
+/* Reassurance row */
+.cart-page__trust { grid-column: 1 / -1; margin-block-start: 48px; }
+.storm-trust { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px 40px; padding-block: 24px; border-block: 1px solid var(--storm-red); }
+.storm-trust__title { margin: 0 0 6px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--storm-deep); }
+.storm-trust p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--storm-red); }
+
+/* Empty cart */
+.storm-cart-empty { margin-block-start: 24px; text-align: center; }
+.storm-cart-empty__text { margin: 0 0 16px; color: var(--storm-red); }
+.storm-cart-empty__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.storm-cart-empty__link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 1px solid var(--storm-red); color: var(--storm-red); text-decoration: none; font-size: 14px; font-weight: 600; text-transform: uppercase; transition: background-color var(--storm-dur-fast) var(--storm-ease), color var(--storm-dur-fast) var(--storm-ease); }
+.storm-cart-empty__link:hover { background: var(--storm-deep); color: var(--storm-sand); }
+
+/* Phones: summary sits under the items, sticky checkout bar added below */
+@media (max-width: 749px) {
+  .cart-page .cart__summary-inner { padding: 18px; }
+  .cart-page__trust { margin-block-start: 32px; }
+}

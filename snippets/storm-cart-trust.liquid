@@ -1,0 +1,27 @@
+{%- comment -%}
+  Storm: reassurance row under the cart page. Only states things that are true for the shop today.
+  Edit the free-shipping figure in Theme settings → Storm holiday messaging. A returns note appears when one is entered there.
+{%- endcomment -%}
+{%- assign threshold = settings.storm_free_shipping_threshold | plus: 0 -%}
+<section class="storm-trust" aria-label="Shopping with Storm">
+  {%- if settings.storm_free_shipping_enabled and threshold > 0 -%}
+    <div class="storm-trust__item">
+      <h3 class="storm-trust__title">Free shipping</h3>
+      <p>Free shipping in Canada on orders over {{ threshold | times: 100 | money_without_trailing_zeros }}.</p>
+    </div>
+  {%- endif -%}
+  <div class="storm-trust__item">
+    <h3 class="storm-trust__title">Pickup in Tofino</h3>
+    <p>Collect at Storm Surf Shop. In-stock items are usually ready within 24 hours.</p>
+  </div>
+  {%- if settings.storm_returns_blurb != blank -%}
+    <div class="storm-trust__item">
+      <h3 class="storm-trust__title">Returns and exchanges</h3>
+      <p>{{ settings.storm_returns_blurb | escape }}</p>
+    </div>
+  {%- endif -%}
+  <div class="storm-trust__item">
+    <h3 class="storm-trust__title">Secure checkout</h3>
+    <p>Pay by card or Shop Pay. Your details are encrypted by Shopify.</p>
+  </div>
+</section>

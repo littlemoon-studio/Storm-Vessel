@@ -607,6 +607,8 @@
                     {% endif %}
                   {%- endif -%}
 
+                  {% render 'storm-cart-line-note', item: item %}
+
                   {% if item.line_level_discount_allocations.size > 0 %}
                     <ul
                       class="list-unstyled"

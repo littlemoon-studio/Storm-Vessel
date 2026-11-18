@@ -20,7 +20,7 @@
 {% endstylesheet %}
 
 {%- comment -%} Storm: free-shipping progress and delivery note {%- endcomment -%}
-{%- unless in_drawer -%}{% render 'storm-shipping-progress' %}{%- endunless -%}
+{%- unless in_drawer -%}<h2 class="storm-summary-title">Order summary</h2>{% render 'storm-shipping-progress', show_note: false %}{%- endunless -%}
 
 <div class="cart__summary-totals">
   {% # We need to keep this node in place to allow morphing to work properly # %}

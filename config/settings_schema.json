@@ -2377,6 +2377,12 @@
         "default": true
       },
       {
+        "type": "text",
+        "id": "storm_returns_blurb",
+        "label": "Returns note (cart page)",
+        "info": "One short sentence about your returns and exchanges. Shown in the reassurance row under the cart. Leave blank to hide it."
+      },
+      {
         "type": "checkbox",
         "id": "storm_snow_enabled",
         "label": "Falling snow effect",

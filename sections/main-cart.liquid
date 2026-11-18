@@ -97,10 +97,18 @@
     >
       <div class="cart-page__title">
         {%- content_for 'block', id: 'cart-page-title', type: '_cart-title' %}
+        {%- unless cart.empty? -%}
+          <div class="storm-cart-sub">{% render 'storm-delivery-note' %}</div>
+        {%- endunless -%}
       </div>
 
       <div class="cart-page__items">
         {%- content_for 'block', id: 'cart-page-items', type: '_cart-products' %}
+        {%- if cart.empty? -%}
+          {% render 'storm-cart-empty' %}
+        {%- else -%}
+          <a class="storm-continue" href="{{ routes.all_products_collection_url }}">&larr; Continue shopping</a>
+        {%- endif -%}
       </div>
 
       {%- unless cart.empty? -%}
@@ -108,6 +116,11 @@
           {%- content_for 'block', id: 'cart-page-summary', type: '_cart-summary' -%}
         </div>
       {%- endunless -%}
+
+      {%- unless cart.empty? -%}
+        <div class="cart-page__trust">{% render 'storm-cart-trust' %}</div>
+      {%- endunless -%}
+      {% render 'storm-cart-sticky' %}
 
       <div class="cart-page__more-blocks">
         {%- content_for 'blocks' -%}
