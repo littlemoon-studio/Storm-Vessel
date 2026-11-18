@@ -40,9 +40,9 @@
             "label": "SKIP THE GUESSWORK",
             "title": "GIFTS 4\nSURFERS",
             "link": "shopify://collections/gift-for-surfers",
-            "background": "#08341c",
-            "label_color": "#f9f5ee",
-            "title_color": "#f6e7d2"
+            "background": "#95D2E8",
+            "label_color": "#042E99",
+            "title_color": "#042E99"
           }
         },
         "tile_4": {
@@ -62,9 +62,9 @@
             "label": "STAYING PUT?",
             "title": "COLD WATER\nWETSUITS",
             "link": "/collections/wetsuits",
-            "background": "#f6e7d2",
-            "label_color": "#640403",
-            "title_color": "#640403"
+            "background": "#042E99",
+            "label_color": "#A6E7B1",
+            "title_color": "#A6E7B1"
           }
         }
       },
@@ -79,7 +79,7 @@
         "sticky": "none",
         "columns": 5,
         "show_on_collections": "",
-        "tile_height": 140,
+        "tile_height": 116,
         "tile_height_mobile": 88
       }
     },
