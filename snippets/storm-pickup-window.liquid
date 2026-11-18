@@ -1,0 +1,22 @@
+{%- comment -%}
+  Storm: turns a number of days into friendly text. 60 -> "2 months", 30 -> "1 month", 10 -> "10 days".
+  Usage: {% render 'storm-pickup-window', days: 60 %}
+{%- endcomment -%}
+{%- liquid
+  assign window_days = days | plus: 0
+  assign window_rem = window_days | modulo: 30
+  if window_days >= 30 and window_rem == 0
+    assign window_months = window_days | divided_by: 30
+    if window_months == 1
+      echo '1 month'
+    else
+      echo window_months
+      echo ' months'
+    endif
+  elsif window_days == 1
+    echo '1 day'
+  else
+    echo window_days
+    echo ' days'
+  endif
+-%}

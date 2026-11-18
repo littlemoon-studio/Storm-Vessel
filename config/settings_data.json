@@ -9,6 +9,9 @@
  */
 {
   "current": {
+    "storm_pickup_days": 60,
+    "storm_pickup_phone": "250-725-3344",
+    "storm_pickup_hours": "daily, 10am to 5pm Pacific time",
     "logo": "shopify://shop_images/Storm_Surf_Shop_9e8ab2e7-ef2f-4903-9b5c-b43045bab09f.png",
     "favicon": "shopify://shop_images/Storm_Surf_Shop.png",
     "type_body_font": "mono",

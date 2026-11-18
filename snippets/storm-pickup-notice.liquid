@@ -6,13 +6,15 @@
 {%- endcomment -%}
 {%- assign pickup_days = settings.storm_pickup_days | plus: 0 -%}
 {%- assign pickup_phone = settings.storm_pickup_phone | strip -%}
+{%- assign pickup_hours = settings.storm_pickup_hours | strip -%}
 {%- assign pickup_phone_href = pickup_phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '.' -%}
 
 <aside class="storm-pickup-notice" role="note" aria-label="Surfboard pickup only">
   <p class="storm-pickup-notice__title">Pickup only</p>
   <p class="storm-pickup-notice__text">
     We don't ship surfboards. You collect your board at Storm Surf Shop in Tofino
-    {%- if pickup_days > 0 %}, within {{ pickup_days }} day{% if pickup_days != 1 %}s{% endif %} of your purchase{% endif -%}.
+    {%- if pickup_days > 0 %}, within {% render 'storm-pickup-window', days: pickup_days %} of your purchase{% endif -%}.
+    {%- if pickup_hours != blank %} Pickup hours: {{ pickup_hours | escape }}.{% endif %}
     You'll choose your pickup day in your cart before you check out.
     {%- if pickup_phone != blank %}
       Questions? <a href="tel:{{ pickup_phone_href }}">Call the shop on {{ pickup_phone | escape }}</a>.

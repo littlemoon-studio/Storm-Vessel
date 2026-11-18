@@ -37,6 +37,13 @@
   {%- liquid
     assign pickup_days = settings.storm_pickup_days | plus: 0
     assign pickup_phone = settings.storm_pickup_phone | strip
+    assign pickup_hours = settings.storm_pickup_hours | strip
+    assign pickup_window = ''
+    if pickup_days > 0
+      capture pickup_window
+        render 'storm-pickup-window', days: pickup_days
+      endcapture
+    endif
     assign pickup_phone_href = pickup_phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '.'
     assign now_s = 'now' | date: '%s' | plus: 0
     assign min_date = now_s | plus: 86400 | date: '%Y-%m-%d'
@@ -61,6 +68,7 @@
     data-active
     data-ready="{{ gate_ready }}"
     data-days="{{ pickup_days }}"
+    data-window="{{ pickup_window | strip | escape }}"
     data-closed-dates="{{ settings.storm_pickup_closed_dates | escape }}"
     data-closed-weekdays="{{ settings.storm_pickup_closed_weekdays | escape }}"
   >
@@ -73,7 +81,8 @@
         {%- endfor %}
         is pickup only. We don't ship surfboards.
         Collect it at Storm Surf Shop in Tofino
-        {%- if pickup_days > 0 %} within {{ pickup_days }} day{% if pickup_days != 1 %}s{% endif %} of your purchase{% endif -%}.
+        {%- if pickup_days > 0 %} within {{ pickup_window }} of your purchase{% endif -%}.
+        {%- if pickup_hours != blank %} Pickup hours: {{ pickup_hours | escape }}.{% endif %}
       </p>
 
       <label class="storm-pickup-gate__check">
@@ -203,7 +212,7 @@
       if (days > 0) {
         const latest = new Date(today);
         latest.setDate(latest.getDate() + days);
-        if (chosen > latest) return `Choose a pickup day within ${days} day${days === 1 ? '' : 's'}.`;
+        if (chosen > latest) return `Choose a pickup day within ${gate.dataset.window || days + ' days'}.`;
       }
 
       if (parseList(gate.dataset.closedDates).includes(dateInput.value)) return 'The shop is closed that day. Please choose another.';
