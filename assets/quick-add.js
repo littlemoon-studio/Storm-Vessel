@@ -70,6 +70,10 @@ export class QuickAddComponent extends Component {
 
     this.#stayVisibleUntilDialogCloses(dialogComponent);
 
+    // Storm: "View full details" link points at this product
+    const fullDetails = dialogComponent.querySelector('.storm-qv-full');
+    if (fullDetails && this.productPageUrl) fullDetails.href = this.productPageUrl;
+
     dialogComponent.showDialog();
   };
 
