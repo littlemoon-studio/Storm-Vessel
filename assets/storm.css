@@ -193,7 +193,7 @@ product-card product-price .price {
 .cart-page .cart-items__details { font-size: 13px; }
 .cart-page .cart-items__details .cart-items__variants { color: var(--storm-red); }
 .cart-page .cart-items__price { font-family: var(--font-accent--family); font-size: 15px; }
-.cart-page .cart-items__quantity { max-width: 9rem; }
+.cart-page .cart-items__quantity .quantity-selector { max-width: 8rem; }   /* the remove button lives beside the stepper, so only the stepper is capped */
 
 /* Line note: how this item reaches you */
 .storm-line-note { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; margin: 6px 0 0 !important; font-size: 12px; line-height: 1.35; color: var(--storm-red); opacity: 0.85; }
