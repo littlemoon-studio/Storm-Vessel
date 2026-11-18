@@ -10,7 +10,7 @@ html:root {
   --storm-paper: #F9F5EE;
   --storm-sand: #F6E7D2;
   --storm-flame: #E62E09;
-  --storm-ember: #E3441D;
+  --storm-ember: var(--storm-flame); /* merged into flame: one orange */
   --storm-night: #1E1E1E;
   --storm-forest: #08341C;
 }

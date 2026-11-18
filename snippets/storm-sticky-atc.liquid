@@ -1,0 +1,116 @@
+{%- comment -%}
+  Storm: mobile sticky add-to-cart bar for product pages.
+  Appears (phones only) while the real Add to cart button is off screen.
+  - Single-variant products (patches, boards): the bar adds to cart directly.
+  - Products with options (size, colour): the bar says "Choose options" and scrolls to the picker,
+    so nobody adds a default size by accident.
+  Rendered from blocks/buy-buttons.liquid. Controlled by Theme settings → Storm holiday messaging.
+
+  @param {product} product
+  @param {boolean} can_add_to_cart
+{%- endcomment -%}
+{%- if settings.storm_sticky_atc_enabled and product != blank and can_add_to_cart -%}
+  <storm-sticky-atc
+    class="storm-sticky-atc"
+    hidden
+    data-simple="{% if product.has_only_default_variant %}true{% else %}false{% endif %}"
+  >
+    <span class="storm-sticky-atc__title">{{ product.title | escape }}</span>
+    <button type="button" class="storm-sticky-atc__button" data-sticky-atc-button>
+      {%- if product.has_only_default_variant -%}Add to cart{%- else -%}Choose options{%- endif -%}
+    </button>
+  </storm-sticky-atc>
+{%- endif -%}
+
+{% stylesheet %}
+  storm-sticky-atc { display: none; }
+  @media screen and (max-width: 749px) {
+    storm-sticky-atc.is-visible {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: fixed;
+      inset-inline: 0;
+      inset-block-end: 0;
+      z-index: 6;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      background: var(--storm-cream, #f4f0e7);
+      border-top: 1px solid var(--storm-red, #a90707);
+    }
+    .storm-sticky-atc__title {
+      flex: 1;
+      min-width: 0;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--storm-red, #a90707);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .storm-sticky-atc__button {
+      flex: none;
+      min-height: 49px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 0;
+      background: var(--storm-deep, #640403);
+      color: var(--storm-paper, #f9f5ee);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('storm-sticky-atc')) {
+    customElements.define(
+      'storm-sticky-atc',
+      class StormStickyAtc extends HTMLElement {
+        connectedCallback() {
+          this.block = this.closest('.buy-buttons-block') || this.parentElement;
+          this.target = this.block && this.block.querySelector('[ref="addToCartButton"]');
+          this.button = this.querySelector('[data-sticky-atc-button]');
+          if (!this.target || !this.button) return;
+
+          this.onClick = () => {
+            if (this.dataset.simple === 'true') {
+              this.target.click();
+              return;
+            }
+            const scope = this.closest('.shopify-section') || document;
+            const picker = scope.querySelector('variant-picker');
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (picker) {
+              picker.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+              const first = picker.querySelector('input, select');
+              if (first) first.focus({ preventScroll: true });
+            } else {
+              this.target.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+            }
+          };
+          this.button.addEventListener('click', this.onClick);
+
+          this.observer = new IntersectionObserver(
+            ([entry]) => {
+              const show = !entry.isIntersecting;
+              this.classList.toggle('is-visible', show);
+              this.hidden = !show;
+            },
+            { threshold: 0 }
+          );
+          this.observer.observe(this.target);
+        }
+
+        disconnectedCallback() {
+          if (this.observer) this.observer.disconnect();
+          if (this.button && this.onClick) this.button.removeEventListener('click', this.onClick);
+        }
+      }
+    );
+  }
+{% endjavascript %}

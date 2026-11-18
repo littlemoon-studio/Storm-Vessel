@@ -272,6 +272,7 @@
     {%- unless storm_is_pickup contains 'true' -%}
       {% render 'storm-delivery-note' %}
     {%- endunless -%}
+    {% render 'storm-sticky-atc', product: product, can_add_to_cart: can_add_to_cart %}
   {%- else -%}
     <div class="product-form-buttons">
       <button

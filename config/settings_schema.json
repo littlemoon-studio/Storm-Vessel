@@ -2369,6 +2369,12 @@
         "label": "Free shipping threshold (CAD)",
         "info": "Display only. Your Shopify shipping rates decide the real threshold, so keep this in step with them.",
         "default": 150
+      },
+      {
+        "type": "checkbox",
+        "id": "storm_sticky_atc_enabled",
+        "label": "Mobile sticky add-to-cart bar on product pages",
+        "default": true
       }
     ]
   }
