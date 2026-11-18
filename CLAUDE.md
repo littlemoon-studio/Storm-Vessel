@@ -72,3 +72,6 @@ Copy both into the repo, replacing the old ones, then commit `"Split section: tr
 - **Colours:** there is one orange now (`--storm-flame` #E62E09; `--storm-ember` is an alias). Text on flame is black for AA contrast. No blue anywhere except Shop Pay.
 - Pushing from a non-interactive shell needs: `git -c credential.helper='!gh auth git-credential' push`.
 - A local site audit with a progress tracker lives in `audits/` (kept out of git on purpose: it contains sales numbers).
+- **Fonts (Nov 2026):** IBM Plex Mono and PT Mono are self-hosted woff2 files in `assets/` and declared in `layout/theme.liquid` (no Google Fonts request). `--font-accent--family` is set to PT Mono in `assets/storm.css`; the Shopify font picker can't supply PT Mono (the `pt_mono_n4` handle is invalid and silently falls back), so don't set it there. Vessel product-card titles and prices are forced to PT Mono 15px with `!important` in storm.css because Vessel's text blocks set their own font at higher priority.
+- **Polish layer:** `assets/storm-polish.js` (lazy image fade, loading bar, home section reveals) plus the "Storm polish layer" section at the end of `assets/storm.css` (motion tokens, touch and focus details, parallax). All motion is behind `prefers-reduced-motion`.
+- **Magnetic scroll snap is off on purpose.** Don't re-enable it.
