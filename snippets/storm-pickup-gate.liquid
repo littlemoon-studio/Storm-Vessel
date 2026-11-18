@@ -254,6 +254,8 @@
       if (btn) {
         if (message) btn.setAttribute('aria-disabled', 'true');
         else btn.removeAttribute('aria-disabled');
+        const hint = btn.closest('.cart__ctas') && btn.closest('.cart__ctas').querySelector('[data-storm-gate-hint]');
+        if (hint) hint.hidden = !message;
       }
       showError(gate, announce ? message : '');
       return message;

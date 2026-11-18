@@ -116,6 +116,9 @@
 {%- unless in_drawer -%}{{ storm_gate_html }}{%- endunless -%}
 
 <div class="cart__ctas">
+  {%- if storm_gate_active -%}
+    <p class="storm-gate-hint" data-storm-gate-hint{% unless storm_gate_block %} hidden{% endunless %}>Choose your board pickup day to check out.</p>
+  {%- endif -%}
   <button
     type="submit"
     id="checkout"
