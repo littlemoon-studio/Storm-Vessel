@@ -349,3 +349,8 @@ product-card product-price .price {
 .product-card .variant-option--swatches overflow-list::part(list) { padding: 0; margin: 0; gap: 2px; }
 .product-card .variant-option__swatch:has(input[data-option-available='false']) { display: none; }
 .storm-card__swatches .storm-card__swatch:first-child { outline: 0; box-shadow: 0 0 0 2px var(--storm-paper), 0 0 0 3px var(--storm-red); }
+
+/* Card price + swatch row: price left, swatches right; swatches drop under the price (left) on narrow cards, also on phones */
+.product-card .group-block-content:has(> product-swatches) { flex-direction: row !important; flex-wrap: wrap; align-items: center; justify-content: space-between !important; row-gap: 8px; }
+.product-card .group-block-content:has(> product-swatches) product-price { text-align: left; }
+.product-card product-swatches { margin-inline-start: 0; }
