@@ -12,64 +12,64 @@
     "quick_tiles_dqRJjK": {
       "type": "quick-tiles",
       "blocks": {
-        "tile_ART9cV": {
+        "tile_1": {
           "type": "tile",
           "settings": {
             "label": "SHOP ALL",
             "title": "STORM\nBRAND",
-            "link": "",
-            "background": "#1E1E1E",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "link": "/collections/storm-apparel",
+            "background": "#1e1e1e",
+            "label_color": "#f9f5ee",
+            "title_color": "#f6e7d2"
           }
         },
-        "tile_jQbUDY": {
+        "tile_2": {
           "type": "tile",
           "settings": {
-            "label": "SHOP ALL",
-            "title": "STORM\nBRAND",
-            "link": "",
-            "background": "#1E1E1E",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "label": "GIFTS UNDER $50",
+            "title": "STOCKING\nSTUFFERS",
+            "link": "/collections/stocking-stuffers",
+            "background": "#640403",
+            "label_color": "#f6e7d2",
+            "title_color": "#e62e09"
           }
         },
-        "tile_DVmfTT": {
+        "tile_3": {
           "type": "tile",
           "settings": {
-            "label": "SHOP ALL",
-            "title": "STORM\nBRAND",
-            "link": "",
-            "background": "#1E1E1E",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "label": "SKIP THE GUESSWORK",
+            "title": "GIFTS 4\nSURFERS",
+            "link": "shopify://collections/gift-for-surfers",
+            "background": "#08341c",
+            "label_color": "#f9f5ee",
+            "title_color": "#f6e7d2"
           }
         },
-        "tile_hQpkxE": {
+        "tile_4": {
           "type": "tile",
           "settings": {
-            "label": "SHOP ALL",
-            "title": "STORM\nBRAND",
-            "link": "",
-            "background": "#1E1E1E",
-            "label_color": "#F9F5EE",
-            "title_color": "#F6E7D2"
+            "label": "FLYING SOUTH?",
+            "title": "SURF TRIP\nMUST-HAVES",
+            "link": "/collections/surf-trip-must-haves",
+            "background": "#e62e09",
+            "label_color": "#000000",
+            "title_color": "#640403"
           }
         }
       },
       "block_order": [
-        "tile_ART9cV",
-        "tile_jQbUDY",
-        "tile_DVmfTT",
-        "tile_hQpkxE"
+        "tile_1",
+        "tile_2",
+        "tile_3",
+        "tile_4"
       ],
-      "disabled": true,
       "name": "Quick tiles",
       "settings": {
         "sticky": "scroll-up",
         "columns": 4,
         "tile_height": 160,
-        "tile_height_mobile": 112
+        "tile_height_mobile": 112,
+        "show_on_collections": "stocking-stuffers, stocking-stuffers-under-50, gift-for-surfers, gifts-4-surfers, storm-apparel, storm-tees, storm-hats, surf-trip-must-haves, holiday-gift-packs"
       }
     },
     "section": {
@@ -127,7 +127,7 @@
         "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "center",
-        "gap": 40,
+        "gap": 20,
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
@@ -143,8 +143,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 50,
-        "padding-block-end": 75
+        "padding-block-start": 28,
+        "padding-block-end": 24
       }
     },
     "blocks_XHBKbj": {

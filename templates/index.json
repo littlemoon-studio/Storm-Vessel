@@ -30,7 +30,7 @@
             "title": "STOCKING\nSTUFFERS",
             "link": "/collections/stocking-stuffers",
             "background": "#640403",
-            "label_color": "#e62e09",
+            "label_color": "#f6e7d2",
             "title_color": "#e62e09"
           }
         },
@@ -52,7 +52,7 @@
             "title": "SURF TRIP\nMUST-HAVES",
             "link": "/collections/surf-trip-must-haves",
             "background": "#e62e09",
-            "label_color": "#640403",
+            "label_color": "#000000",
             "title_color": "#640403"
           }
         }

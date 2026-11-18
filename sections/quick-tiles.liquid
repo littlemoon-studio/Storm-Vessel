@@ -1,3 +1,13 @@
+{%- liquid
+  assign show_tiles = true
+  if section.settings.show_on_collections != blank and template.name == 'collection'
+    assign allowed_handles = section.settings.show_on_collections | downcase | remove: ' ' | split: ','
+    unless allowed_handles contains collection.handle
+      assign show_tiles = false
+    endunless
+  endif
+-%}
+{%- if show_tiles -%}
 <storm-quick-tiles
   class="storm-tiles"
   data-sticky="{{ section.settings.sticky }}"
@@ -6,8 +16,9 @@
   <div class="storm-tiles__grid">
     {%- for block in section.blocks -%}
       <a
-        class="storm-tile"
+        class="storm-tile{% if template.name == 'collection' and block.settings.link == collection.url %} storm-tile--current{% endif %}"
         href="{{ block.settings.link | default: '#' }}"
+        {% if template.name == 'collection' and block.settings.link == collection.url %}aria-current="page"{% endif %}
         style="--tile-bg: {{ block.settings.background }}; --tile-label: {{ block.settings.label_color }}; --tile-title: {{ block.settings.title_color }};"
         {{ block.shopify_attributes }}
       >
@@ -17,6 +28,7 @@
     {%- endfor -%}
   </div>
 </storm-quick-tiles>
+{%- endif -%}
 
 {% stylesheet %}
   storm-quick-tiles { display: block; }
@@ -46,14 +58,16 @@
     min-width: 0;
   }
   .storm-tile:hover { filter: brightness(1.12); }
+  .storm-tile--current { box-shadow: inset 0 -6px 0 var(--tile-title); }
+  .storm-tile:focus-visible { outline: 3px solid #f6e7d2; outline-offset: -6px; }
   .storm-tile__label {
     font-family: var(--font-body--family);
-    font-size: 11px;
-    line-height: 14.3px;
+    font-size: 12px;
+    line-height: 15.6px;
     letter-spacing: 0.02em;
     text-transform: uppercase;
     color: var(--tile-label);
-    min-height: 14.3px;
+    min-height: 15.6px;
   }
   .storm-tile__title {
     font-family: var(--font-body--family);
@@ -113,6 +127,7 @@
       "default": "scroll-up"
     },
     { "type": "range", "id": "columns", "label": "Tiles per row (desktop)", "min": 2, "max": 6, "step": 1, "default": 4 },
+    { "type": "text", "id": "show_on_collections", "label": "Show only on these collections", "info": "Collection pages only. Comma separated handles, for example: stocking-stuffers, gift-for-surfers. Leave blank to show on every collection page." },
     { "type": "range", "id": "tile_height", "label": "Tile height (desktop)", "min": 100, "max": 260, "step": 4, "unit": "px", "default": 160 },
     { "type": "range", "id": "tile_height_mobile", "label": "Tile height (mobile)", "min": 80, "max": 200, "step": 4, "unit": "px", "default": 112 }
   ],
