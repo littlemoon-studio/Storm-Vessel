@@ -322,3 +322,13 @@ product-card product-price .price {
 .product-card .group-block-content:has(> product-swatches) { flex-wrap: wrap; align-items: center; row-gap: 8px; }
 .product-card product-swatches { width: auto; flex: 0 0 auto; min-width: 116px; margin-inline-start: auto; overflow: visible; }
 .product-card .variant-option--swatches overflow-list { min-width: 116px; }
+
+/* Card swatches: the ring is on the circle itself, not Vessel's square selected box */
+.product-card .variant-option__button-label--has-swatch,
+.product-card .variant-option__button-label--has-swatch:hover,
+.product-card .variant-option__button-label--has-swatch:has(:checked) {
+  outline: 0 !important; box-shadow: none !important; background: none !important; border: 0 !important; border-radius: 50% !important; padding: 0 !important;
+}
+.product-card .variant-option__button-label--has-swatch:has(:checked) .swatch { outline: 1px solid var(--storm-red); outline-offset: 2px; }
+.product-card .variant-option__button-label--has-swatch:hover .swatch { outline: 1px solid rgb(100 4 3 / 0.5); outline-offset: 2px; }
+.product-card .variant-option--swatches .variant-option__swatch-value { display: none; }
