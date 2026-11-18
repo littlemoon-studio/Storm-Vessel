@@ -10,7 +10,10 @@
   <form>
     {%- for product_option in product_resource.options_with_values -%}
       {%- liquid
-        assign swatch_count = product_option.values | map: 'swatch' | compact | size
+        capture storm_swatch_count_text
+          render 'storm-swatch-count', option: product_option
+        endcapture
+        assign swatch_count = storm_swatch_count_text | plus: 0
       -%}
 
       {% if swatch_count == 0 %}

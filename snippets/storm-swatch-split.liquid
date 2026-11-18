@@ -1,57 +1,47 @@
 {%- comment -%}
-  Storm: two-colour (split) swatch background. Prints a CSS gradient, or nothing.
-  A colour value named "Black/Red", "Black & Red" or "Black + Red" is split in half when BOTH words are in the
-  colour dictionary (Theme settings → Storm swatch colours). A line can also name the whole value:
-  "black/red = #111111 #a90707". Swatches that use an image (prints, camo) are never changed.
+  Storm: swatch background from a colour NAME, using the colour list in Theme settings → Storm swatch colours.
+  Prints a CSS value, or nothing when the name is not a colour we know.
+    - "Black/Red", "Black & Red", "Black + Red" → half-and-half gradient (needs both words in the list)
+    - "Matte Black/Gray Green Polar" → the first colour alone when the rest is not a colour
+    - "Navy" → that colour
+    - a list line can name a whole value: "black/red = #111111 #A90707" (two codes = split)
+  This lets swatches work without linking Shopify swatch entries. Image swatches are never touched.
 
   @param {string} name - the colour option value
 {%- endcomment -%}
 {%- liquid
-  assign split_css = ''
-  assign dict = settings.storm_swatch_colours | newline_to_br | split: '<br />'
+  assign storm_css = ''
+  assign dict = '<br />' | append: settings.storm_swatch_colours | downcase | newline_to_br | strip_newlines | replace: ' = ', '=' | replace: ' =', '=' | replace: '= ', '='
   assign wanted = name | downcase | strip | replace: ' & ', '/' | replace: ' + ', '/' | replace: ' and ', '/' | replace: ' / ', '/' | replace: ' - ', '/'
-  assign hex_a = ''
-  assign hex_b = ''
-  for line in dict
-    assign pair = line | split: '='
-    if pair.size < 2
-      continue
+  assign marker = '<br />' | append: wanted | append: '='
+  assign hit = dict | split: marker
+  if hit.size > 1
+    assign val = hit[1] | split: '<br />' | first | strip
+    if val contains ' '
+      assign two = val | split: ' '
+      assign storm_css = 'linear-gradient(135deg, ' | append: two[0] | append: ' 0 50%, ' | append: two[1] | append: ' 50% 100%)'
+    else
+      assign storm_css = val
     endif
-    assign key = pair[0] | strip | downcase | replace: ' / ', '/'
-    assign val = pair[1] | strip
-    if key == wanted and val contains ' '
-      assign both = val | split: ' '
-      assign hex_a = both[0]
-      assign hex_b = both[1]
-      break
-    endif
-  endfor
-  if hex_a == '' and wanted contains '/'
+  elsif wanted contains '/'
     assign parts = wanted | split: '/'
-    if parts.size >= 2
-      assign want_a = parts[0] | strip
-      assign want_b = parts[1] | strip
-      for line in dict
-        assign pair = line | split: '='
-        if pair.size < 2
-          continue
-        endif
-        assign key = pair[0] | strip | downcase
-        assign val = pair[1] | strip
-        if val contains ' '
-          continue
-        endif
-        if key == want_a
-          assign hex_a = val
-        endif
-        if key == want_b
-          assign hex_b = val
-        endif
-      endfor
+    assign marker_a = '<br />' | append: parts[0] | strip | append: '='
+    assign marker_b = '<br />' | append: parts[1] | strip | append: '='
+    assign hit_a = dict | split: marker_a
+    assign hit_b = dict | split: marker_b
+    assign hex_a = ''
+    assign hex_b = ''
+    if hit_a.size > 1
+      assign hex_a = hit_a[1] | split: '<br />' | first | strip | split: ' ' | first
     endif
-  endif
-  if hex_a != '' and hex_b != ''
-    assign split_css = 'linear-gradient(135deg, ' | append: hex_a | append: ' 0 50%, ' | append: hex_b | append: ' 50% 100%)'
+    if hit_b.size > 1
+      assign hex_b = hit_b[1] | split: '<br />' | first | strip | split: ' ' | first
+    endif
+    if hex_a != '' and hex_b != ''
+      assign storm_css = 'linear-gradient(135deg, ' | append: hex_a | append: ' 0 50%, ' | append: hex_b | append: ' 50% 100%)'
+    elsif hex_a != ''
+      assign storm_css = hex_a
+    endif
   endif
 -%}
-{{- split_css -}}
+{{- storm_css -}}

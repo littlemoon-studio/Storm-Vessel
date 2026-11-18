@@ -1,0 +1,27 @@
+{%- comment -%}
+  Storm: how many values of a product option can be shown as a swatch: a linked Shopify swatch, or (for a
+  Colour / Color option) a colour we can work out from the name. Prints a number.
+
+  @param {object} option - a product option (product.options_with_values item)
+{%- endcomment -%}
+{%- liquid
+  assign storm_n = 0
+  assign storm_opt = option.name | downcase
+  assign storm_is_colour = false
+  if storm_opt == 'color' or storm_opt == 'colour'
+    assign storm_is_colour = true
+  endif
+  for v in option.values
+    if v.swatch
+      assign storm_n = storm_n | plus: 1
+    elsif storm_is_colour
+      capture storm_c
+        render 'storm-swatch-split', name: v.name
+      endcapture
+      if storm_c != blank
+        assign storm_n = storm_n | plus: 1
+      endif
+    endif
+  endfor
+-%}
+{{- storm_n -}}

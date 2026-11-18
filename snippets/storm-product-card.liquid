@@ -5,7 +5,10 @@
 {%- liquid
   assign colour_option = nil
   for option in product.options_with_values
-    assign swatch_count = option.values | map: 'swatch' | compact | size
+    capture storm_swatch_count_text
+      render 'storm-swatch-count', option: option
+    endcapture
+    assign swatch_count = storm_swatch_count_text | plus: 0
     if swatch_count > 1
       assign colour_option = option
       break
@@ -45,7 +48,18 @@
             {%- else -%}
               {%- capture storm_split -%}{% render 'storm-swatch-split', name: value.name %}{%- endcapture -%}
               {%- assign storm_split = storm_split | strip -%}
-              <span class="storm-card__swatch" style="background: {% if storm_split != blank %}{{ storm_split }}{% else %}{{ value.swatch.color }}{% endif %};" title="{{ value | escape }}"></span>
+              {%- liquid
+                if storm_split contains 'linear-gradient'
+                  assign card_swatch_bg = storm_split
+                elsif value.swatch.color
+                  assign card_swatch_bg = value.swatch.color
+                elsif storm_split != blank
+                  assign card_swatch_bg = storm_split
+                else
+                  assign card_swatch_bg = 'repeating-linear-gradient(45deg, #E6E0D4 0 3px, #D4CCBC 3px 6px)'
+                endif
+              -%}
+              <span class="storm-card__swatch" style="background: {{ card_swatch_bg }};" title="{{ value | escape }}"></span>
             {%- endif -%}
           {%- endfor -%}
         </span>

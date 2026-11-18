@@ -327,7 +327,10 @@
     <form class="variant-picker__form">
       {%- for product_option in product_resource.options_with_values -%}
         {%- liquid
-          assign swatch_count = product_option.values | map: 'swatch' | compact | size
+          capture storm_swatch_count_text
+            render 'storm-swatch-count', option: product_option
+          endcapture
+          assign swatch_count = storm_swatch_count_text | plus: 0
           comment
             Storm: normalise the style so an unexpected stored value (e.g. "dropdown" without the s)
             can never hide the picker. Anything that is not 'dropdowns' renders as buttons.

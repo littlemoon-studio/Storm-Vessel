@@ -64,7 +64,10 @@
 
 {%- liquid
   for product_option in block.settings.product.options_with_values
-    assign swatch_count = product_option.values | map: 'swatch' | compact | size
+    capture storm_swatch_count_text
+      render 'storm-swatch-count', option: product_option
+    endcapture
+    assign swatch_count = storm_swatch_count_text | plus: 0
 
     if swatch_count > 1
       assign product_has_swatches = true

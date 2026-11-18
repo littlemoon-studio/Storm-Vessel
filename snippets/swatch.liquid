@@ -19,18 +19,20 @@
   elsif swatch.image
     assign swatch_image_url = swatch.image | image_url: width: 80
     assign swatch_value = 'url(' | append: swatch_image_url | append: ')'
-  elsif name != blank
+  elsif name != blank or swatch.color
     capture storm_split
       render 'storm-swatch-split', name: name
     endcapture
     assign storm_split = storm_split | strip
-    if storm_split != blank
+    if storm_split contains 'linear-gradient'
       assign swatch_value = storm_split
     elsif swatch.color
       assign swatch_value = 'rgb(' | append: swatch.color.rgb | append: ')'
+    elsif storm_split != blank
+      assign swatch_value = storm_split
+    else
+      assign swatch_value = 'repeating-linear-gradient(45deg, #E6E0D4 0 4px, #D4CCBC 4px 8px)'
     endif
-  elsif swatch.color
-    assign swatch_value = 'rgb(' | append: swatch.color.rgb | append: ')'
   endif
   assign classes =
   case mode
