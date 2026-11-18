@@ -176,16 +176,17 @@ product-card product-price .price {
 .storm-cart-sub .storm-delivery-note { margin: 0; flex-direction: row; flex-wrap: wrap; gap: 4px 20px; }
 
 /* Item rows: real thumbnails, one clear hierarchy, hairlines between items */
-.cart-page .cart-items__table-row {
+.cart-page .cart-items__table tbody .cart-items__table-row {
   --storm-thumb: clamp(5.5rem, 26cqi, 9rem);
   grid-template-columns: var(--storm-thumb) minmax(0, 1fr) minmax(5rem, auto);
   padding-block: 20px;
   margin-bottom: 0;
   border-top: 1px solid var(--storm-red);
+  border-bottom: 0;
 }
-.cart-page .cart-items__table tbody tr:last-child { border-bottom: 1px solid var(--storm-red); }
+.cart-page .cart-items__table tbody .cart-items__table-row:last-child { border-bottom: 1px solid var(--storm-red); }
 @container cart-items (width >= 720px) {
-  .cart-page .cart-items__table-row { grid-template-columns: var(--storm-thumb) minmax(0, 1fr) auto minmax(6rem, auto); }
+  .cart-page .cart-items__table tbody .cart-items__table-row { grid-template-columns: var(--storm-thumb) minmax(0, 1fr) auto minmax(6rem, auto); }
 }
 .cart-page .cart-items__media-container { background: #fff; border: 1px solid var(--storm-red); }
 .cart-page .cart-items__title { font-family: var(--font-accent--family); font-size: 15px; line-height: 1.2; }
@@ -202,7 +203,7 @@ product-card product-price .price {
 
 /* Summary panel */
 .cart-page .cart__summary-inner { background: var(--storm-paper); border: 1px solid var(--storm-red); padding: 24px; }
-.storm-summary-title { margin: 0 0 14px; font-size: 14px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--storm-deep); }
+.storm-summary-title { display: block; width: 100%; text-align: left; margin: 0 0 14px; font-size: 14px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--storm-deep); }
 .cart-page .cart__summary-inner .storm-ship-progress { margin-block-end: 14px; }
 
 .storm-continue { display: inline-block; margin-block-start: 18px; font-size: 14px; font-weight: 600; color: var(--storm-red); text-decoration: underline; text-underline-offset: 0.2em; }
