@@ -181,7 +181,8 @@
         .map((v) => v.trim().toLowerCase())
         .filter(Boolean);
 
-    const toDate = (iso) => new Date(`${iso}T12:00:00`);
+    /* Local midnight, so "today" compares equal to today and is rejected (earliest pickup is tomorrow). */
+    const toDate = (iso) => new Date(`${iso}T00:00:00`);
 
     /* Returns an error message, or '' when the gate is satisfied. */
     const validate = (gate) => {
