@@ -9,12 +9,6 @@
  */
 {
   "current": {
-    "storm_pickup_collection": "all-surfboards, shortboards, longboards, mid-length-boards",
-    "auto_open_cart_drawer": true,
-    "show_cart_note": true,
-    "storm_pickup_days": 60,
-    "storm_pickup_phone": "250-725-3344",
-    "storm_pickup_hours": "daily, 10am to 5pm Pacific time",
     "logo": "shopify://shop_images/Storm_Surf_Shop_9e8ab2e7-ef2f-4903-9b5c-b43045bab09f.png",
     "favicon": "shopify://shop_images/Storm_Surf_Shop.png",
     "type_body_font": "mono",
@@ -61,6 +55,8 @@
     "button_border_radius_secondary": 0,
     "button_text_case_secondary": "uppercase",
     "cart_type": "drawer",
+    "auto_open_cart_drawer": true,
+    "show_cart_note": true,
     "drawer_color_scheme": "scheme-storm-cream",
     "icon_stroke": "thin",
     "input_border_width": 1,
@@ -83,6 +79,10 @@
     "storm_snap_enabled": false,
     "storm_snap_zone": 44,
     "storm_snap_duration": 950,
+    "storm_pickup_collection": "all-surfboards, shortboards, longboards, mid-length-boards",
+    "storm_pickup_days": 60,
+    "storm_pickup_phone": "250-725-3344",
+    "storm_pickup_hours": "daily, 10am to 5pm Pacific time",
     "content_for_index": [],
     "blocks": {
       "13305437469741356523": {
@@ -489,7 +489,7 @@
       },
       "scheme-storm-cream": {
         "settings": {
-          "background": "#f4f0e7",
+          "background": "#F2F2EA",
           "foreground_heading": "#a90707",
           "foreground": "#a90707",
           "primary": "#a90707",
