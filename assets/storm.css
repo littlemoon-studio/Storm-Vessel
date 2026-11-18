@@ -137,3 +137,12 @@ p, li { text-wrap: pretty; }
 }
 @keyframes storm-hero-parallax { to { transform: scale(1.12) translateY(5%); } }
 @keyframes storm-star-turn { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
+
+/* Product rows on phones: snap lines up with the page margin, and a swipe at the end of a row doesn't trigger the browser's back gesture */
+@media (max-width: 749px) {
+  .resource-list__carousel slideshow-slides { scroll-padding-inline: var(--page-margin, 16px); overscroll-behavior-x: contain; }
+}
+
+/* Quick-add button: visual size stays 36px, the tappable area becomes 44px */
+.quick-add__button { position: relative; }
+.quick-add__button::before { content: ''; position: absolute; inset: -4px; }
