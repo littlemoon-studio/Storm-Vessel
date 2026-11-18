@@ -46,7 +46,7 @@
   };
   const nativeFetch = window.fetch;
   window.fetch = function (input) {
-    const url = typeof input === 'string' ? input : (input && input.url) || '';
+    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : (input && input.url) || '';
     const request = nativeFetch.apply(this, arguments);
     if (WATCH.test(url)) {
       pending++;
