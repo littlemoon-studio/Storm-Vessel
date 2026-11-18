@@ -332,3 +332,5 @@ product-card product-price .price {
 .product-card .variant-option__button-label--has-swatch:has(:checked) .swatch { outline: 1px solid var(--storm-red); outline-offset: 2px; }
 .product-card .variant-option__button-label--has-swatch:hover .swatch { outline: 1px solid rgb(100 4 3 / 0.5); outline-offset: 2px; }
 .product-card .variant-option--swatches .variant-option__swatch-value { display: none; }
+.product-card .variant-option--swatches overflow-list::part(list) { padding: 3px; margin: -3px; }
+.product-card .variant-option--swatches, .product-card product-swatches, .product-card swatches-variant-picker-component { overflow: visible; }
