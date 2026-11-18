@@ -61,3 +61,14 @@ The `assets/storm.css` and `sections/split-collection.liquid` that come with thi
 - the image/info divider line back on split-section cards
 
 Copy both into the repo, replacing the old ones, then commit `"Split section: tree heading controls, star gap, card divider"` and push.
+
+## Added Nov 2026 (audit fixes)
+- **Surfboards are pickup-only** (sold online, never shipped). `snippets/storm-is-pickup-product.liquid` decides what counts (tag `pickup-only` or the collection handles in Theme settings → Storm board pickup). `storm-pickup-notice` is the product/collection banner, `storm-pickup-gate` is the cart panel (terms tick + pickup date saved as cart attributes, blocks Check out; accelerated checkout is hidden on boards and when the gate is active). Pickup window, phone and hours are theme settings.
+- **Delivery lines:** `storm-delivery-note` (Canada-only Christmas cutoff + free shipping), `storm-shipping-progress` (cart progress bar). Settings: Storm holiday messaging. Canada only: the shop does not ship to the US.
+- **`storm-sticky-atc`:** mobile bar on product pages. Products with options say "Choose options" and scroll to the picker.
+- **`storm-snow`:** optional snow canvas, off by default, honours reduced motion.
+- **Quick tiles on collection pages:** `templates/collection.json` shows the tiles only on the collections listed in the section setting "Show only on these collections". The current collection's tile is marked.
+- **Product variant picker:** `variant_style` in product templates must be `buttons` or `dropdowns` (the snippet now falls back to buttons for anything else). A wrong value hid the size picker in Nov 2026.
+- **Colours:** there is one orange now (`--storm-flame` #E62E09; `--storm-ember` is an alias). Text on flame is black for AA contrast. No blue anywhere except Shop Pay.
+- Pushing from a non-interactive shell needs: `git -c credential.helper='!gh auth git-credential' push`.
+- A local site audit with a progress tracker lives in `audits/` (kept out of git on purpose: it contains sales numbers).
