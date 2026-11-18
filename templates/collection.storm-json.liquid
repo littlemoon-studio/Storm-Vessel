@@ -2,13 +2,13 @@
 {%- comment -%}
   Storm: tiny JSON list of products with their spec metafields. Used by the "Refine" chips on product pages.
   Request it with ?view=storm-json plus the normal filters, for example:
-    /collections/all?view=storm-json&filter.p.m.custom.collection=Infiniti&filter.p.m.custom.fit=Mens
-  Not linked anywhere and not meant for visitors. Add ?debug=1 to see which custom metafield keys the first product has.
+    /collections/all?view=storm-json&filter.p.m.custom.collection=Infiniti&filter.p.m.custom.fitt=Mens
+  Not linked anywhere and not meant for visitors. See collection.storm-json-debug.liquid to list the real metafield keys.
 {%- endcomment -%}
 {%- paginate collection.products by 50 -%}
-{"count":{{ collection.products_count }},{%- if request.query_string contains 'debug=1' -%}"keys":[{%- assign first_p = collection.products.first -%}{%- for m in first_p.metafields.custom -%}{{ m.first | json }}{% unless forloop.last %},{% endunless %}{%- endfor -%}],{%- endif -%}"products":[
+{"count":{{ collection.products_count }},"products":[
 {%- for p in collection.products -%}
-{"h":{{ p.handle | json }},"t":{{ p.title | json }},"u":{{ p.url | json }},"a":{{ p.available | json }},"c":{{ p.metafields.custom.collection.value | json }},"f":{{ p.metafields.custom.fit.value | json }},"g":{{ p.metafields.custom.category.value | json }},"th":{{ p.metafields.custom.thickness.value | json }},"en":{{ p.metafields.custom.entry.value | json }},"ho":{{ p.metafields.custom.hood.value | json }},"bs":{{ p.metafields.custom.boot_style.value | json }},"gs":{{ p.metafields.custom.glove_style.value | json }}}{% unless forloop.last %},{% endunless %}
+{"h":{{ p.handle | json }},"t":{{ p.title | json }},"u":{{ p.url | json }},"a":{{ p.available | json }},"v":{{ p.vendor | json }},"c":{{ p.metafields.custom.collection.value | json }},"f":{{ p.metafields.custom.fitt.value | json }},"g":{{ p.metafields.custom.category.value | json }},"th":{{ p.metafields.custom.thickness.value | json }},"en":{{ p.metafields.custom.entry.value | json }},"ho":{{ p.metafields.custom.wetsuit_type.value | json }},"bs":{{ p.metafields.custom.boot_style.value | json }},"gs":{{ p.metafields.custom.glove_style.value | json }}}{% unless forloop.last %},{% endunless %}
 {%- endfor -%}
 ]}
 {%- endpaginate -%}
