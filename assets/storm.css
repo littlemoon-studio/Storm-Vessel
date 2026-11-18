@@ -156,3 +156,13 @@ product-card product-price .price {
   font-size: 15px !important;
   line-height: 1.15;
 }
+
+/* Cart drawer: the items list always keeps room; extras scroll with it, the footer stays compact */
+.cart-drawer__items { min-height: 160px; }
+.storm-drawer-extras { padding: 8px var(--drawer-padding, 20px) 16px; display: flex; flex-direction: column; gap: 8px; }
+.storm-drawer-extras .storm-ship-progress { margin: 0; }
+.storm-drawer-extras .storm-pickup-gate { margin-block: 0; }
+.storm-view-bag {
+  display: block; text-align: center; padding: 12px 0 4px; font-size: 14px; font-weight: 600; letter-spacing: 0.02em;
+  color: var(--storm-red); text-decoration: underline; text-underline-offset: 0.2em;
+}

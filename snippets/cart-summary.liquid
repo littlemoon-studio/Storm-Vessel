@@ -20,7 +20,7 @@
 {% endstylesheet %}
 
 {%- comment -%} Storm: free-shipping progress and delivery note {%- endcomment -%}
-{% render 'storm-shipping-progress' %}
+{%- unless in_drawer -%}{% render 'storm-shipping-progress' %}{%- endunless -%}
 
 <div class="cart__summary-totals">
   {% # We need to keep this node in place to allow morphing to work properly # %}
@@ -113,7 +113,7 @@
     {%- assign storm_gate_block = true -%}
   {%- endunless -%}
 {%- endif -%}
-{{ storm_gate_html }}
+{%- unless in_drawer -%}{{ storm_gate_html }}{%- endunless -%}
 
 <div class="cart__ctas">
   <button

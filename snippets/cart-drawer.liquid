@@ -157,12 +157,18 @@
               class="cart-drawer__items"
             >
               {% render 'cart-products' %}
+              {%- comment -%} Storm: shipping progress, delivery lines and the surfboard pickup panel scroll with the items, so the footer stays compact {%- endcomment -%}
+              <div class="storm-drawer-extras">
+                {% render 'storm-shipping-progress' %}
+                {% render 'storm-pickup-gate' %}
+              </div>
             </scroll-hint>
 
             <div
               class="cart-drawer__summary"
             >
-              {% render 'cart-summary' %}
+              {% render 'cart-summary', in_drawer: true %}
+              <a class="storm-view-bag" href="{{ routes.cart_url }}">View bag</a>
             </div>
           </div>
         {%- endif -%}
