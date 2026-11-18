@@ -354,3 +354,6 @@ product-card product-price .price {
 .product-card .group-block-content:has(> product-swatches) { flex-direction: row !important; flex-wrap: wrap; align-items: center; justify-content: space-between !important; row-gap: 8px; }
 .product-card .group-block-content:has(> product-swatches) product-price { text-align: left; }
 .product-card product-swatches { margin-inline-start: 0; }
+.product-card product-swatches, .product-card swatches-variant-picker-component, .product-card .variant-option--swatches { justify-content: flex-start !important; }
+.product-card .variant-option--swatches overflow-list { --overflow-list-alignment: flex-start; --overflow-list-alignment-mobile: flex-start; justify-content: flex-start; }
+.product-card .variant-option--swatches overflow-list::part(list) { justify-content: flex-start; }
