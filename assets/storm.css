@@ -36,8 +36,8 @@ h1, h2, h3, .h1, .h2, .h3 { letter-spacing: -0.03em; }
 .storm-card__title, .storm-card__price { font-family: var(--font-accent--family); font-size: 15px; line-height: 17.25px; color: var(--storm-red); }
 .storm-card__vendor { font-family: var(--font-body--family); font-size: 10px; line-height: 13px; letter-spacing: .04em; text-transform: uppercase; }
 .storm-card__bottom { margin-top: auto; padding-top: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 8px 12px; }
-.storm-card__swatches { display: flex; gap: 6px; margin-left: auto; }
-.storm-card__swatch { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--storm-red); background-size: cover; background-position: center; }
+.storm-card__swatches { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.storm-card__swatch { width: 16px; height: 16px; flex: none; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--storm-red); background-size: cover; background-position: center; }
 
 
 /* Keyboard focus: 3px ring that reads on cream and on dark panels */
@@ -300,3 +300,20 @@ product-card product-price .price {
 /* Swatches: a hairline so white / cream / split colours don't vanish on the cream page */
 .swatch:not(.swatch--filter):not(.swatch--pill) { box-shadow: inset 0 0 0 1px rgb(100 4 3 / 0.35); }
 .storm-card__swatch { box-shadow: inset 0 0 0 1px rgb(100 4 3 / 0.35); }
+
+/* Colour swatches on cards: small circles, 4 at most, "+N" for the rest, ring on the current one */
+.product-card .variant-option--swatches { padding: 0 !important; }
+.product-card .variant-option--swatches overflow-list::part(list) { gap: 6px; align-items: center; }
+.product-card .variant-option__swatch { display: flex; align-items: center; }
+.product-card .variant-option__button-label--has-swatch { padding: 0 !important; margin: 0; min-width: 0; min-height: 0; border: 0; background: none; }
+.product-card .swatch,
+.product-card .swatch--unscaled {
+  width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important;
+  border-radius: 50% !important; border: 0 !important; background-size: cover;
+}
+.product-card .variant-option__button-label--has-swatch:has(:checked) .swatch,
+.storm-card__swatches .storm-card__swatch:first-child { outline: 1px solid var(--storm-red); outline-offset: 2px; }
+.storm-swatch-more, .storm-card__more {
+  font-family: var(--font-accent--family); font-size: 11px; line-height: 1; color: var(--storm-red); align-self: center; white-space: nowrap;
+}
+.product-card .strikethrough-variant, .product-card .variant-option__button-label--has-swatch .strikethrough-variant { border-radius: 50%; overflow: hidden; }

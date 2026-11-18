@@ -22,7 +22,7 @@
 
       <fieldset class="variant-option variant-option--buttons variant-option--swatches">
         {% capture children %}
-        {%- for product_option_value in product_option.values -%}
+        {%- for product_option_value in product_option.values limit: 4 -%}
           {% liquid
             assign featured_media = product_option_value.variant.featured_media
 
@@ -66,6 +66,9 @@
             </label>
           </li>
         {%- endfor -%}
+        {%- if product_option.values.size > 4 -%}
+          <li class="storm-swatch-more" aria-label="{{ product_option.values.size | minus: 4 }} more colours">+{{ product_option.values.size | minus: 4 }}</li>
+        {%- endif -%}
         <li
           slot="more"
           on:click="/showAllSwatches"
