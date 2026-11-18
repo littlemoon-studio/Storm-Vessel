@@ -2405,7 +2405,12 @@
         "type": "paragraph",
         "content": "Small extras shown in the cart, the cart drawer and under the Add to cart button. Only in-stock, single-option, non-board products are shown, and never something already in the cart."
       },
-      { "type": "checkbox", "id": "storm_addons_enabled", "label": "Show add-ons", "default": true },
+      {
+        "type": "checkbox",
+        "id": "storm_addons_enabled",
+        "label": "Show add-ons",
+        "default": true
+      },
       {
         "type": "text",
         "id": "storm_addon_collections",
@@ -2413,7 +2418,15 @@
         "info": "Comma separated, in priority order. The first ones fill the row first.",
         "default": "stocking-stuffers, storm-stickers, sex-wax"
       },
-      { "type": "range", "id": "storm_addons_count", "label": "Items in the cart and product page", "min": 2, "max": 6, "step": 1, "default": 3 }
+      {
+        "type": "range",
+        "id": "storm_addons_count",
+        "label": "Items in the cart and product page",
+        "min": 2,
+        "max": 6,
+        "step": 1,
+        "default": 3
+      }
     ]
   },
   {
@@ -2427,7 +2440,7 @@
         "type": "textarea",
         "id": "storm_swatch_colours",
         "label": "Colour list",
-        "default": "black = #111111\nwhite = #FFFFFF\ngrey = #8A8A8A\ngray = #8A8A8A\ncharcoal = #3A3A3A\nred = #C21807\nburgundy = #6D1020\norange = #F26A21\nyellow = #F2C230\ngreen = #2E7D4F\nolive = #6B6B2F\nforest = #08341C\nteal = #1F7A7A\nblue = #2F5DA8\nnavy = #14233F\npurple = #6A3FA0\npink = #E58AA8\nbrown = #6B4428\ntan = #C8A878\ncream = #F4F0E7\nsand = #E6D5B8"
+        "default": "black = #000000\nwhite = #FFFFFF\noff-white = #FAF5E9\ngrey = #808080\ngray = #808080\nlight grey = #D3D3D3\ncool grey = #A5ADB5\nwarm grey = #A49C94\ncharcoal = #36454F\ngraphite = #41464B\nstorm = #65717D\nsmoke = #73787D\nstone = #B8B0A0\nsand = #D6C39F\ndesert = #C7AA7B\ncream = #FFF4D6\nbeige = #D8C7A5\nkhaki = #B6A477\ntan = #B79C73\ntaupe = #948477\nbrown = #795238\nacorn = #9A754D\nred = #FF0000\nox red = #8E2F2A\nmaroon = #800000\nburgundy = #6D1020\npink = #FFC0CB\npeach = #F4C2A1\norange = #FF8000\nyellow = #FFFF00\ngreen = #008000\nolive = #808000\nforest = #285238\ndeep forest = #183F2D\nfrost green = #BCD5C5\nsage = #8A9A73\nmint = #A8DCC2\nteal = #008080\naqua = #00BFC4\nturquoise = #40E0D0\nblue = #0066CC\nbright blue = #0088EE\ndark blue = #14305E\nlight blue = #8DB8CE\nwinter sky = #9DB9D6\nsapphire = #0F52BA\ndenim = #456F99\nnavy = #000080\nnight = #161B29\npurple = #800080\nlilac = #C8A2C8\nsilver = #C0C0C0\nsteel = #858D94"
       }
     ]
   },
