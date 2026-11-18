@@ -2399,6 +2399,24 @@
     ]
   },
   {
+    "name": "Storm add-ons",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Small extras shown in the cart, the cart drawer and under the Add to cart button. Only in-stock, single-option, non-board products are shown, and never something already in the cart."
+      },
+      { "type": "checkbox", "id": "storm_addons_enabled", "label": "Show add-ons", "default": true },
+      {
+        "type": "text",
+        "id": "storm_addon_collections",
+        "label": "Collection handles",
+        "info": "Comma separated, in priority order. The first ones fill the row first.",
+        "default": "stocking-stuffers, storm-stickers, sex-wax"
+      },
+      { "type": "range", "id": "storm_addons_count", "label": "Items in the cart and product page", "min": 2, "max": 6, "step": 1, "default": 3 }
+    ]
+  },
+  {
     "name": "Storm swatch colours",
     "settings": [
       {

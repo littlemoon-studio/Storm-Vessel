@@ -1,0 +1,138 @@
+{%- comment -%}
+  Storm: "small extras" row (stickers, wax, stocking stuffers) for the cart page, the cart drawer and product pages.
+  Server-rendered, so it stays in step with the cart. It picks in-stock, single-variant, non-board products from the
+  collections in Theme settings → Storm add-ons, skips anything already in the cart or on the current page, and
+  adds with one tap. Information only: it never changes a price.
+
+  @param {string} [context] - 'cart', 'drawer' or 'product'
+  @param {product} [exclude] - the product being viewed (product page)
+{%- endcomment -%}
+{%- if settings.storm_addons_enabled -%}
+  {%- liquid
+    assign addon_handles = settings.storm_addon_collections | remove: ' ' | downcase | split: ','
+    assign max_items = settings.storm_addons_count | default: 3
+    if context == 'drawer'
+      assign max_items = 2
+    endif
+    assign cart_product_ids = cart.items | map: 'product_id' | join: ','
+    assign cart_product_ids = ',' | append: cart_product_ids | append: ','
+    assign picked_ids = ','
+    assign picked = 0
+    assign exclude_id = exclude.id | default: 0
+  -%}
+  {%- capture addon_cards -%}
+    {%- for handle in addon_handles -%}
+      {%- assign addon_collection = collections[handle] -%}
+      {%- if addon_collection == blank -%}{%- continue -%}{%- endif -%}
+      {%- for addon in addon_collection.products limit: 16 -%}
+        {%- if picked >= max_items -%}{%- break -%}{%- endif -%}
+        {%- assign id_key = ',' | append: addon.id | append: ',' -%}
+        {%- if addon.id == exclude_id or cart_product_ids contains id_key or picked_ids contains id_key -%}{%- continue -%}{%- endif -%}
+        {%- unless addon.available and addon.variants.size == 1 -%}{%- continue -%}{%- endunless -%}
+        {%- capture addon_is_pickup -%}{% render 'storm-is-pickup-product', product: addon %}{%- endcapture -%}
+        {%- if addon_is_pickup contains 'true' -%}{%- continue -%}{%- endif -%}
+        {%- assign picked = picked | plus: 1 -%}
+        {%- assign picked_ids = picked_ids | append: addon.id | append: ',' -%}
+        <li class="storm-addon">
+          <a class="storm-addon__image" href="{{ addon.url }}" tabindex="-1" aria-hidden="true">
+            {%- if addon.featured_image -%}
+              {{ addon.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 160', sizes: '80px', alt: '' }}
+            {%- endif -%}
+          </a>
+          <div class="storm-addon__info">
+            <a class="storm-addon__title" href="{{ addon.url }}">{{ addon.title | escape }}</a>
+            <span class="storm-addon__price">{{ addon.price | money }}</span>
+          </div>
+          <button
+            type="button"
+            class="storm-addon__add"
+            data-variant-id="{{ addon.selected_or_first_available_variant.id }}"
+            aria-label="Add {{ addon.title | escape }} to cart"
+          >Add</button>
+        </li>
+      {%- endfor -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if picked > 0 -%}
+    <storm-addons class="storm-addons storm-addons--{{ context | default: 'cart' }}" aria-label="Small extras">
+      <p class="storm-addons__title">{% if context == 'product' %}Goes with this{% else %}Add a little something{% endif %}</p>
+      <ul class="storm-addons__list">{{ addon_cards }}</ul>
+      <p class="storm-addons__error" role="status" hidden></p>
+    </storm-addons>
+  {%- endif -%}
+{%- endif -%}
+
+{% stylesheet %}
+  .storm-addons { display: block; margin-block: 16px; padding-block: 14px 4px; border-top: 1px solid var(--storm-red); }
+  .storm-addons__title { margin: 0 0 10px; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: -0.02em; color: var(--storm-red); }
+  .storm-addons__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .storm-addon { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; }
+  .storm-addon__image { display: block; width: 56px; height: 56px; border: 1px solid var(--storm-red); background: var(--storm-paper); overflow: hidden; }
+  .storm-addon__image img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .storm-addon__info { display: grid; gap: 2px; min-width: 0; }
+  .storm-addon__title { font-family: var(--font-accent--family); font-size: 13px; line-height: 1.25; color: var(--storm-red); text-decoration: none;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .storm-addon__price { font-family: var(--font-accent--family); font-size: 13px; color: var(--storm-red); }
+  .storm-addon__add {
+    min-width: 64px; min-height: 44px; padding: 0 14px; border: 1px solid var(--storm-red); background: transparent; color: var(--storm-red);
+    font: inherit; font-size: 13px; font-weight: 700; text-transform: uppercase; cursor: pointer; border-radius: 0;
+    transition: background-color var(--storm-dur-fast, 0.15s) ease, color var(--storm-dur-fast, 0.15s) ease;
+  }
+  .storm-addon__add:hover { background: var(--storm-deep); border-color: var(--storm-deep); color: var(--storm-sand); }
+  .storm-addon__add[disabled] { opacity: 0.5; cursor: progress; }
+  .storm-addon__add:focus-visible { outline: 3px solid var(--storm-red); outline-offset: 2px; }
+  .storm-addons__error { margin: 8px 0 0; font-size: 13px; color: var(--storm-red); }
+  .storm-addons--product { margin-block: 20px 8px; }
+  .storm-addons--drawer { margin-block: 12px 0; }
+  .storm-addons--drawer .storm-addon { grid-template-columns: 48px 1fr auto; }
+  .storm-addons--drawer .storm-addon__image { width: 48px; height: 48px; }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('storm-addons')) {
+    customElements.define(
+      'storm-addons',
+      class StormAddons extends HTMLElement {
+        connectedCallback() {
+          this.addEventListener('click', this.onClick);
+        }
+        disconnectedCallback() {
+          this.removeEventListener('click', this.onClick);
+        }
+        onClick = async (event) => {
+          const button = event.target instanceof Element && event.target.closest('.storm-addon__add');
+          if (!button || button.disabled) return;
+          const error = this.querySelector('.storm-addons__error');
+          if (error) error.hidden = true;
+          button.disabled = true;
+          const label = button.textContent;
+          button.textContent = '…';
+          try {
+            const response = await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+              body: JSON.stringify({ items: [{ id: Number(button.dataset.variantId), quantity: 1 }] }),
+            });
+            const result = await response.json();
+            if (!response.ok || result.status) throw new Error(result.description || result.message || 'Could not add');
+            const cart = await (await fetch('/cart.js', { headers: { Accept: 'application/json' } })).json();
+            // Same event Vessel's own add to cart sends; the cart re-renders itself and the icon count updates.
+            const update = new Event('cart:update', { bubbles: true });
+            update.detail = {
+              resource: cart,
+              sourceId: 'storm-addons',
+              data: { source: 'storm-addons', itemCount: cart.item_count, variantId: String(button.dataset.variantId) },
+            };
+            this.dispatchEvent(update);
+            const row = button.closest('.storm-addon');
+            if (row && !document.querySelector('cart-items-component')) row.remove();
+          } catch (e) {
+            button.disabled = false;
+            button.textContent = label;
+            if (error) { error.textContent = 'Could not add that one. Please try again.'; error.hidden = false; }
+          }
+        };
+      }
+    );
+  }
+{% endjavascript %}

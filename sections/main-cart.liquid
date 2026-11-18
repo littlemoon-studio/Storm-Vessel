@@ -107,6 +107,7 @@
         {%- if cart.empty? -%}
           {% render 'storm-cart-empty' %}
         {%- else -%}
+          {% render 'storm-addons', context: 'cart' %}
           <a class="storm-continue" href="{{ routes.all_products_collection_url }}">&larr; Continue shopping</a>
         {%- endif -%}
       </div>
