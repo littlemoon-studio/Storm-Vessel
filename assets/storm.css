@@ -152,7 +152,7 @@ p, li { text-wrap: pretty; }
 product-card [class*='__product_title'] :is(p, h2, h3, h4),
 product-card product-price,
 product-card product-price .price {
-  font-family: var(--font-accent--family);
-  font-size: 15px;
+  font-family: var(--font-accent--family) !important;   /* !important: Vessel's text blocks set their own font at higher priority */
+  font-size: 15px !important;
   line-height: 1.15;
 }
