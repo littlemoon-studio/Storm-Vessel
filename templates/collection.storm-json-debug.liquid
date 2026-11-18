@@ -1,0 +1,7 @@
+{%- layout none -%}
+{%- comment -%} Storm: developer helper. Lists every custom metafield key and value on the first products of a collection. Not linked anywhere. {%- endcomment -%}
+{"products":[
+{%- for p in collection.products limit: 4 -%}
+{"t":{{ p.title | json }},"m":{ {%- for m in p.metafields.custom -%}{{ m.first | json }}:{{ m.last.value | json }}{% unless forloop.last %},{% endunless %}{%- endfor -%} }}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]}
