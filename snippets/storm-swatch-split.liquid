@@ -19,7 +19,11 @@
     assign val = hit[1] | split: '<br />' | first | strip
     if val contains ' '
       assign two = val | split: ' '
-      assign storm_css = 'linear-gradient(135deg, ' | append: two[0] | append: ' 0 50%, ' | append: two[1] | append: ' 50% 100%)'
+      if two.size > 2
+        assign storm_css = 'linear-gradient(135deg, ' | append: two[0] | append: ' 0 33.33%, ' | append: two[1] | append: ' 33.33% 66.66%, ' | append: two[2] | append: ' 66.66% 100%)'
+      else
+        assign storm_css = 'linear-gradient(135deg, ' | append: two[0] | append: ' 0 50%, ' | append: two[1] | append: ' 50% 100%)'
+      endif
     else
       assign storm_css = val
     endif
