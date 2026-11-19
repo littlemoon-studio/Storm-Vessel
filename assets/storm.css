@@ -374,3 +374,9 @@ product-card product-price .price {
   width: 26px !important; height: 26px !important; border-radius: 50% !important; background-size: cover !important;
 }
 .variant-option--swatches:not(.product-card *) .strikethrough-variant { border-radius: 50%; overflow: hidden; }
+
+/* "You may also like" cards: framed photo + title only (no price, vendor or swatches; add-ons carry prices) */
+product-recommendations .product-card__link { padding: 18px !important; gap: 14px !important; background: var(--storm-paper); }
+product-recommendations .product-card .card-gallery { border: 1px solid rgb(169 7 7 / 0.4) !important; }
+product-recommendations .product-card .group-block { padding: 0 !important; }
+product-recommendations .product-card .group-block-content { padding: 0 !important; }

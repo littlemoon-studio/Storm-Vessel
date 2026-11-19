@@ -909,6 +909,7 @@
             },
             "group_tiCWTh": {
               "type": "group",
+              "disabled": true,
               "name": "Divider",
               "settings": {
                 "link": "",
@@ -1028,6 +1029,7 @@
                 },
                 "text_DcDhcH": {
                   "type": "text",
+                  "disabled": true,
                   "settings": {
                     "text": "<p>{{ closest.product.vendor }}</p>",
                     "width": "fit-content",
@@ -1059,6 +1061,7 @@
             },
             "group_qqYXCd": {
               "type": "group",
+              "disabled": true,
               "name": "Price",
               "settings": {
                 "link": "",
