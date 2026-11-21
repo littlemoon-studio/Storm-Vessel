@@ -15,9 +15,9 @@
         "tile_1": {
           "type": "tile",
           "settings": {
-            "label": "Select apparel",
+            "label": "20% off",
             "title": "WOMENS \nON SALE",
-            "link": "/collections/storm-apparel",
+            "link": "/collections/womens-on-sale",
             "background": "#1e1e1e",
             "label_color": "#f7f5e0",
             "title_color": "#f7f5e0"
@@ -28,7 +28,7 @@
           "settings": {
             "label": "20% off",
             "title": "MENS\nON SALE",
-            "link": "shopify://collections/stocking-stuffers",
+            "link": "/collections/mens-on-sale",
             "background": "#1e1e1e",
             "label_color": "#f7f5e0",
             "title_color": "#f7f5e0"
@@ -37,9 +37,9 @@
         "tile_3": {
           "type": "tile",
           "settings": {
-            "label": "35% off",
-            "title": "YOUTH Apparel\nON sale",
-            "link": "shopify://collections/gift-for-surfers",
+            "label": "20% off",
+            "title": "footwear\nON sale",
+            "link": "/collections/footwear-on-sale",
             "background": "#1e1e1e",
             "label_color": "#f7f5e0",
             "title_color": "#f7f5e0"
@@ -48,9 +48,9 @@
         "tile_4": {
           "type": "tile",
           "settings": {
-            "label": "25% off",
-            "title": "WETSUITS ON SALE",
-            "link": "/collections/surf-trip-must-haves",
+            "label": "20-50% off",
+            "title": "all \non sale",
+            "link": "/collections/black-friday",
             "background": "#1e1e1e",
             "label_color": "#f7f5e0",
             "title_color": "#f7f5e0"
@@ -58,6 +58,7 @@
         },
         "tile_5": {
           "type": "tile",
+          "disabled": true,
           "settings": {
             "label": "20% off",
             "title": "goods + more\non sale",
@@ -75,10 +76,9 @@
         "tile_4",
         "tile_5"
       ],
-      "disabled": true,
       "settings": {
         "sticky": "none",
-        "columns": 5,
+        "columns": 4,
         "show_on_collections": "",
         "tile_height": 116,
         "tile_height_mobile": 88
