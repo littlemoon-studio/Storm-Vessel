@@ -15,56 +15,56 @@
         "tile_1": {
           "type": "tile",
           "settings": {
-            "label": "SHOP ALL",
-            "title": "STORM\nBRAND",
+            "label": "Select apparel",
+            "title": "WOMENS \nON SALE",
             "link": "/collections/storm-apparel",
             "background": "#1e1e1e",
-            "label_color": "#F7F5E0",
-            "title_color": "#F7F5E0"
+            "label_color": "#f7f5e0",
+            "title_color": "#f7f5e0"
           }
         },
         "tile_2": {
           "type": "tile",
           "settings": {
-            "label": "GIFTS UNDER $50",
-            "title": "STOCKING\nSTUFFERS",
+            "label": "20% off",
+            "title": "MENS\nON SALE",
             "link": "shopify://collections/stocking-stuffers",
-            "background": "#640403",
-            "label_color": "#e62e09",
-            "title_color": "#e62e09"
+            "background": "#1E1E1E",
+            "label_color": "#F7F5E0",
+            "title_color": "#F7F5E0"
           }
         },
         "tile_3": {
           "type": "tile",
           "settings": {
-            "label": "SKIP THE GUESSWORK",
-            "title": "GIFTS 4\nSURFERS",
+            "label": "35% off",
+            "title": "YOUTH Apparel\nON sale",
             "link": "shopify://collections/gift-for-surfers",
-            "background": "#E62E09",
-            "label_color": "#95D2E8",
-            "title_color": "#95D2E8"
+            "background": "#1E1E1E",
+            "label_color": "#F7F5E0",
+            "title_color": "#F7F5E0"
           }
         },
         "tile_4": {
           "type": "tile",
           "settings": {
-            "label": "FLYING SOUTH?",
-            "title": "SURF TRIP\nMUST-HAVES",
+            "label": "25% off",
+            "title": "WETSUITS ON SALE",
             "link": "/collections/surf-trip-must-haves",
-            "background": "#95D2E8",
-            "label_color": "#640403",
-            "title_color": "#640403"
+            "background": "#1E1E1E",
+            "label_color": "#F7F5E0",
+            "title_color": "#F7F5E0"
           }
         },
         "tile_5": {
           "type": "tile",
           "settings": {
-            "label": "STAYING PUT?",
-            "title": "COLD WATER\nWETSUITS",
+            "label": "20% off",
+            "title": "goods + more\non sale",
             "link": "/collections/wetsuits",
-            "background": "#042E99",
-            "label_color": "#A6E7B1",
-            "title_color": "#A6E7B1"
+            "background": "#1E1E1E",
+            "label_color": "#F7F5E0",
+            "title_color": "#F7F5E0"
           }
         }
       },
@@ -102,7 +102,7 @@
             "inherit_color_scheme": false,
             "color_scheme": "scheme-7320ef0c-8cb2-4360-8022-1a64657e4d96",
             "toggle_overlay": true,
-            "overlay_color": "#30340B33",
+            "overlay_color": "#30340b33",
             "overlay_style": "solid",
             "gradient_direction": "to top",
             "padding-block-start": 0,
@@ -167,7 +167,7 @@
                     "wrap": "pretty",
                     "color": "var(--color-foreground)",
                     "background": true,
-                    "background_color": "#5B0202",
+                    "background_color": "#5b0202",
                     "corner_radius": 0,
                     "padding-block-start": 0,
                     "padding-block-end": 0,
@@ -1420,7 +1420,7 @@
             "product_list_text_yGy8FT": {
               "type": "_product-list-text",
               "settings": {
-                "text": "<h3>GIFTS FOR SURFERS</h3>",
+                "text": "<h3>BLACK FRIDAY DEALS</h3>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -1740,7 +1740,7 @@
       },
       "name": "[NEW] Product list",
       "settings": {
-        "collection": "gift-for-surfers",
+        "collection": "black-friday",
         "layout_type": "carousel",
         "carousel_on_mobile": true,
         "max_products": 11,
