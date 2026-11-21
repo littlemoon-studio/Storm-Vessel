@@ -1,0 +1,48 @@
+{%- comment -%}
+  Storm: Black Friday message tile inside product grids (all collections). Text and dates come from Theme settings → Storm Black Friday tile.
+  Information only, never a price.
+{%- endcomment -%}
+{%- liquid
+  assign show_bf = false
+  if settings.storm_bf_enabled
+    assign show_bf = true
+    if settings.storm_bf_end != blank
+      assign bf_end_s = settings.storm_bf_end | date: '%s' | plus: 86400
+      assign now_s = 'now' | date: '%s' | plus: 0
+      if now_s >= bf_end_s
+        assign show_bf = false
+      endif
+    endif
+  endif
+-%}
+{%- if show_bf -%}
+  <li class="product-grid__item storm-grid-note storm-grid-note--sale">
+    <div class="storm-grid-note__inner">
+      <span class="storm-grid-note__star" aria-hidden="true">&#10038;</span>
+      <p class="storm-grid-note__title">{{ settings.storm_bf_title | escape }}</p>
+      {%- assign bf_lines = settings.storm_bf_lines | newline_to_br | split: '<br />' -%}
+      {%- for bf_line in bf_lines -%}
+        {%- assign bl = bf_line | strip -%}
+        {%- if bl != blank -%}<p class="storm-grid-note__text">{{ bl | escape }}</p>{%- endif -%}
+      {%- endfor -%}
+      {%- if settings.storm_bf_small != blank -%}
+        <p class="storm-grid-note__small">{{ settings.storm_bf_small | escape }}</p>
+      {%- endif -%}
+      {%- if settings.storm_bf_link != blank -%}
+        <a class="storm-grid-note__link" href="{{ settings.storm_bf_link }}">{{ settings.storm_bf_link_label | escape }} &rarr;</a>
+      {%- endif -%}
+    </div>
+  </li>
+{%- endif -%}
+
+{% stylesheet %}
+  .storm-grid-note--sale { display: flex; }
+  .storm-grid-note--sale .storm-grid-note__inner { flex: 1; min-height: 260px; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 24px; border: 1px solid; text-align: left; }
+  .storm-grid-note--sale .storm-grid-note__star { font-size: 28px; line-height: 1; margin-block-end: 8px; }
+  .storm-grid-note--sale .storm-grid-note__title { margin: 0; font-size: clamp(20px, 2.2vw, 30px); font-weight: 700; line-height: 1; letter-spacing: -0.03em; text-transform: uppercase; }
+  .storm-grid-note--sale .storm-grid-note__text { margin: 0; font-size: 14px; line-height: 1.35; }
+  .storm-grid-note--sale .storm-grid-note__small { margin: 10px 0 0; font-size: 12px; line-height: 1.35; }
+  .storm-grid-note--sale .storm-grid-note__inner { background: var(--storm-flame, #e62e09); border-color: var(--storm-flame, #e62e09); color: #000; }
+  .storm-grid-note--sale .storm-grid-note__text { font-weight: 600; }
+  .storm-grid-note__link { margin-top: 14px; color: inherit; font-size: 13px; font-weight: 700; text-transform: uppercase; text-decoration: underline; text-underline-offset: 3px; }
+{% endstylesheet %}

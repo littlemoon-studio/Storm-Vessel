@@ -2399,6 +2399,23 @@
     ]
   },
   {
+    "name": "Storm Black Friday tile",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "One message tile inside every collection grid (after the 4th product, first page). Information only: it never changes a price."
+      },
+      { "type": "checkbox", "id": "storm_bf_enabled", "label": "Show the Black Friday tile", "default": true },
+      { "type": "text", "id": "storm_bf_end", "label": "Last day to show it", "info": "Format YYYY-MM-DD. It disappears the day after. Leave empty to keep it showing.", "default": "2026-11-30" },
+      { "type": "text", "id": "storm_bf_title", "label": "Big line", "default": "Black Friday" },
+      { "type": "textarea", "id": "storm_bf_lines", "label": "Lines under it (one per line)", "default": "35% off backpacks, purses & kids wear\n25% off Adelio wetsuits\n20% off swim, sunglasses & footwear" },
+      { "type": "text", "id": "storm_bf_small", "label": "Small line", "default": "Online, Nov 20 – Nov 30." },
+      { "type": "url", "id": "storm_bf_link", "label": "Link" },
+      { "type": "text", "id": "storm_bf_link_label", "label": "Link text", "default": "Shop the sale" },
+      { "type": "range", "id": "storm_bf_position", "label": "Show after product number", "min": 2, "max": 12, "step": 1, "default": 4 }
+    ]
+  },
+  {
     "name": "Storm add-ons",
     "settings": [
       {

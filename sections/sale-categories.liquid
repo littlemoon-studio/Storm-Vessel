@@ -1,0 +1,218 @@
+{%- comment -%}
+  Storm: sale category strip for collection pages (the Aritzia-style frame, Storm styles).
+  Small vertical photos in a row, label below or over the photo. The tile you are on gets a border.
+  A tile is "current" when its link matches the page address, filters included (so "Womens" lights up when the Womens filter is on).
+  Link each tile to a collection, or to a collection plus filters, e.g. /collections/black-friday?filter.p.m.custom.fitt=Womens
+{%- endcomment -%}
+{%- liquid
+  assign show_strip = true
+  if section.settings.show_on_collections != blank and template.name == 'collection'
+    assign allowed = section.settings.show_on_collections | downcase | remove: ' ' | split: ','
+    unless allowed contains collection.handle
+      assign show_strip = false
+    endunless
+  endif
+-%}
+{%- if show_strip -%}
+<storm-sale-cats
+  class="storm-cats storm-cats--{{ section.settings.text_position }} color-{{ section.settings.color_scheme }}"
+  style="
+    --cat-w: {{ section.settings.tile_width }}px;
+    --cat-w-m: {{ section.settings.tile_width_mobile }}px;
+    --cat-ratio: {{ section.settings.image_ratio }};
+    --cat-gap: {{ section.settings.gap }}px;
+    --cat-label: {{ section.settings.label_size }}px;
+    --cat-ring: {{ section.settings.active_border }}px;
+    --cat-pad-top: {{ section.settings.padding_top }}px;
+    --cat-pad-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="storm-cats__row" role="list">
+    {%- for block in section.blocks -%}
+      <a
+        class="storm-cat"
+        role="listitem"
+        href="{{ block.settings.link | default: '#' }}"
+        {{ block.shopify_attributes }}
+      >
+        <span class="storm-cat__img" style="background-color: {{ block.settings.fallback_color }};">
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 480 | image_tag: loading: 'lazy', widths: '240, 360, 480', sizes: '(min-width: 750px) 240px, 160px', alt: block.settings.label }}
+          {%- endif -%}
+        </span>
+        <span class="storm-cat__label">{{ block.settings.label | escape }}</span>
+      </a>
+    {%- endfor -%}
+  </div>
+</storm-sale-cats>
+{%- endif -%}
+
+{% stylesheet %}
+  storm-sale-cats { display: block; background: var(--color-background); color: var(--color-foreground); }
+  .storm-cats__row {
+    display: flex;
+    gap: var(--cat-gap);
+    overflow-x: auto;
+    padding: var(--cat-pad-top) max(16px, calc((100vw - var(--page-width, 1440px)) / 2 + 16px)) var(--cat-pad-bottom);
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .storm-cats__row::-webkit-scrollbar { display: none; }
+  .storm-cat {
+    flex: 0 0 var(--cat-w-m);
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: var(--storm-red, #a90707);
+    text-decoration: none;
+    scroll-snap-align: start;
+    position: relative;
+  }
+  @media screen and (width >= 750px) {
+    .storm-cat { flex-basis: var(--cat-w); }
+  }
+  .storm-cat__img {
+    display: block;
+    aspect-ratio: var(--cat-ratio);
+    overflow: hidden;
+    background: var(--storm-paper, #f9f5ee);
+    border: 1px solid rgb(169 7 7 / 0.35);
+    position: relative;
+    transition: outline-color 0.2s ease, border-color 0.2s ease;
+    outline: var(--cat-ring) solid transparent;
+    outline-offset: 3px;
+  }
+  .storm-cat__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .storm-cat:hover .storm-cat__img { border-color: var(--storm-red, #a90707); }
+  .storm-cat[aria-current='true'] .storm-cat__img { outline-color: var(--storm-red, #a90707); border-color: var(--storm-red, #a90707); }
+  .storm-cat:focus-visible { outline: 2px solid var(--storm-red, #a90707); outline-offset: 4px; }
+  .storm-cat__label {
+    font-size: var(--cat-label);
+    line-height: 1.25;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+  .storm-cat[aria-current='true'] .storm-cat__label { text-decoration: underline; text-underline-offset: 3px; }
+  /* label over the photo */
+  .storm-cats--over .storm-cat { gap: 0; }
+  .storm-cats--over .storm-cat__label {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 28px 10px 10px;
+    color: var(--storm-sand, #f6e7d2);
+    background: linear-gradient(to top, rgb(30 30 30 / 0.78), rgb(30 30 30 / 0));
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) { .storm-cat__img { transition: none; } }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('storm-sale-cats')) {
+    const key = (u) => {
+      try {
+        const x = new URL(u, location.origin);
+        const f = [...x.searchParams].filter(([k]) => k.startsWith('filter.')).map(([k, v]) => k + '=' + v).sort().join('&');
+        return x.pathname.replace(/\/$/, '') + '?' + f;
+      } catch (e) { return ''; }
+    };
+    ['pushState', 'replaceState'].forEach((m) => {
+      const orig = history[m];
+      history[m] = function () { const r = orig.apply(this, arguments); window.dispatchEvent(new Event('storm:urlchange')); return r; };
+    });
+    customElements.define('storm-sale-cats', class extends HTMLElement {
+      connectedCallback() {
+        this.mark = () => {
+          const here = key(location.href);
+          this.querySelectorAll('.storm-cat').forEach((a) => {
+            const on = a.getAttribute('href') !== '#' && key(a.href) === here;
+            on ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current');
+          });
+          const cur = this.querySelector('[aria-current]');
+          if (cur && !this._scrolled) { this._scrolled = true; cur.scrollIntoView({ block: 'nearest', inline: 'center' }); }
+        };
+        window.addEventListener('storm:urlchange', this.mark);
+        window.addEventListener('popstate', this.mark);
+        this.mark();
+      }
+      disconnectedCallback() {
+        window.removeEventListener('storm:urlchange', this.mark);
+        window.removeEventListener('popstate', this.mark);
+      }
+    });
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Sale categories",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    { "type": "header", "content": "Where it shows" },
+    {
+      "type": "text",
+      "id": "show_on_collections",
+      "label": "Show only on these collections",
+      "info": "Collection handles, comma separated. Leave empty to show on every collection page using this section."
+    },
+    { "type": "header", "content": "Tiles" },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Photo shape",
+      "options": [
+        { "value": "2 / 3", "label": "Tall (2:3)" },
+        { "value": "3 / 4", "label": "Portrait (3:4)" },
+        { "value": "4 / 5", "label": "Portrait (4:5)" },
+        { "value": "1 / 1", "label": "Square" }
+      ],
+      "default": "3 / 4"
+    },
+    { "type": "range", "id": "tile_width", "label": "Tile width, desktop", "min": 100, "max": 320, "step": 10, "unit": "px", "default": 180 },
+    { "type": "range", "id": "tile_width_mobile", "label": "Tile width, phone", "min": 80, "max": 220, "step": 10, "unit": "px", "default": 132 },
+    { "type": "range", "id": "gap", "label": "Space between tiles", "min": 4, "max": 40, "step": 2, "unit": "px", "default": 14 },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Label position",
+      "options": [
+        { "value": "below", "label": "Under the photo" },
+        { "value": "over", "label": "Over the photo" }
+      ],
+      "default": "below"
+    },
+    { "type": "range", "id": "label_size", "label": "Label size", "min": 10, "max": 18, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "active_border", "label": "Border on the tile you are on", "min": 1, "max": 4, "step": 1, "unit": "px", "default": 1 },
+    { "type": "header", "content": "Section" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Colour scheme", "default": "scheme-storm-cream" },
+    { "type": "range", "id": "padding_top", "label": "Space above", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 24 },
+    { "type": "range", "id": "padding_bottom", "label": "Space below", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 24 }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "All sale" },
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "color", "id": "fallback_color", "label": "Colour behind the photo", "default": "#f9f5ee" },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "A collection, or a collection with filters, e.g. /collections/black-friday?filter.p.m.custom.fitt=Womens"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sale categories",
+      "blocks": [{ "type": "category" }, { "type": "category" }, { "type": "category" }]
+    }
+  ]
+}
+{% endschema %}

@@ -83,6 +83,22 @@
     transform: none;
   }
 {% endstylesheet %}
+{%- liquid
+  assign storm_hidden = false
+  if only_filters != blank
+    assign storm_hidden = true
+    assign storm_only = only_filters | downcase | split: ','
+    assign storm_label = filter.label | downcase | strip
+    for storm_item in storm_only
+      assign storm_item = storm_item | strip
+      if storm_item == storm_label
+        assign storm_hidden = false
+      endif
+    endfor
+  endif
+-%}
+{%- unless storm_hidden -%}
+
 
 <accordion-custom
   class="facets__item"
@@ -233,3 +249,4 @@
     </floating-panel-component>
   </details>
 </accordion-custom>
+{%- endunless -%}

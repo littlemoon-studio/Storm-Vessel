@@ -793,7 +793,7 @@
             else
               assign should_render_clear = false
             endif
-            render 'price-filter', filter: filter, filter_style: block.settings.filter_style, should_render_clear: should_render_clear
+            render 'price-filter', filter: filter, filter_style: block.settings.filter_style, should_render_clear: should_render_clear, only_filters: block.settings.only_filters
           -%}
         {% else %}
           {%- liquid
@@ -807,7 +807,7 @@
             else
               assign should_render_clear = false
             endif
-            render 'list-filter', filter: filter, filter_style: block.settings.filter_style, active_value_count: active_value_count, should_render_clear: should_render_clear, show_swatch_label: block.settings.show_swatch_label, sectionId: section.id
+            render 'list-filter', filter: filter, filter_style: block.settings.filter_style, active_value_count: active_value_count, should_render_clear: should_render_clear, show_swatch_label: block.settings.show_swatch_label, sectionId: section.id, only_filters: block.settings.only_filters
           -%}
       {% endcase %}
     {% endif %}
@@ -824,7 +824,7 @@
           else
             assign should_render_clear = false
           endif
-          render 'price-filter', filter: filter, filter_style: block.settings.filter_style, should_render_clear: should_render_clear
+          render 'price-filter', filter: filter, filter_style: block.settings.filter_style, should_render_clear: should_render_clear, only_filters: block.settings.only_filters
         -%}
       {% else %}
         {%- liquid
@@ -838,7 +838,7 @@
           else
             assign should_render_clear = false
           endif
-          render 'list-filter', filter: filter, filter_style: block.settings.filter_style, active_value_count: active_value_count, should_render_clear: should_render_clear, show_swatch_label: block.settings.show_swatch_label, sectionId: section.id
+          render 'list-filter', filter: filter, filter_style: block.settings.filter_style, active_value_count: active_value_count, should_render_clear: should_render_clear, show_swatch_label: block.settings.show_swatch_label, sectionId: section.id, only_filters: block.settings.only_filters
         -%}
     {% endcase %}
   {% endif %}
@@ -1042,7 +1042,7 @@
                         assign is_active = true
                       endif
 
-                      render 'price-filter', filter: filter, filter_style: 'vertical', should_render_clear: false, autofocus: should_autofocus
+                      render 'price-filter', filter: filter, filter_style: 'vertical', should_render_clear: false, autofocus: should_autofocus, only_filters: block.settings.only_filters
                     -%}
                   {% else %}
                     {% liquid
@@ -1052,7 +1052,7 @@
 
                       assign active_value_count = filter.active_values | size
                       assign total_active_values = total_active_values | plus: active_value_count
-                      render 'list-filter', filter: filter, filter_style: 'vertical', active_value_count: active_value_count, should_render_clear: false, autofocus: should_autofocus, in_drawer: true, sectionId: section.id
+                      render 'list-filter', filter: filter, filter_style: 'vertical', active_value_count: active_value_count, should_render_clear: false, autofocus: should_autofocus, in_drawer: true, sectionId: section.id, only_filters: block.settings.only_filters
                     %}
                 {% endcase %}
               {%- endfor -%}
@@ -1087,6 +1087,12 @@
   "name": "t:names.filters",
   "tag": null,
   "settings": [
+    {
+      "type": "text",
+      "id": "only_filters",
+      "label": "Only show these filters (Storm)",
+      "info": "Filter names exactly as in Search & Discovery, comma separated, e.g. Brand, Thickness, Hood, Entry. Leave empty to show every filter."
+    },
     {
       "type": "checkbox",
       "id": "enable_filtering",

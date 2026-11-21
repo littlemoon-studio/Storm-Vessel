@@ -380,3 +380,6 @@ product-recommendations .product-card__link { padding: 18px !important; gap: 14p
 product-recommendations .product-card .card-gallery { border: 1px solid rgb(169 7 7 / 0.4) !important; }
 product-recommendations .product-card .group-block { padding: 0 !important; }
 product-recommendations .product-card .group-block-content { padding: 0 !important; }
+
+/* Collection filter bar: boxed buttons like the sale reference (Storm colours) */
+.facets--horizontal .facets__summary, .facets__filters-wrapper .facets__summary { border-radius: 0; }

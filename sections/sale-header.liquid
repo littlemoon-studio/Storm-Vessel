@@ -1,0 +1,171 @@
+{%- comment -%}
+  Storm: sale page header. Big sale line, "Select styles. Details" link, and a right-hand drawer listing the sale details
+  (the discount groups). Each "Discount group" block is one row in the drawer. Information only: discounts are applied in Shopify.
+{%- endcomment -%}
+<storm-sale-header class="storm-sale-head color-{{ section.settings.color_scheme }}" style="--sale-pad-top: {{ section.settings.padding_top }}px; --sale-pad-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="storm-sale-head__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="storm-sale-head__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    <h1 class="storm-sale-head__title">{{ section.settings.heading | escape | newline_to_br }}</h1>
+    <p class="storm-sale-head__sub">
+      {{ section.settings.subline | escape }}
+      {%- if section.blocks.size > 0 %}
+        <button type="button" class="storm-sale-head__link" data-sale-open aria-haspopup="dialog">{{ section.settings.details_label | escape }}</button>
+      {%- endif -%}
+    </p>
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    <dialog class="storm-sale-drawer" aria-labelledby="sale-drawer-title-{{ section.id }}">
+      <div class="storm-sale-drawer__panel">
+        <div class="storm-sale-drawer__top">
+          <h2 id="sale-drawer-title-{{ section.id }}" class="storm-sale-drawer__title">{{ section.settings.drawer_title | escape }}</h2>
+          <button type="button" class="storm-sale-drawer__close" data-sale-close aria-label="Close">&times;</button>
+        </div>
+        {%- if section.settings.dates != blank -%}
+          <p class="storm-sale-drawer__dates">{{ section.settings.dates | escape }}</p>
+        {%- endif -%}
+        <div class="storm-sale-drawer__body">
+          {%- for block in section.blocks -%}
+            <section class="storm-sale-group" {{ block.shopify_attributes }}>
+              <h3 class="storm-sale-group__off">{{ block.settings.off | escape }}</h3>
+              <ul class="storm-sale-group__list">
+                {%- assign lines = block.settings.items | newline_to_br | split: '<br />' -%}
+                {%- for line in lines -%}
+                  {%- assign l = line | strip -%}
+                  {%- if l != blank -%}<li>{{ l | escape }}</li>{%- endif -%}
+                {%- endfor -%}
+              </ul>
+            </section>
+          {%- endfor -%}
+          {%- if section.settings.note != blank -%}
+            <p class="storm-sale-drawer__note">{{ section.settings.note | escape }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+    </dialog>
+  {%- endif -%}
+</storm-sale-header>
+
+{% stylesheet %}
+  storm-sale-header { display: block; background: var(--color-background); color: var(--color-foreground); }
+  .storm-sale-head__inner {
+    max-width: var(--page-width, 1440px);
+    margin-inline: auto;
+    padding: var(--sale-pad-top) 16px var(--sale-pad-bottom);
+  }
+  .storm-sale-head__eyebrow { margin: 0 0 10px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .storm-sale-head__title {
+    margin: 0;
+    font-size: clamp(34px, 7vw, 88px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .storm-sale-head__sub { margin: 18px 0 0; font-size: 14px; }
+  .storm-sale-head__link {
+    all: unset;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 600;
+  }
+  .storm-sale-head__link:focus-visible { outline: 2px solid currentcolor; outline-offset: 3px; }
+
+  .storm-sale-drawer {
+    margin: 0 0 0 auto;
+    padding: 0;
+    border: 0;
+    height: 100dvh;
+    max-height: 100dvh;
+    width: min(440px, 100vw);
+    background: var(--storm-cream, #f4f0e7);
+    color: var(--storm-red, #a90707);
+    border-left: 1px solid var(--storm-red, #a90707);
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), overlay 0.32s allow-discrete, display 0.32s allow-discrete;
+  }
+  .storm-sale-drawer[open] { transform: translateX(0); }
+  @starting-style { .storm-sale-drawer[open] { transform: translateX(100%); } }
+  .storm-sale-drawer::backdrop { background: rgb(30 30 30 / 0.45); opacity: 0; transition: opacity 0.32s ease, overlay 0.32s allow-discrete, display 0.32s allow-discrete; }
+  .storm-sale-drawer[open]::backdrop { opacity: 1; }
+  @starting-style { .storm-sale-drawer[open]::backdrop { opacity: 0; } }
+  .storm-sale-drawer__panel { height: 100%; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; padding: 0 24px 32px; }
+  .storm-sale-drawer__top {
+    position: sticky; top: 0; z-index: 1;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 20px 0 14px;
+    background: var(--storm-cream, #f4f0e7);
+    border-bottom: 1px solid var(--storm-red, #a90707);
+  }
+  .storm-sale-drawer__title { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.03em; text-transform: uppercase; }
+  .storm-sale-drawer__close { all: unset; cursor: pointer; font-size: 30px; line-height: 1; padding: 4px 8px; }
+  .storm-sale-drawer__close:focus-visible { outline: 2px solid currentcolor; }
+  .storm-sale-drawer__dates { margin: 16px 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; }
+  .storm-sale-group { padding: 22px 0; border-bottom: 1px solid rgb(169 7 7 / 0.3); }
+  .storm-sale-group:last-of-type { border-bottom: 0; }
+  .storm-sale-group__off { margin: 0 0 10px; font-size: 34px; font-weight: 700; letter-spacing: -0.03em; text-transform: uppercase; line-height: 1; }
+  .storm-sale-group__list { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 14px; line-height: 1.35; }
+  .storm-sale-group__list li::before { content: '\2022'; margin-inline-end: 8px; }
+  .storm-sale-drawer__note { margin: 20px 0 0; font-size: 12px; line-height: 1.4; opacity: 0.85; }
+  @media (prefers-reduced-motion: reduce) { .storm-sale-drawer, .storm-sale-drawer::backdrop { transition: none; } }
+{% endstylesheet %}
+
+{% javascript %}
+  if (!customElements.get('storm-sale-header')) {
+    customElements.define('storm-sale-header', class extends HTMLElement {
+      connectedCallback() {
+        const dlg = this.querySelector('dialog');
+        if (!dlg) return;
+        this.addEventListener('click', (e) => {
+          if (e.target.closest('[data-sale-open]')) { dlg.showModal(); document.documentElement.style.overflow = 'hidden'; }
+          else if (e.target.closest('[data-sale-close]')) dlg.close();
+          else if (e.target === dlg) dlg.close();
+        });
+        dlg.addEventListener('close', () => { document.documentElement.style.overflow = ''; });
+      }
+    });
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Sale header",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small line above", "default": "Nov 20 – Nov 30" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "info": "A new line starts a new row.", "default": "Black Friday\nSale" },
+    { "type": "text", "id": "subline", "label": "Line under the heading", "default": "Select styles." },
+    { "type": "text", "id": "details_label", "label": "Details link text", "default": "Details" },
+    { "type": "header", "content": "Details drawer" },
+    { "type": "text", "id": "drawer_title", "label": "Drawer title", "default": "Sale details" },
+    { "type": "text", "id": "dates", "label": "Dates line", "default": "Online, Nov 20 – Nov 30" },
+    { "type": "textarea", "id": "note", "label": "Small note at the bottom (optional)" },
+    { "type": "header", "content": "Section" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Colour scheme", "default": "scheme-storm-cream" },
+    { "type": "range", "id": "padding_top", "label": "Space above", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Space below", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 16 }
+  ],
+  "blocks": [
+    {
+      "type": "tier",
+      "name": "Discount group",
+      "settings": [
+        { "type": "text", "id": "off", "label": "Discount", "default": "20% off" },
+        { "type": "textarea", "id": "items", "label": "What is included", "info": "One item per line." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sale header",
+      "blocks": [
+        { "type": "tier", "settings": { "off": "35% off", "items": "Backpacks, purses & totes\nKids wear (not Storm brand)" } },
+        { "type": "tier", "settings": { "off": "25% off", "items": "Adelio wetsuits" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

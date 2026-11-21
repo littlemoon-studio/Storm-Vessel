@@ -157,6 +157,10 @@
           {%- if forloop.index == 8 and paginate.current_page == 1 and collection.products_count > 8 -%}
             {% render 'storm-grid-note' %}
           {%- endif -%}
+          {%- assign bf_pos = settings.storm_bf_position | default: 4 | plus: 0 -%}
+          {%- if forloop.index == bf_pos and paginate.current_page == 1 and collection.products_count > bf_pos -%}
+            {% render 'storm-grid-sale-note' %}
+          {%- endif -%}
         {% endfor %}
         {% endcapture %}
         {% render 'product-grid',
