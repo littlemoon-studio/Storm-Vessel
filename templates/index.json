@@ -29,9 +29,9 @@
             "label": "20% off",
             "title": "MENS\nON SALE",
             "link": "shopify://collections/stocking-stuffers",
-            "background": "#1E1E1E",
-            "label_color": "#F7F5E0",
-            "title_color": "#F7F5E0"
+            "background": "#1e1e1e",
+            "label_color": "#f7f5e0",
+            "title_color": "#f7f5e0"
           }
         },
         "tile_3": {
@@ -40,9 +40,9 @@
             "label": "35% off",
             "title": "YOUTH Apparel\nON sale",
             "link": "shopify://collections/gift-for-surfers",
-            "background": "#1E1E1E",
-            "label_color": "#F7F5E0",
-            "title_color": "#F7F5E0"
+            "background": "#1e1e1e",
+            "label_color": "#f7f5e0",
+            "title_color": "#f7f5e0"
           }
         },
         "tile_4": {
@@ -51,9 +51,9 @@
             "label": "25% off",
             "title": "WETSUITS ON SALE",
             "link": "/collections/surf-trip-must-haves",
-            "background": "#1E1E1E",
-            "label_color": "#F7F5E0",
-            "title_color": "#F7F5E0"
+            "background": "#1e1e1e",
+            "label_color": "#f7f5e0",
+            "title_color": "#f7f5e0"
           }
         },
         "tile_5": {
@@ -62,9 +62,9 @@
             "label": "20% off",
             "title": "goods + more\non sale",
             "link": "/collections/wetsuits",
-            "background": "#1E1E1E",
-            "label_color": "#F7F5E0",
-            "title_color": "#F7F5E0"
+            "background": "#1e1e1e",
+            "label_color": "#f7f5e0",
+            "title_color": "#f7f5e0"
           }
         }
       },
@@ -75,6 +75,7 @@
         "tile_4",
         "tile_5"
       ],
+      "disabled": true,
       "settings": {
         "sticky": "none",
         "columns": 5,
