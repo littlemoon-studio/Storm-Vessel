@@ -9,6 +9,81 @@
  */
 {
   "sections": {
+    "quick_tiles_WtMB9G": {
+      "type": "quick-tiles",
+      "blocks": {
+        "tile_khBGXz": {
+          "type": "tile",
+          "settings": {
+            "label": "20% off",
+            "title": "WOMENS \nON SALE",
+            "link": "/collections/womens-on-sale",
+            "background": "#1e1e1e",
+            "label_color": "#f7f5e0",
+            "title_color": "#f7f5e0"
+          }
+        },
+        "tile_LprfcH": {
+          "type": "tile",
+          "settings": {
+            "label": "20% off",
+            "title": "MENS\nON SALE",
+            "link": "/collections/mens-on-sale",
+            "background": "#1e1e1e",
+            "label_color": "#f7f5e0",
+            "title_color": "#f7f5e0"
+          }
+        },
+        "tile_C6LbMM": {
+          "type": "tile",
+          "settings": {
+            "label": "20% off",
+            "title": "footwear\nON sale",
+            "link": "/collections/footwear-on-sale",
+            "background": "#1e1e1e",
+            "label_color": "#f7f5e0",
+            "title_color": "#f7f5e0"
+          }
+        },
+        "tile_gm6X48": {
+          "type": "tile",
+          "settings": {
+            "label": "20-50% off",
+            "title": "all \non sale",
+            "link": "/collections/black-friday",
+            "background": "#1e1e1e",
+            "label_color": "#f7f5e0",
+            "title_color": "#f7f5e0"
+          }
+        },
+        "tile_Mjwcz7": {
+          "type": "tile",
+          "disabled": true,
+          "settings": {
+            "label": "20% off",
+            "title": "goods + more\non sale",
+            "link": "/collections/wetsuits",
+            "background": "#1e1e1e",
+            "label_color": "#f7f5e0",
+            "title_color": "#f7f5e0"
+          }
+        }
+      },
+      "block_order": [
+        "tile_khBGXz",
+        "tile_LprfcH",
+        "tile_C6LbMM",
+        "tile_gm6X48",
+        "tile_Mjwcz7"
+      ],
+      "settings": {
+        "sticky": "none",
+        "columns": 4,
+        "show_on_collections": "",
+        "tile_height": 116,
+        "tile_height_mobile": 88
+      }
+    },
     "quick_tiles_dqRJjK": {
       "type": "quick-tiles",
       "blocks": {
@@ -75,13 +150,14 @@
         "tile_4",
         "tile_5"
       ],
+      "disabled": true,
       "name": "Quick tiles",
       "settings": {
         "sticky": "scroll-up",
         "columns": 5,
+        "show_on_collections": "stocking-stuffers, stocking-stuffers-under-50, gift-for-surfers, gifts-4-surfers, storm-apparel, storm-tees, storm-hats, surf-trip-must-haves, holiday-gift-packs",
         "tile_height": 160,
-        "tile_height_mobile": 112,
-        "show_on_collections": "stocking-stuffers, stocking-stuffers-under-50, gift-for-surfers, gifts-4-surfers, storm-apparel, storm-tees, storm-hats, surf-trip-must-haves, holiday-gift-packs"
+        "tile_height_mobile": 112
       }
     },
     "section": {
@@ -198,6 +274,7 @@
           "type": "filters",
           "static": true,
           "settings": {
+            "only_filters": "",
             "enable_filtering": true,
             "filter_style": "horizontal",
             "filter_width": "centered",
@@ -239,6 +316,7 @@
               "type": "_product-card-gallery",
               "settings": {
                 "product": "{{ closest.product }}",
+                "storm_card_photo": "first",
                 "image_ratio": "portrait",
                 "border": "none",
                 "border_width": 1,
@@ -624,6 +702,7 @@
     }
   },
   "order": [
+    "quick_tiles_WtMB9G",
     "quick_tiles_dqRJjK",
     "section",
     "blocks_XHBKbj",
