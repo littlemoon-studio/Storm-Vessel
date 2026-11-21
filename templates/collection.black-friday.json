@@ -534,6 +534,22 @@
             "fallback_color": "#f9f5ee"
           }
         },
+        "cat_3": {
+          "type": "category",
+          "settings": {
+            "label": "Womens",
+            "link": "/collections/black-friday?filter.p.m.custom.fitt=Womens&filter.p.m.custom.fitt=Unisex",
+            "fallback_color": "#f9f5ee"
+          }
+        },
+        "cat_4": {
+          "type": "category",
+          "settings": {
+            "label": "Mens",
+            "link": "/collections/black-friday?filter.p.m.custom.fitt=Mens&filter.p.m.custom.fitt=Unisex",
+            "fallback_color": "#f9f5ee"
+          }
+        },
         "cat_5": {
           "type": "category",
           "settings": {
@@ -562,6 +578,8 @@
       "block_order": [
         "cat_1",
         "cat_2",
+        "cat_3",
+        "cat_4",
         "cat_5",
         "cat_6",
         "cat_7"
