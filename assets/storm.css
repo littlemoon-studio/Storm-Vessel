@@ -59,7 +59,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .facets-toggle {
     position: sticky;
     top: var(--header-height, 61px);
-    z-index: 2;
+    z-index: 5; /* above card badges / quick-add buttons (z-index 1-2) so cards never draw over the sticky Filter row */
     background: var(--color-background, var(--storm-cream));
     border-bottom: 1px solid var(--storm-red);
   }
